@@ -1,0 +1,29 @@
+.header_logo_outer_div ion-img{
+ width: 75%;
+ margin-left: 1rem;
+}
+.header_icon {
+    margin-left: 135px;
+    margin-top: 6px;
+    width: 18%;
+}
+
+.start_end {
+    display: flex;  /* Use flex to align items */
+    align-items: center;  /* Center items vertically */
+    justify-content: flex-end;  /* Align to the end of the column */
+}
+
+.ion_toolbar {
+    --border-width: 0 !important;
+}
+
+.header_fix {
+    position: sticky;
+    top: 0;
+}
+
+/* Media Queries for better responsiveness */
+.outer_header_div{
+    padding: 0px 10px;
+}

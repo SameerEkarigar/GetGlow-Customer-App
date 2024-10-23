@@ -1,0 +1,50 @@
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <div class="arrow_div"  (click)="navigateToLoginPage()">
+        <ion-icon size="large" name="arrow-back-outline"></ion-icon>
+      </div>
+      <!-- <ion-button *ngIf="isOtpFilled" (click)="continue()">Continue</ion-button> -->
+       
+    </ion-row>
+    <ion-row>
+     <ion-col>
+      <div class="set_positon_OTP">
+        <div>
+          <h4 class="header-text">Enter One Time Password</h4>
+          <p>Please enter the 4 digit One Time Passcode sent on your mobile number.</p>
+        </div>
+      <form (ngSubmit)="submitOtp()">
+        <div class="otp-input-group">
+          <ion-input
+            *ngFor="let digit of otpDigits; let i = index"
+            [(ngModel)]="otp[i]"
+            (ionInput)="onInputChange(i, $event)"
+            (keydown)="handleKeyDown(i, $event)"
+            maxlength="1"
+            type="number"
+            inputmode="numeric"
+            class="otp-input"
+            required
+            name="otp-{{i}}"
+          ></ion-input>
+        </div>
+        <p *ngIf="!isTimeOut">{{ minutes }}:{{ seconds | number:'2.0' }}</p>
+        <p *ngIf="isTimeOut" (click)="resendOtp()" style="color: red;">Resend OTP</p>
+        <!-- Disable button if not all OTP fields are filled -->
+         <div *ngIf="isOtpFilled" class="continue_btn">
+          <ion-button expand="full" type="submit" >Continue</ion-button>
+         </div>
+        
+      </form>
+    </div>
+     </ion-col>
+    </ion-row>
+ 
+  </ion-grid>
+
+   
+      
+    
+ 
+</ion-content>

@@ -1,0 +1,238 @@
+<div *ngIf="!showpackages">
+<ion-content [fullscreen]="true">
+  <app-header-component [cart_quantity]="HeaderQyt"></app-header-component><!--[serviceCategory] ="servicecategory"-->
+
+  <div class="outer_content">
+    <ion-row size="12">
+      <ion-col size="12">
+        <div class="arrow_div">
+          <ion-icon size="large" (click)="navigateToTabPage()" name="arrow-back-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <div *ngIf="selectedService">
+      <ion-row size="12">
+        <ion-col size="12" class="section_heading">
+          <p>{{category_name}}</p> 
+        </ion-col>
+      </ion-row>
+      <ion-row size="12">
+
+        <ion-col size="12" class="">
+          <div class="bannerImgOuterDiv">
+            <ion-img [src]="serviceImgbanner" alt=""></ion-img>
+          </div>
+        </ion-col>
+
+      </ion-row>
+      <ion-row size="12">
+        <ion-col size="12">
+          <swiper-container class="mySwiper" loop="false" slides-per-view="2.2" space-between="5">
+            <swiper-slide *ngFor="let service of servicesArray; let i = index">
+              <div class="slide-content variant_slide" (click)="changeToactive(i)">
+                <!-- Highlight the active button using ngClass -->
+                <ion-button 
+                  [ngClass]="{'active-button': activeIndex === i}" 
+                  (click)="onclickService($event, i)" 
+                  [attr.data-service]="serviceNamesArray[i]" 
+                  size="small">
+                  {{ service }}
+                </ion-button>
+              </div>
+            </swiper-slide>
+          </swiper-container>
+        </ion-col>
+      </ion-row>
+      
+  </div>
+       <div *ngIf="variantData1">
+        <ion-row size="12" class="padding_top_services">
+          <ion-col size="8" class="service_colmn">
+            <div>
+              <h2>{{variantData1.name}}</h2>
+              <p>Discover the ultimate relaxation with our {{variantData1.name}} service. </p>
+              <p (click)="openModal(variantData1.services_id)" class="know_more_css">Know More</p>
+            </div>
+          </ion-col>       
+          <ion-col size="4">
+            <ion-img [src]="variantData1.image_name" alt=""></ion-img>
+          </ion-col>  
+        </ion-row>
+       </div>
+    <!-- jj -->
+
+     <!-- jj -->
+      
+
+  <ion-row size="12" class="outer_div_add_btn">
+    <ion-col size="12">
+      
+      <div *ngFor="let variant of variantData; let i = index">
+        <p>{{ variant.sv_name.split(' - ')[0].trim() }}</p>
+        <p>{{ variant.sv_duration }}</p>
+        <p class="bold_css">AED {{ variant.sv_price }}</p>
+    
+        <!-- Show Add button if the item is not added or the quantity is 0 -->
+         <div *ngIf="static_btn" >
+          <ion-button class="before_add"  size="small" >Add</ion-button>
+         </div>
+        <div *ngIf="!variant.addButton || variant.quantity < 1">
+            <ion-button #sv_people class="before_add" [attr.sv_people]="variant.sv_people" size="small" (click)="showAddButtons(i, $event)">Add</ion-button>
+        </div>
+    
+        <!-- Show quantity controls if the item is added -->
+        <div  *ngIf="variant.addButton && variant.quantity > 0" class="after_add" >
+            <ion-button class="less_btn" size="small" (click)="deductQuantity(i)">-</ion-button>
+            <ion-button class="add_btn" size="small">{{ variant.quantity }}</ion-button>
+            <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
+        </div>
+    </div>
+    
+    </ion-col>
+  </ion-row>
+ 
+<app-increment-modal #incrementModal></app-increment-modal>
+
+</div>
+  <div *ngIf="showcart" class="view_cart_div">
+    <ion-row size="12">
+      <ion-col size="6">
+        <p>AED {{ overallTotalAmount.toFixed(2) }}</p>
+      </ion-col>
+      <ion-col size="6">
+        <div class="start_end">
+          <ion-button (click)="navigateToViewBooking()">View Bookings</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
+</div> 
+<!-- --------- -->
+<!-- <div *ngIf="showcart" class="view_cart_div">
+  <ion-row size="12">
+    <ion-col size="6">
+      <p>AED {{ overallTotalAmount.toFixed(2) }}</p>
+    </ion-col>
+    <ion-col size="6">
+      <div class="start_end">
+        <ion-button (click)="navigateToViewBooking()">View Booking</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+</div> -->
+
+<div class="ifpackages" *ngIf="showpackages">     
+  <ion-content [fullscreen]="true">
+    <app-header-component [cart_quantity]="HeaderQyt"></app-header-component> <!-- //[serviceCategory] ="servicecategory" -->
+    
+    <div class="outer_content">
+      <ion-row size="12">
+        <ion-col size="12">
+          <div class="arrow_div">
+            <ion-icon size="large" (click)="navigateToTabPage()" name="arrow-back-outline"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+      <div *ngIf="selectedService">
+        <ion-row size="12">
+          <ion-col size="12" class="section_heading">
+            <p>Packages</p> 
+          </ion-col>
+        </ion-row>
+        <ion-row size="12">
+          <ion-col size="12" class="">
+            <div class="bannerImgOuterDiv">
+              <ion-img [src]="serviceImgbanner" alt=""></ion-img>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row size="12">
+          <ion-col size="12">
+            <swiper-container class="mySwiper" loop="false" slides-per-view="2.2" space-between="5">
+              <swiper-slide *ngFor="let package of packages; let i = index">
+                <div class="slide-content variant_slide" (click)="changeToactive(i)">
+                  <!-- Highlight the active button using ngClass -->
+                  <ion-button 
+                    [ngClass]="{'active-button': activeIndex === i}" 
+                    (click)="onclickpackageServiceName($event, i, package.service_name)"  
+                    size="small">
+                    {{ package.package_name }}
+                  </ion-button>
+                </div>
+              </swiper-slide>
+            </swiper-container>
+          </ion-col>
+        </ion-row>
+        
+    </div>
+       
+      <!-- jj -->
+  
+       <!-- jj -->
+        <div *ngFor="let packageVariant of printPackageVariant; let i = index">
+
+          <div *ngIf="packageVariant"> 
+            <ion-row size="12" class="padding_top_services">    
+            <ion-col size="8" class="service_colmn">
+              <div>
+                <h2>{{packageVariant.package_name}}</h2>
+                <p>Discover the ultimate relaxation with our {{packageVariant.package_name}} service. </p>
+                <p (click)="openpackageModal(packageVariant.services_variants)" class="know_more_css">Know More</p>
+              </div>
+            </ion-col>       
+            <ion-col size="4">
+              <ion-img [src]="packageVariant.image_name" alt=""></ion-img>
+            </ion-col> 
+          </ion-row>   
+         </div>
+
+          <ion-row size="12" class="outer_div_add_btn">
+            <ion-col size="12">
+              <div >
+                <p>{{ packageVariant.services_variants_name.split(' - ')[0].trim() }}</p>
+                <p>{{ packageVariant.sv_duration_time }} mins</p>
+                <p class="bold_css">AED {{ packageVariant.package_amount }}</p>
+            
+                <!-- Show Add button if the item is not added or the quantity is 0 -->
+                 <!-- <div *ngIf="static_btn" >
+                  <ion-button class="before_add"  size="small" >Add</ion-button>
+                 </div> -->
+                <div *ngIf="!packageVariant.addButton || packageVariant.quantity < 1">
+                    <ion-button #sv_people class="before_add" [attr.sv_people]="packageVariant.sv_people" size="small" (click)="showAddButtons(i, $event)">Add</ion-button>
+                </div>
+            
+                <!-- Show quantity controls if the item is added -->
+                <div  *ngIf="packageVariant.addButton && packageVariant.quantity > 0" class="after_add" >
+                    <ion-button class="less_btn" size="small" (click)="deductQuantity(i)">-</ion-button>
+                    <ion-button class="add_btn" size="small">{{ packageVariant.quantity }}</ion-button>
+                    <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
+                </div>
+            </div>
+            
+            </ion-col>
+          </ion-row>
+        </div>
+    
+   
+  <app-increment-modal #incrementModal></app-increment-modal>
+  
+  </div>
+    <div *ngIf="showcart" class="view_cart_div">
+      <ion-row size="12">
+        <ion-col size="6">
+          <p>AED {{ overallTotalAmount.toFixed(2) }}</p>
+        </ion-col>
+        <ion-col size="6">
+          <div class="start_end">
+            <ion-button (click)="navigateToViewBooking()">View Bookings</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  
+  <div class="ifpackages">
+      
+  </div>
+  </ion-content> 
+</div>

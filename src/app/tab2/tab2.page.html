@@ -1,0 +1,129 @@
+
+<app-header-component></app-header-component>
+<ion-content [fullscreen]="true" >
+  <div class="outer_content">
+
+  <ion-row size="12">
+    <app-backbutton></app-backbutton>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="12" class="section_heading">
+      <p>My Bookings</p>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="6" class="">
+      <ion-button size="small" class="upcoming_btn margin_0"><p>Upcoming</p></ion-button>
+    </ion-col>
+    <ion-col size="6" class="">
+      <ion-button size="small" class="past_btn margin_0"><p>Past</p></ion-button>
+    </ion-col>
+  </ion-row>
+  <div class="cancel-booking-div" *ngIf="showFirstDiv && confirmbooking">
+  <ion-row size="12">
+    <ion-col size="4" class="upcoming_outer_booking_div">
+      <h5 class="">Swedish Massage</h5>
+      <p class="">30/07/2024</p>
+      <p class="">Single - 60 mins</p>
+      <p class="">AED 169</p>
+    </ion-col>
+    <ion-col size="4" class="">
+      <div class="prof_img">
+        <ion-img src="assets/prof_img.png"></ion-img>
+        <p>Ayu dayawanti</p>
+      </div>
+    </ion-col>
+    <ion-col size="4" class="cancel_btn_div">
+      <div class="color_black text-end ">
+        <p>GGB-1234</p>
+      </div>
+      <div class="cancel_btn_outer_div">
+        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs()">Cancel</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="4" class="upcoming_outer_booking_div">
+      <h5 class="">Swedish Massage</h5>
+      <p class="">30/07/2024</p>
+      <p class="">Single - 60 mins</p>
+      <p class="">AED 169</p>
+    </ion-col>
+    <ion-col size="4" class="">
+      <div class="prof_img">
+        <ion-img src="assets/prof_img.png"></ion-img>
+        <p>Ayu dayawanti</p>
+      </div>
+    </ion-col>
+    <ion-col size="4" class="cancel_btn_div">
+      <div class="color_black text-end ">
+        <p>GGB-1234</p>
+      </div>
+      <div class="cancel_btn_outer_div">
+        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs()">Cancel</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="4" class="upcoming_outer_booking_div">
+      <h5 class="">Swedish Massage</h5>
+      <p class="">30/07/2024</p>
+      <p class="">Single - 60 mins</p>
+      <p class="">AED 169</p>
+    </ion-col>
+    <ion-col size="4" class="">
+      <div class="prof_img">
+        <ion-img src="assets/prof_img.png"></ion-img>
+        <p>Ayu dayawanti</p>
+      </div>
+    </ion-col>
+    <ion-col size="4" class="cancel_btn_div">
+      <div class="color_black text-end ">
+        <p>GGB-1234</p>
+      </div>
+      <div class="cancel_btn_outer_div">
+        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs()">Cancel</ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+</div>
+<div *ngIf="!showFirstDiv" class="color_black text-center confirm_cancel_booking" >
+  <p class="font_bold">Are you sure you want to cancel ?</p> 
+  <p>Your Booking GGB-1234 will be cancelled and the <br>
+     amount will be refunded to your credit/debit card. This <br>
+     cannot be undone when you click on Proceed. <br>
+     Do you wish to continue?</p>
+     <div class="back-proceed-outer-dv">
+      <div><ion-button size="small" class="back_btn">
+        Back
+      </ion-button ></div>  
+      <div><ion-button (click)="proceed()" size="small" class="proceed_btn">
+        Procced
+      </ion-button></div>
+      </div>
+</div>
+<div class="confirm_cancel_div" *ngIf="!confirmbooking">
+ <p class="color_black text-center font_bold">Cancelling your booking <br>
+     Please Wait</p>
+</div>
+<div *ngIf="!showCancelStatus">
+  <p class="color_black font_bold text-center">Booking Cancelled</p>
+</div>
+
+<!-- <div  class="color_black text-center confirm_cancel_booking" >
+  <p class="font_bold">Are you sure you want to cancel ?</p> 
+  <p>Your Booking GGB-1234 will be cancelled and as per <br> the cancellation policy,10% amount will be deducted <br> and the balance amount will be refunded to your <br> credit/debit card. This cannot be undone when <br> you click on Proceed.  <br>
+    Do you wish to continue?</p>
+     <div class="back-proceed-outer-dv">
+      <div><ion-button size="small" class="back_btn">
+        Back
+      </ion-button ></div>  
+      <div><ion-button (click)="proceed()" size="small" class="proceed_btn">
+        Procced
+      </ion-button></div>
+      </div>
+</div> -->
+</div>
+
+</ion-content>
+<app-tabcomponent></app-tabcomponent>

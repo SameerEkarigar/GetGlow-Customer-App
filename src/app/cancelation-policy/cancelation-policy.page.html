@@ -1,0 +1,29 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>cancelation-policy</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+<app-header-component>
+</app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content">
+    <app-backbutton></app-backbutton>
+    <div *ngFor="let cancellation of cancellationPolicyData">
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>{{cancellation.heading}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="12">
+       <div class="color_black" [innerHTML]="cancellation.content"></div>
+      </ion-col>
+    </ion-row>
+  </div>
+  </div>
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">cancelation-policy</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+</ion-content>

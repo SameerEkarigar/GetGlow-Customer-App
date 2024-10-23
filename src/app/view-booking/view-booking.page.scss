@@ -1,0 +1,294 @@
+ion-toolbar{
+    --background: white !important;
+     color: black;
+}
+ion-content{
+    --background: white !important;
+     color: black;
+     
+}
+
+p{
+   color: black;
+   font-size: 13px;
+}
+.tab_logo_div{
+    width: 45%;
+    margin-top: 6px;
+}
+.header_icon{   
+    margin-left: 133px;
+    margin-top: 7px;  
+}
+.outer_icon_div{
+  display: flex;
+}
+.arrow_div{
+    color: black;
+    padding-top: 10px;
+}
+.section_heading p{
+  color: black;
+  margin: 0;
+}
+.outer_content{
+    padding: 0 10px;
+}
+.slide-content ion-button{
+   --border-radius: 0;
+   font-size: 11px;
+   color: white;
+   --background: #6596A0;
+   white-space: nowrap;
+   width: -webkit-fill-available;
+}
+.service_colmn h2, p{
+    color: black;
+}
+.service_colmn  p{   
+    font-size: 12px;
+    margin: 0;
+    line-height: 22px;
+}
+
+.service_colmn h2{
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+.outer_div_add_btn{
+    display: flex;
+    padding: 4px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E6DFDF;
+}
+.outer_div_add_btn ion-button{
+    --border-radius: 0;
+     color: white;
+     --background: #6596A0;
+     width: -webkit-fill-available;
+     margin: 0;
+}
+.outer_div_add_btn div{
+    border: 0.5px solid #D1CDCD;
+    margin-top: 12px;
+    // margin-right: 12px;
+    width: 90%;
+    min-width: 30%;
+}
+.outer_div_add_btn p{
+    text-align: center;
+    margin: 8px;
+    font-size: 12px;
+}
+.outer_div_add_btn ion-col{
+    width: 30% !important;
+    max-width: 27% !important;
+    padding: 0;
+}
+.bold_css{
+    font-weight: 600;
+}
+.know_more_css{
+    color: #6596A0;
+}
+.padding_top_services{
+    padding: 10px 0px;
+}
+
+.view_boking_btn ion-button{
+    --border-radius: 0;
+     color: white;
+     --background: #6596A0;
+}
+.view_boking_btn {
+    text-align: end;
+}
+.cart_amount{
+    text-align: start;
+} 
+// .ion-padding{
+//     --background: pink !important;
+//     border: 1px solid black;
+// }
+
+
+.custom-modal {
+    position: absolute;
+    top: 91%;
+    left: 0;
+    right: 0;
+    background-color: #E6DFDF;
+    padding: 40px;
+  }
+  
+//   .cart_amount p {
+//     font-size: 23px;
+//     font-weight: bold;
+//   }
+  
+//   .view_booking_btn {
+//     text-align: right;
+//   }
+  .after_add{
+    display: flex;
+    width: 100% !important;
+    margin-top: 0 !important;
+    border: none !important;
+  }
+  .before_add{
+    width: 100% !important;
+    margin-top: 0 !important;
+    border: none !important;
+  }
+  .less_btn{
+    width: 25% !important;
+    min-width: 22% !important;
+    margin: 0;
+    color: white;
+    --background: #6596A0;
+  }
+  .add_btn{
+    width: 27% !important;
+    min-width: 40% !important;
+    margin: 0;
+    color: black !important;
+    --background: #ffffff !important;
+  }
+  .plus_btn{
+    width: 25% !important;
+    min-width: 22% !important;
+    color: white !important;
+    --background: #6596A0 !important;
+    margin: 0 !important;
+  }
+  .cart_amnt_btn{
+    float: inline-start;
+  }
+  .cart_view_btn{
+    float: inline-end;
+  }
+  .cart_view_btn ion-button{
+    --border-radius: 0;
+    color: white;
+    --background: #6596A0;
+  }
+  .interactive-background .modal-wrapper ion-content {
+    pointer-events: auto;
+  }
+  .interactive-background {
+    pointer-events: auto;
+  }
+  .color_black h4, p{
+    color: black;
+  }
+
+  .color_black h4{
+    font-size: 14px;
+  }
+  .color_black  p{
+    font-size: 12px;
+  }
+.color_black ul li{
+    color: black;
+}
+
+.color_black ul {
+    padding-left: 20px;
+}
+.view_add_btn ion-button{
+    --border-radius: 0;
+    font-size: 11px;
+    // position: absolute;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: -webkit-fill-available;
+    top: 15px;
+}
+.frequent_Add_btn ion-button{
+    --border-radius: 0;
+    font-size: 11px;
+    white-space: nowrap;
+    width: 100;
+}
+.frequent_Add_btn p, ion-button{
+    text-align: center;
+    margin-bottom: 2px;
+    margin-top: 1px;
+    font-size: 12px;
+}
+.intial_start{
+    text-align: start;
+}
+.start_end{
+    text-align: end;
+}
+
+.text_color_theme{
+    color: #6596A0;
+    font-size: 10px;
+}
+.font_10px{
+    font-size: 10px;
+}
+.continue_to_address_btn {
+    --border-radius: 0;
+    font-size: 11px;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: 100%;
+   
+}
+.bottom_btn_fix{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 12px;
+    background-color: white;
+}
+
+.ion_modal{
+  --background: white;
+}
+.close_btn_discount{
+  color: black;
+}
+.padding_12px{
+  padding: 12px;
+}
+.discount_input{
+  border: 1px solid #D0CACA;
+  width: 95%;
+  height: 0vh;
+  color: black;
+  padding-left: 11px !important;
+}
+.apply_discount{
+  --border-radius: 0;
+  font-size: 11px;
+  color: white;
+  --background: #6596A0;
+  white-space: nowrap;
+  width: 100%;
+}
+.margin_0{
+  margin: 0px;
+}
+.save_btn_outer_div{
+ width: 100%;
+}
+.continue_btn_fixed{
+  position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    padding: 12px;
+    z-index: 1000;
+}
+.payment_summary p{
+  margin: 0;
+}

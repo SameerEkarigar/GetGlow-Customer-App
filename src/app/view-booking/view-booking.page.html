@@ -1,0 +1,156 @@
+<ion-content [fullscreen]="true">
+  <app-header-component [cart_quantity]="HeaderQyt"></app-header-component>
+ 
+   <div class="outer_content">
+     <ion-row size="12">
+      <ion-col size="12">
+        <div class="arrow_div" (click)="navigateTospaLadies()">
+          <ion-icon size="large" name="arrow-back-outline"></ion-icon>
+        </div>
+        <!-- <app-backbutton></app-backbutton> -->
+      </ion-col>
+     </ion-row>
+     <!-- ----------- -->
+     <ion-row size="12">
+       <ion-col size="12" class="section_heading">
+         <p style="font-size: 16px;">Your Bookings</p>
+       </ion-col>
+     </ion-row>
+ 
+     <div *ngFor="let cart_item of cart_data; let i = index">
+       <ion-row size="12">
+         <ion-col size="6">
+           <p style="margin-top: 5px; margin-bottom: 5px;">
+             {{ cart_item.name }} - {{ cart_item.duration }}
+           </p>
+         </ion-col>
+         <ion-col size="3">
+           <p style="margin-top: 5px; margin-bottom: 5px; font-size: 14px; white-space: nowrap;">
+             AED {{ cart_item.totalAmount }}  <!-- totalAmount now uses discounted_price for new items -->
+           </p>
+         </ion-col>
+         <ion-col size="3">
+           <ion-button class="less_btn" size="small" style="--border-radius: 0px;" (click)="DeductCartQuantity(i)">-</ion-button>
+           <ion-button class="add_btn" size="small" style="--border-radius: 0px;">{{ cart_item.quantity }}</ion-button>
+           <ion-button class="plus_btn" size="small" style="--border-radius: 0px;" (click)="IncreaseCartQuantity(i)">+</ion-button>
+         </ion-col>
+       </ion-row>
+     </div>
+     
+     <ion-row size="12" style="margin-top: 15px;">
+       <ion-col size="12" class="section_heading">
+         <p style="font-size: 16px;">Frequently Booked Together</p>
+       </ion-col>
+     </ion-row>
+ 
+     <ion-row size="12">
+       <ion-col>
+         <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
+           <swiper-slide *ngFor="let frequent_data of frequentData; let i = index">
+             <div class="slide-content">
+              <div class="frequent_Add_btn">
+                <div *ngIf="frequent_data.service_name_thumbnail; else dumyimg">
+                  <img [src]="frequent_data.service_name_thumbnail">
+                </div>
+                <ng-template #dumyimg>
+                  <img src="./assets/empty-img.png">
+                </ng-template>
+              
+              
+                <div class="innerFreqDiv">            
+                 <p style="height: 30px;">{{ frequent_data.name }}</p>
+                 <p style="height: 16px;">{{ frequent_data.duration }}</p>
+                 <p >AED {{ frequent_data.discounted_price }}</p>
+                 <div *ngIf="!frequent_data.addButton">
+                   <ion-button class="before_add" size="small" (click)="addItemToBooking(i)">Add</ion-button>
+                 </div>
+               </div>
+              </div>
+             </div>
+           </swiper-slide>
+         </swiper-container>
+       </ion-col>
+     </ion-row>
+     <div class="payment_summary">
+     <ion-row size="12">
+       <ion-col size="12" class="section_heading">
+         <p style="font-size: 16px; margin-top: 14px;">Payment Summary</p>
+       </ion-col>
+     </ion-row>
+     <ion-row size="12">
+       <ion-col size="6">
+         <div class="intial_start ">
+           <p>Booking Total</p>
+         </div> 
+       </ion-col>
+       <ion-col size="6">
+         <div class="start_end " >
+           <p>AED {{total_amount}}</p>
+         </div>
+       </ion-col>
+     </ion-row>
+     <ion-row size="12">
+       <ion-col size="6" >
+         <div class="intial_start ">
+           <p>Discounts  & Offers</p>
+           <p style="font-weight: 500;">{{storedDiscountCode}}</p>
+           <p id="open_modal" class="text_color_theme">{{viewOffer}}</p>
+           <ion-modal trigger="open_modal" [initialBreakpoint]="0.4" class="ion_modal">
+             <ng-template>
+               <div class="block padding_12px">              
+                     <ion-row size="12">
+                       <ion-col size="8"><p>Discounts  & Offers</p></ion-col>
+                       <ion-col size="4">
+                         <div class=" start_end">  
+                           <p class="close_btn_discount" (click)="customClose()">Close</p>
+                         </div>                      
+                       </ion-col>
+                     </ion-row>        
+                 <ion-row size="12">
+                   <ion-col size="9"><ion-input class="discount_input" placeholder="Enter Discount Code" [(ngModel)]="enteredDiscountCode" (ionInput)="storeDiscountCode()"></ion-input></ion-col>
+                   <ion-col size="3"> <ion-button size="default" class="start_end apply_discount" (click)="applyAndStoreDiscount()">Apply</ion-button></ion-col>
+                </ion-row>
+                <ion-row size="12" *ngFor="let discount of printdiscount">
+                 <ion-col size="9">
+                   <p class="margin_0">Summer Special Offer</p>
+                   <p class="margin_0 font_10px">{{discount.coupon_name}}</p>
+                   <p class="margin_0 font_10px">Get AED {{discount.discount_amount}} off on the order</p>
+                 </ion-col>
+                 <ion-col size="3"><ion-button size="default" class="start_end apply_discount" (click)="applyAndStoreDiscount(discount.coupon_name, discount.discount_amount)">Apply</ion-button></ion-col>
+              </ion-row>
+             
+               </div>
+             </ng-template>
+           </ion-modal>
+         </div>       
+       </ion-col>
+       <ion-col size="6" >
+         <div class="start_end margin_0" >
+           <p>AED {{selectedDiscountAmount}}</p>
+         </div>   
+       </ion-col>
+     </ion-row>
+     <ion-row size="12" style="margin-bottom: 6rem;">
+       <ion-col size="6" >
+         <div class="intial_start ">
+           <p>Total</p>
+         </div>       
+       </ion-col>
+       <ion-col size="6" >
+         <div class="start_end " >
+           <p>AED {{AmountAfterDeductDiscount}}</p>
+           <p class="font_10px">Includes 5% VAT = AED 15.71</p>
+         </div>   
+       </ion-col>
+     </ion-row>
+    </div>
+   
+  
+</div>
+<div class="continue_btn_fixed">
+  <div>
+    <ion-button expand="full" (click)="navigateToselectAddress()" class="continue_to_address_btn">Continue To Address</ion-button>
+ </div>  
+</div>
+   
+ </ion-content>

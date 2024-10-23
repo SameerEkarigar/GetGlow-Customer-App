@@ -1,0 +1,98 @@
+ion-content{
+    --background: rgb(255, 255, 255);
+    --color: #000;
+}
+.content_box {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+ion-img{
+    width: 200px;
+    display: block;
+    margin: auto;
+}
+.massage_img{
+    width: 100%;
+    display: block;
+    margin: auto;
+}
+.button_space{
+    display: flex;
+    justify-content: space-between;
+}
+.theme_btn {
+    --background: #82A29D;
+    --border-radius: 0;
+    --color: white;
+}
+.theme_btn_skip {
+    --color: rgb(0, 0, 0);
+    --background: #ffffff;
+    --box-shadow: none;
+}
+.home_heading{
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+.home_para{
+    margin-top: 0;
+}
+.small_logo_img{
+    margin-bottom: 12px;
+}
+.dot-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px; /* Adjust spacing as needed */
+  }
+  
+  .dot {
+    // width: 38px;
+    // height: 4px;
+    // background-color: #ccc;
+    // margin: 0 5px;
+    // cursor: pointer;
+    --width: 22px !important;
+    --height: 2px;
+    background-color: #D3D3D3;
+    margin: 0 5px;
+    cursor: pointer;
+    padding: 2px 18px;
+    border-radius: 0px;
+  }
+  
+  .dot.active {
+    background-color: #82A29D;
+  }
+  .skeleton{
+    opacity: .7;
+    height: 15vh;
+    border-radius: 0px;
+    animation: skeleton-loading 1s linear infinite alternate;
+  }
+  .skeleton-img{
+    opacity: .7;
+    height: 56vh;
+    border-radius: 0px;
+    animation: skeleton-loading 1s linear infinite alternate;
+  }
+  .skeleton-button{
+    opacity: .7;
+    height: 6vh;
+    width: 21%;
+    border-radius: 0px;
+    animation: skeleton-loading 1s linear infinite alternate;
+  }
+  @keyframes skeleton-loading {
+    0%{
+      background-color: hsl(200, 20%,70%);
+    }
+    
+    100%{
+      background-color: hsl(200, 20%, 95%);
+    }
+  }

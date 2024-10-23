@@ -1,0 +1,113 @@
+ion-content{
+    --background: rgb(255, 255, 255);
+    --color: #000;
+}
+.content_box {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 15%;
+    transform: translateY(-50%);
+}
+.margin_0{
+    margin: 0;
+}
+.arrow_div{
+    text-align: justify;
+    // position: absolute;
+    // left: 0px;
+    // right: 82%;
+    // top: 8%;
+    // transform: translateY(-50%);
+}
+.checkbox_outer_div ion-checkbox[disabled] {
+    opacity: 2.5; /* Set opacity to a desired value (0.5 in this case) */
+  }
+ .outer_number_div .select-disabled{
+    opacity: 2.5;
+ }
+.bg_white{
+    --background: white;
+     color: #000;
+}
+.login_form_column{
+    position: absolute;
+    top: 20%;
+    right: 0;
+    padding: 0 12px;
+}
+.signup_btn{
+    --background: #82A29D;
+    color: white;
+    --border-radius: 0;
+}
+.border_1px{
+    border: 1px solid;
+    margin-bottom: 12px;
+    --inner-border-width: 0;
+}
+.bg_white p{
+    font-size: 12px;
+}
+.login_number_div{
+    --background: white;
+    --inner-border-width: 0;
+      width: 24%;
+      border: 1px solid black;
+}
+ion-checkbox{
+    --checkbox-background: white;
+    --border-color: black;
+    --border-width: 1px;
+    --border-radius: 0;
+    --border-color-checked: black;
+    --checkbox-background-checked: white;
+    float: left;
+    --checkmark-color: rgb(0, 0, 0) !important;
+}
+.outer_number_div{
+    display: flex;
+    justify-content: center;
+}
+.country_dropdown{
+    width: 25%;
+    padding-left: 15px;
+    border: 1px solid;
+    color: #000;
+    border-right: none;
+}
+.login_number_div2{
+    --background: white;
+    --inner-border-width: 0;
+      border: 1px solid black;
+      color: #000;
+      width: -webkit-fill-available;
+}
+.margin_bottom12px{
+    margin-bottom: 12px;
+}
+.checkbox_outer_div p{
+    white-space: break-spaces;
+    text-align: justify;
+}
+.signup_btn_outer_div{
+    margin-top: 8rem;
+}
+ion-input[disabled] {
+    /* Darker background color for disabled state */
+    --color: #030303; 
+    opacity: 1;/* Text color for disabled state */
+  }
+  .message-box p{
+    color: red;
+  }
+  .ion-text-center{
+    margin-top: 20%;
+  }
+  .header-text{
+    font-weight: 600;
+  }
+  .formInnerDivCSs{
+    padding: 12px;
+  }

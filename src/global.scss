@@ -1,0 +1,147 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+.padding_bottom_footer{
+    padding: 13px;
+  }
+  .button_space{
+    padding-top: 40px;
+  }
+  .fix_header{
+    position: fixed;
+    top: 0;
+  }
+  .padding_top12px{
+    padding-top: 12px;
+  }
+
+.ion_badge{
+  position: absolute;
+  top: 6px;
+  right: -2px;
+  --background: red;
+  color: white;
+  height: 40%;
+  width: 10%;
+  border-radius: 15px;
+}
+.header_icon{   
+  margin-left: 133px;
+  margin-top: 7px;  
+}
+.start_end{
+  text-align: end;
+}
+.ion_toolbar{
+  --background: white;
+}
+ion-toolbar{
+  --background: white !important;
+}
+ion-content{
+  --background: white !important;
+}
+ion-searchbar{
+  --background: white !important;
+  color: black;
+}
+.section_heading p{
+  color: black;
+  margin: 0;
+}
+.outer_content{
+  padding: 0 8px;
+}
+.margin_0 p{
+  margin: 4px;
+}
+.arrow_div{
+  color: black;
+  padding-top: 10px;
+}
+.font_10px{
+  font-size: 10px;
+}
+.start_end{
+  text-align: end;
+}
+.color_red{
+ color: red !important;
+}
+.font_14px{
+  font-size: 14px;
+}
+.color_black{
+  color: black;
+}
+.border_bottom_css{
+  border-bottom: 1px solid gray;
+}
+.text_align_center{
+  text-align: center;
+}
+ion-datetime{
+
+}
+.save_btn_outer_div{
+  width: 99%;
+}
+.bg_white{
+  background-color: white;
+}
+.display_flex{
+  display: flex;
+}
+.color_black{
+  color: black;
+}
+.text-center{
+  text-align: center;
+}
+.text-end{
+  text-align: end;
+}
+.font_bold{
+  font-weight: bold !important;
+}
+.remove_white_space{
+  white-space: normal;
+}
+.custom-modal-class{
+  padding-top: 85px !important;
+}

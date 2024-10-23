@@ -1,0 +1,15 @@
+
+ion-tab-bar{
+    --background: rgb(255, 255, 255);
+   
+}
+ion-checkbox{
+    --checkbox-background: white;
+    --border-color: black;
+    --border-width: 1px;
+    --border-radius: 0;
+    --border-color-checked: black;
+    --checkbox-background-checked: white;
+    float: left;
+    --checkmark-color: rgb(0, 0, 0) !important;
+}

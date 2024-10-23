@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "592895833357",
+    "project_id": "get-glow-76814",
+    "storage_bucket": "get-glow-76814.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592895833357:android:4ccac7d368b768c6ff2c44",
+        "android_client_info": {
+          "package_name": "io.gg.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8G8eC-LWBtmLg8-7J2EYDO6IqvzJx9Ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592895833357:android:515f317b618418e2ff2c44",
+        "android_client_info": {
+          "package_name": "io.gg.employee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8G8eC-LWBtmLg8-7J2EYDO6IqvzJx9Ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

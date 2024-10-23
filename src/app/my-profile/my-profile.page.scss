@@ -1,0 +1,76 @@
+.profile_rows p{
+    color: black;
+    white-space: nowrap;
+}
+.padding_top{
+    padding-top: 20px;
+}
+.edit_outer_div  {     
+    float: inline-end;
+ }
+ .margin_0 {
+    margin: 4px;
+  }
+  .padding_top30px{
+    padding-top: 30px;
+  }
+  .save_changes_btn{
+    --border-radius: 0;
+    font-size: 11px;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: 100%;
+  }
+  .bottom_btn_fix{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.edit_outer_div p{
+    color: #6596a0 !important;
+}
+.ion_modal{
+    --background: white;
+  }
+  .padding_12px{
+    padding: 12px;
+  }
+  .otp_colums{
+    justify-content: space-evenly;
+  }
+  .otp-input {
+    text-align: center;
+    border: 1px solid #ccc;
+    display: flex; 
+  }
+  .otp_outer_div{
+    padding: 10px 0px !important;
+  }
+  .save_btn_outer_div{
+    width: 99%;
+  }
+  .outer_number_div{
+    display: flex;
+    justify-content: center;
+}
+.login_form_column{
+  position: absolute;
+  top: 20%;
+  right: 0;
+  padding: 0 12px;
+}
+.login_number_div2{
+  --background: white;
+  --inner-border-width: 0;
+    border: 1px solid black;
+    color: #000;
+    width: -webkit-fill-available;
+}
+.country_dropdown{
+  width: 25%;
+  padding-left: 15px;
+  border: 1px solid;
+  color: #000;
+  border-right: none;
+}

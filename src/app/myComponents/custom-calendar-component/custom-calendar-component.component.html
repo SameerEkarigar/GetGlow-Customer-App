@@ -1,0 +1,29 @@
+
+<div id="calendar">
+  <div class="calendar-header">
+    <ion-row size="12" class="calender_div">
+      <div class="calender_header_text">
+        <ion-col size="6" id="month-year">{{ monthYear }}</ion-col>
+      </div>  
+      <ion-col size="6">
+        <div>
+          <ion-button class="left_btn" fill="clear" (click)="changeMonth(-1)">
+            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button class="right_btn" fill="clear" (click)="changeMonth(1)">
+            <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-col>
+    </ion-row> 
+  </div>
+  <div class="calendar-body">
+    <div class="calendar-weekdays">
+      <div *ngFor="let day of weekDays">{{ day }}</div>
+    </div>
+    <div class="calendar-dates">
+      <div *ngFor="let date of dates" [ngClass]="date.classes">{{ date.day }}</div>
+    </div>
+  </div>
+</div>
+

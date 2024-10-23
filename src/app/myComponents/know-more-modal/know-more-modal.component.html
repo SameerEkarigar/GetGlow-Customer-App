@@ -1,0 +1,260 @@
+<ion-header class="ion_header">
+  <ion-toolbar class="modal_header">
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div *ngIf="servicePageDescription">
+    <ion-row size="12">
+      <ion-col size="12">
+        <img [src]="servicePageDescription.banner_img" alt="">
+      </ion-col>
+    </ion-row>
+
+  <ion-row size="12" class="padding_top_services">
+    <ion-col size="12" class="service_colmn">
+      <div>
+        <h2 class="color_black">{{servicePageDescription.description}}</h2>
+        <p class="color_black">{{servicePageDescription.short_description}}</p>
+        <!-- <p class="know_more_css">Know More</p> -->
+      </div>
+    </ion-col>
+ 
+  </ion-row>
+ 
+  <ion-row size="12" class="outer_div_add_btn">
+    <ion-col size="12">
+      <div *ngFor="let arrayOfservice of servicePAgeDEscriptionArray">
+      <div>
+        <p>{{arrayOfservice.splitSvName }}</p>
+        <p>{{arrayOfservice.sv_duration_time}} mins</p>
+        <p class="bold_css">AED {{arrayOfservice.sv_price}}</p>
+        <div *ngIf="!addbtn && !showcart" (click)="showbtn()" class="before_add">
+          <ion-button size="small">Add</ion-button>
+        </div>
+      </div>
+      <div *ngIf="addbtn" class="after_add">
+        <ion-button class="less_btn" size="small" (click)="deductquantity()">-</ion-button>
+        <ion-button class="add_btn" size="small">{{quantity}}</ion-button>
+        <ion-button class="plus_btn" size="small" (click)="increasequantity()">+</ion-button>
+      </div>
+    </div>
+    </ion-col>
+  </ion-row>
+</div>
+
+  <ion-row size="12">
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="featuresDataArray.feature_1_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{featuresDataArray.feature_1_heading}}</h2>
+          <p>{{featuresDataArray.feature_1_description}}</p>
+        </div>
+      </div>
+
+    </ion-col>
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="featuresDataArray.feature_2_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{featuresDataArray.feature_2_heading}}</h2>
+          <p>{{featuresDataArray.feature_2_description}}</p>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="featuresDataArray.feature_3_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{featuresDataArray.feature_3_heading}}</h2>
+          <p>{{featuresDataArray.feature_3_description}}</p>
+        </div>
+      </div>
+
+    </ion-col>
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="featuresDataArray.feature_4_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{featuresDataArray.feature_4_heading}}</h2>
+          <p>{{featuresDataArray.feature_4_description}}</p>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12" class="padding_global slider_heading">
+    <ion-col size="12">
+      <h2>{{ourProfVideoData.video_text_section}}</h2>
+    </ion-col>
+  </ion-row>
+  <swiper-container class="mySwiper" loop="true" slides-per-view="3" space-between="10">
+    <swiper-slide>
+      <div class="slide-content">
+        <div class="video-container">
+          <video autoplay muted playsinline loop>
+            <source [src]="ourProfVideoData.video_1_img" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </swiper-slide>
+    <swiper-slide>
+      <div class="slide-content">
+        <div class="video-container">
+          <video autoplay muted playsinline loop>
+            <source  [src]="ourProfVideoData.video_1_img" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </swiper-slide>
+    <swiper-slide>
+      <div class="slide-content">
+        <div class="video-container">
+          <video autoplay muted playsinline loop>
+            <source  [src]="ourProfVideoData.video_1_img" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+<div *ngIf="serviceData">
+  <ion-row size="12" class="padding_global slider_heading">
+    <ion-col size="12">
+      <h2>{{serviceData.what_we_get_text_section}}</h2>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="serviceData.what_we_get_1_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{serviceData.what_we_get_1_heading}}</h2>
+          <p>{{serviceData.what_we_get_1_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="serviceData.what_we_get_2_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{serviceData.what_we_get_2_heading}}</h2>
+          <p>{{serviceData.what_we_get_2_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="serviceData.what_we_get_3_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{serviceData.what_we_get_3_heading}}</h2>
+          <p>{{serviceData.what_we_get_3_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="serviceData.what_we_get_4_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{serviceData.what_we_get_4_heading}}</h2>
+          <p>{{serviceData.what_we_get_4_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+  </ion-row>
+</div>
+  <ion-row size="12" class="padding_global slider_heading">
+    <ion-col size="12">
+      <p>{{whatincludeData.what_Whats_text_section}}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="12">
+      <ion-img [src]="whatincludeData.whats_included_1_img"></ion-img>
+    </ion-col>
+    <ion-col size="12" class="color_black">
+      <h2>
+        {{whatincludeData.whats_included_1_heading}}
+      </h2>
+      <p>{{whatincludeData.whats_included_1_description}}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="12">
+      <ion-img [src]="whatincludeData.whats_included_2_img"></ion-img>
+    </ion-col>
+    <ion-col size="12" class="color_black">
+      <h2>
+        {{whatincludeData.whats_included_2_heading}}
+      </h2>
+      <p>{{whatincludeData.whats_included_2_description}}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="12">
+      <ion-img [src]="whatincludeData.whats_included_3_img"></ion-img>
+    </ion-col>
+    <ion-col size="12" class="color_black">
+      <h2>
+        {{whatincludeData.whats_included_3_heading}}
+      </h2>
+      <p>{{whatincludeData.whats_included_3_description}}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="12">
+      <ion-img [src]="whatincludeData.whats_included_4_img"></ion-img>
+    </ion-col>
+    <ion-col size="12" class="color_black">
+      <h2>
+        {{whatincludeData.whats_included_4_heading}}
+      </h2>
+      <p>{{whatincludeData.whats_included_4_description}}</p>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="12">
+      <div class="color_black">
+        <h2>{{getBeforeYoubookData.before_you_book_text_section}}</h2>
+        <ul class="my-nav byb_ul">
+          <li>{{getBeforeYoubookData.bullet_1}}</li>
+          <li>{{getBeforeYoubookData.bullet_2}}</li>
+          <li>{{getBeforeYoubookData.bullet_3}}</li>
+        </ul>
+      </div>
+    </ion-col>
+  </ion-row>
+  <!-- <ion-row size="12" class="outer_div_add_btn">
+    <ion-col size="4">
+      <div>
+        <p>60 mins</p>
+        <p class="bold_css">AED 165</p>
+        <div *ngIf="" class="before_add">
+          <ion-button size="small" id="open-modal">Add</ion-button>
+        </div>
+      </div>
+      <div *ngIf="" class="after_add">
+        <ion-button class="less_btn" size="small" (click)="decrement(0)">-</ion-button>
+        <ion-button class="add_btn" size="small">{{ quantities[0] }}</ion-button>
+        <ion-button class="plus_btn" size="small" (click)="increment(0)">+</ion-button>
+      </div> 
+    </ion-col>
+    <ion-col size="4">
+      <div>
+        <p>90 mins</p>
+        <p class="bold_css">AED 220</p>
+        <div *ngIf="" class="before_add">
+          <ion-button size="small">Add</ion-button>
+        </div>
+      </div>
+    <div *ngIf="" class="after_add">
+        <ion-button class="less_btn" size="small" (click)="decrement(1)">-</ion-button>
+        <ion-button class="add_btn" size="small">{{ quantities[1] }}</ion-button>
+        <ion-button class="plus_btn" size="small" (click)="increment(1)">+</ion-button>
+      </div> 
+    </ion-col>
+  </ion-row> -->
+</ion-content>

@@ -1,0 +1,190 @@
+<ion-content [fullscreen]="true">
+  <app-header-component></app-header-component>
+
+  <div class="outer_content">
+    <ion-row size="12">
+      <ion-col size="12">
+        <div class="arrow_div" (click)="navigateToviewBooking()">
+          <ion-icon size="large" name="arrow-back-outline"></ion-icon>
+        </div>
+        <!-- <app-backbutton></app-backbutton> -->
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>Select Address</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <div class="address_div" *ngFor = "let addressData of printAddress">
+        <ion-col size="8">         
+            <ion-radio-group [(ngModel)]="selectedAddress" (ionChange)="onSelectAddress($event, addressData)" [attr.radio_btn_id]="addressData.id" >
+              <div>
+                <ion-radio 
+                  class="margin_0"
+                  [attr.default_address]= "addressData.default_address" 
+                  [value]="addressData.title" 
+                  [attr.service_location]= "addressData.service_location"
+                  labelPlacement="end" 
+                  aria-label="Custom checkbox">
+                  <p class="remove_white_space margin_0 font_bold">
+                    {{addressData.title}}<br>
+                  </p>
+                </ion-radio>
+              </div>
+              <div class="address_text margin_0">
+                <p>{{addressData.address}}</p>
+              </div>         
+            </ion-radio-group>   
+        </ion-col>
+        <ion-col size="4">
+          <div>
+            <div class="font_10px start_end display_flex">
+              <p  #editParagraph 
+              [attr.edit_id]="addressData.id" 
+              class="margin_right_3px" 
+              (click)="onEditClick(editParagraph)">Edit</p>
+              <p>| </p>
+              <p #deletePargaph [attr.delete_id]="addressData.id" class ="clr_red margin_left_3px" (click)="confirmDelete(deletePargaph)">Delete</p>
+            </div>
+          </div>
+        </ion-col>
+      </div>
+    </ion-row>
+  
+    <ion-row size="12">
+      <ion-col size="7">
+        <ion-button  id="open_to_add_address" class="continue_to_address_btn">{{buttonText}}</ion-button>   
+        <ion-modal trigger="open_to_add_address" [initialBreakpoint]="0.9" class="ion_modal">
+          <ng-template>
+            <ion-content>
+              <div class="block padding_12px">
+                <div class="map_header">
+                <ion-row size="12" class="padding_bottom_5px">
+                  <ion-col size="8">
+                    <p class="margin_0 modal_head_0">Select Location Pin</p>
+                  </ion-col>
+                  <ion-col size="4">
+                    <div class="start_end" style="padding-right: 15px;">
+                      <p class="close_btn_discount margin_0 modal_head_0" (click)="customClose()">Close</p>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+                <!-- Display the map iframe if mapUrl is generated -->
+                <ion-row size="12" *ngIf="sanitizedMapUrl" >
+                  <ion-col style="margin-top: 3rem;">
+                    <iframe
+                      [src]="sanitizedMapUrl"
+                      width="100%"
+                      height="300"
+                      frameborder="0"
+                      style="border:0"
+                      allowfullscreen
+                      loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                    <div class="live_location_div">
+                      <ion-icon name="locate" (click)="openLiveLocation()"></ion-icon>
+                      <p class="margin_0">Live</p>
+                    </div>
+                  </ion-col>
+                </ion-row>
+        
+                <!-- Input fields for the address -->
+                <ion-row size="12" class="padding_top12px input_fields">
+                  <ion-col>
+                    <ion-input class="map_input" [(ngModel)]="flatNumber" placeholder="Flat / Villa No."></ion-input>
+                  </ion-col>
+                </ion-row>
+        
+                <ion-row size="12">
+                  <ion-col>
+                    <ion-input class="map_input" [(ngModel)]="buildingName" placeholder="Building Name/ Street Address"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row size="12">
+                  <ion-col class="searchion">
+                   
+                    <ion-select (ionChange)="onLocationChange($event)" class="map_input" [(ngModel)]="location" placeholder="Please select location">
+                      <ion-select-option *ngFor="let location of filteredLocations" [value]="location.id">
+                        <ion-label>{{ location.name }}</ion-label>
+                        <ion-input type="search" placeholder="Search location..." [(ngModel)]="searchInput" (ionInput)="onInput($event)"></ion-input>
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-col>
+                </ion-row>
+        
+                <ion-row size="12">
+                  <ion-col>
+                    <ion-input (click)="generateMapLink()" class="map_input" [(ngModel)]="nickname" placeholder="Add a nick name for the address"></ion-input>
+                  </ion-col>
+                </ion-row>
+        
+                <ion-row *ngIf="showValidationError" size="12">
+                  <ion-col>
+                    <p class="validation-error">Please fill out all mandatory fields before saving.</p>
+                  </ion-col>
+                </ion-row>
+        
+                <ion-row size="12" style="margin-bottom: 15rem;">
+                  <div class="save_Address_btn_div">
+                    <ion-button #saveButton [attr.data-id]="updateId" expand="full" class="continue_to_address_btn" (click)="inserAddressInDb(updateId)">Save & Continue</ion-button>
+                  </div>
+                </ion-row>
+              </div>
+            </ion-content>
+          </ng-template>
+        </ion-modal> 
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div class="bottom_btn_fix">
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p class="margin_0">Payment Summary</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="6">
+        <div class="intial_start">
+          <p class="margin_0">Booking Total</p>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div class="start_end ">
+          <p class="margin_0">AED {{totalAmount}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="6">
+        <div class="intial_start ">
+          <p class="margin_0">Discounts & Offers</p>
+          <p class="margin_0">{{selectedDiscountCode}}</p>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div class="start_end ">
+          <p class="margin_0">AED {{selectedDiscountAmount}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="6">
+        <div class="intial_start ">
+          <p class="margin_0">Total</p>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div class="start_end ">
+          <p>AED {{AmountAfterDeductDiscount}}</p>
+          <p class="font_10px">Includes 5% VAT = AED 15.71</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-button expand="full" (click)="navigateToSelectAddress()" class="continue_to_address_btn">Select
+      Professional</ion-button>
+  </div>
+</ion-content>

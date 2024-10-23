@@ -1,0 +1,7 @@
+{
+  "name": "getglow-customer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

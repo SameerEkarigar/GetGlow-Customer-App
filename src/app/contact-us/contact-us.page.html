@@ -1,0 +1,42 @@
+
+<app-header-component></app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content" >
+   <app-backbutton></app-backbutton>
+   <div *ngFor="let contactUsData of contactUsData">
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>{{contactUsData.heading}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="12">
+        <p>{{contactUsData.description_text}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><h5 class="contact_p">{{contactUsData.phone_no_heading_text}}</h5></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><p class="contact_p">{{contactUsData.phone_no}}</p></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><h5 class="contact_p">{{contactUsData.whatsapp_heading}}</h5></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><p class="contact_p">{{contactUsData.whatsapp_phone_no}}</p></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><h5 class="contact_p">{{contactUsData.email_heading}}</h5></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><p class="contact_p">{{contactUsData.email_id}}</p></ion-col>
+    </ion-row>
+  </div>
+  </div>
+  <!--<ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">contact-us</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+</ion-content>

@@ -1,0 +1,25 @@
+
+<app-header-component>
+</app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content">
+    <app-backbutton></app-backbutton>
+    <div *ngFor="let privacydata of privacyPolicyData">
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>{{privacydata.heading}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="12">
+        <div class="color_black" [innerHTML]="privacydata.content"></div>
+      </ion-col>
+    </ion-row>
+  </div>
+  </div>
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">cancelation-policy</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+</ion-content>

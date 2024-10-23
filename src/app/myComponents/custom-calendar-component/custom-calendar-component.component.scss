@@ -1,0 +1,83 @@
+/* custom-calendar.component.scss */
+
+#calendar {
+  background: #fff;
+}
+.calendar-header .left_btn{
+  color: black;
+  position: relative;
+  left: 35%;
+}
+.calendar-header .right_btn{
+  color: black;
+  position: relative;
+  left: 50%;
+
+}
+.calendar-header {
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  border-radius: 5px 5px 0 0;
+}
+
+.calendar-body {
+  // padding: 10px;
+}
+
+.calendar-weekdays {
+  display: flex;
+}
+
+.calendar-weekdays div {
+  flex: 1;
+  text-align: center;
+ 
+  color: #020202;
+  font-weight: bold;
+}
+
+.calendar-dates {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calendar-dates div {
+  width: 14.28%;
+  text-align: center;
+  padding: 17px 0;
+  cursor: pointer;
+}
+
+.calendar-dates div:hover {
+  background: #82A29D;
+  border-radius: 63%;
+  height: 6vh;
+  color: white;
+  padding-top: 17px;
+
+}
+
+.calendar-dates .current-month {
+  color: #333;
+  
+}
+
+.calendar-dates .other-month {
+  color: #82A29D;
+  display: none;
+ 
+}
+
+.calendar-dates .today {
+  // background: #4a90e2;
+  // color: white;
+  // border-radius: 50%;
+}
+.calender_div{
+  justify-content: space-between;
+}
+.calender_header_text{
+  padding-top: 17px;
+}

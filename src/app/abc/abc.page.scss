@@ -1,0 +1,64 @@
+ion-toolbar{
+  --background: white !important;
+   color: black;
+}
+ion-content{
+  --background: white !important;
+   color: black;
+   
+}
+p{
+  color: black;
+}
+hr{
+  color: black;
+}
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.nav-button {
+  text-align: center;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+.week-days, .week-dates {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.week-dates button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+.week-dates button.selected {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.otp-input-group {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.otp-input {
+  width: 40px;
+  height: 50px;
+  text-align: center;
+  font-size: 24px;
+  margin: 0 5px;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+}

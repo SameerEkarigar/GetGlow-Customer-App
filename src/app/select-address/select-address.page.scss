@@ -1,0 +1,366 @@
+ion-toolbar{
+    --background: white !important;
+     color: black;
+}
+ion-content{
+    --background: white !important;
+     color: black;
+     
+}
+.tab_logo_div{
+    width: 45%;
+    margin-top: 6px;
+}
+
+.outer_icon_div{
+  display: flex;
+}
+.arrow_div{
+    color: black;
+    padding-top: 10px;
+}
+.section_heading p{
+  color: black;
+  margin: 0;
+}
+.outer_content{
+    padding: 0 10px;
+}
+.slide-content ion-button{
+   --border-radius: 0;
+   font-size: 11px;
+   color: white;
+   --background: #6596A0;
+   white-space: nowrap;
+   width: -webkit-fill-available;
+}
+.service_colmn h2, p{
+    color: black;
+}
+.service_colmn  p{   
+    font-size: 12px;
+    margin: 0;
+    line-height: 22px;
+}
+
+ h2{
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+.outer_div_add_btn{
+    display: flex;
+    padding: 4px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E6DFDF;
+}
+.outer_div_add_btn ion-button{
+    --border-radius: 0;
+     color: white;
+     --background: #6596A0;
+     width: -webkit-fill-available;
+     margin: 0;
+}
+.outer_div_add_btn div{
+    border: 0.5px solid #D1CDCD;
+    margin-top: 12px;
+    // margin-right: 12px;
+    width: 90%;
+    min-width: 30%;
+}
+.outer_div_add_btn p{
+    text-align: center;
+    margin: 8px;
+    font-size: 12px;
+}
+.outer_div_add_btn ion-col{
+    width: 30% !important;
+    max-width: 27% !important;
+    padding: 0;
+}
+.bold_css{
+    font-weight: 600;
+}
+.know_more_css{
+    color: #6596A0;
+}
+.padding_top_services{
+    padding: 10px 0px;
+}
+
+.view_boking_btn ion-button{
+    --border-radius: 0;
+     color: white;
+     --background: #6596A0;
+}
+.view_boking_btn {
+    text-align: end;
+}
+.cart_amount{
+    text-align: start;
+} 
+// .ion-padding{
+//     --background: pink !important;
+//     border: 1px solid black;
+// }
+
+
+.custom-modal {
+    position: absolute;
+    top: 91%;
+    left: 0;
+    right: 0;
+    background-color: #E6DFDF;
+    padding: 40px;
+  }
+  
+//   .cart_amount p {
+//     font-size: 23px;
+//     font-weight: bold;
+//   }
+  
+//   .view_booking_btn {
+//     text-align: right;
+//   }
+  .after_add{
+    display: flex;
+    width: 100% !important;
+    margin-top: 0 !important;
+    border: none !important;
+  }
+  .before_add{
+    width: 100% !important;
+    margin-top: 0 !important;
+    border: none !important;
+  }
+  .less_btn{
+    width: 25% !important;
+    min-width: 22% !important;
+  }
+  .add_btn{
+    width: 27% !important;
+    min-width: 40% !important;
+  }
+  .plus_btn{
+    width: 25% !important;
+    min-width: 22% !important;
+  }
+  .cart_amnt_btn{
+    float: inline-start;
+  }
+  .cart_view_btn{
+    float: inline-end;
+  }
+  .cart_view_btn ion-button{
+    --border-radius: 0;
+    color: white;
+    --background: #6596A0;
+  }
+  .interactive-background .modal-wrapper ion-content {
+    pointer-events: auto;
+  }
+  .interactive-background {
+    pointer-events: auto;
+  }
+  .color_black h4, p{
+    color: black;
+  }
+  .color_black h4{
+    font-size: 14px;
+  }
+  .color_black  p{
+    font-size: 12px;
+  }
+.color_black ul li{
+    color: black;
+}
+
+.color_black ul {
+    padding-left: 20px;
+}
+.view_add_btn ion-button{
+    --border-radius: 0;
+    font-size: 11px;
+    position: absolute;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: -webkit-fill-available;
+    top: 15px;
+}
+.frequent_Add_btn ion-button{
+    --border-radius: 0;
+    font-size: 11px;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: 100;
+}
+.frequent_Add_btn p, ion-button{
+    text-align: center;
+    margin-bottom: 2px;
+    margin-top: 1px;
+}
+.intial_start{
+    text-align: start;
+}
+.start_end{
+    text-align: end;
+}
+
+.text_color_theme{
+    color: #6596A0;
+    font-size: 10px;
+}
+.font_10px{
+    font-size: 10px;
+}
+.continue_to_address_btn {
+    --border-radius: 0;
+    font-size: 11px;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: 100%;
+   
+}
+.bottom_btn_fix{
+  position: fixed;
+  bottom: 0;
+  padding: 14px;
+  width: 100%;
+  background: #fff;
+}
+.bg_white{
+    --background: white;
+     color: #000;
+}
+ion-checkbox{
+    --checkbox-background: black;
+    --border-color: black;
+    --border-width: 1px;
+    --border-color-checked: black;
+    --checkbox-background-checked: white;
+    --size: 10px;
+   
+}
+.margin_0{
+  margin: 0;
+}
+.checkbox-icon path{
+  stroke: azure !important;
+  display: none !important;
+}
+.display_flex{  
+    display: flex;
+    justify-content: end;
+}
+.input_fields ion-input{
+  font-size: 16px;
+}
+.address_div{
+  display: flex;
+  width: 100%;
+}
+.clr_red{
+    color: #FF0000;
+}
+.margin_left_3px{
+ margin-left: 3px;
+}
+.margin_right_3px{
+  margin-right: 3px;
+}
+.ion_modal{
+  --background: white;
+}
+.padding_12px{
+  padding: 0px 12px;
+}
+.modal_head_0{
+  margin: 0 !important;
+}
+.padding_bottom_5px{
+  padding-bottom: 4px;
+}
+.map_input{
+  border: 1px solid #D0CACA;
+  width: 100%;
+  height: 0vh;
+  color: black;
+  font-size: 16px;
+  padding-left: 11px !important;
+}
+.save_Address_btn_div{
+  margin-top: 12px;
+  width: 100%;
+}
+
+.validation-error{
+  color: red;
+}
+.cart_icon{
+  font-size: 23px;
+  --background: white;
+}
+
+ion-radio::part(container) {
+  width: 20px;
+  height: 20px;
+
+  border-radius: 15px;
+  border: 2px solid #ddd;
+}
+
+ion-radio::part(mark) {
+  background: none;
+  transition: none;
+  transform: none;
+  border-radius: 0;
+}
+
+ion-radio.radio-checked::part(container) {
+  background: #080808;
+  border-color: transparent;
+}
+
+ion-radio.radio-checked::part(mark) {
+  width: 6px;
+  height: 10px;
+
+  border-width: 0px 2px 2px 0px;
+  border-style: solid;
+  border-color: #fff;
+
+  transform: rotate(45deg);
+}
+// .address_text{
+//   margin-left: 40px;
+// }
+.second_edit_div{
+  position: relative;
+  bottom: -43px;
+}
+.live_location_div{
+  width: 10%;
+  // position: relative;
+  top: -163px;
+  right: -20.8rem;
+  background: white;
+  text-align: center;
+}
+.live_location_div ion-icon{
+  color: black;
+  font-size: 25px;
+}
+.map_header{
+  position: fixed;
+  background-color: white;
+  padding: 10px;
+  z-index: 1000;
+  width: 100%;
+}
+p{
+  font-size: 13px;
+}

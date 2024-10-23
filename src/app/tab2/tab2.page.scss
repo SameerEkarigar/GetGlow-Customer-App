@@ -1,0 +1,84 @@
+.arrow_div{
+    color: black;
+    padding-top: 10px;
+  }
+  .upcoming_btn {
+    --border-radius: 0;
+    font-size: 14px;
+    --background: #6596A0;
+    white-space: nowrap; 
+    width: 100%;
+  }
+  .upcoming_btn p{
+    color: white;
+  }
+  .past_btn{
+    --border-radius: 0;
+    font-size: 14px;
+    --background: #fcfcfc;
+    white-space: nowrap;
+    width: 100%;
+    border-color: #6596A0 !important;
+    border: 1px solid;
+  }
+  .past_btn p{
+    margin: 0;
+    color: #000000;
+    padding: 5.5px;
+  }
+  .back-proceed-outer-dv{
+    display: flex;
+    justify-content: center;
+  }
+  .confirm_cancel_booking p{
+    line-height: 22px;
+  }
+  .upcoming_outer_booking_div h5, p{
+   color: black;
+   white-space: nowrap;
+   margin: 6px;
+  }
+  .prof_img{
+    width: 60%;
+    position: relative;
+    left: 45%;
+    top: 10%;
+  }
+  .cacnel_btn{
+    --border-radius: 0;
+    font-size: 11px;
+    color: white;
+    --background: #6596A0;
+    white-space: nowrap;
+    width: 60%;
+  }
+  .cancel_btn_outer_div{
+    text-align: end;
+    
+  }
+  .prof_img p{
+    position: absolute;
+    right: -30%;
+  }
+  .cancel_btn_div{
+    padding-top: 30px;
+  }
+  .back_btn{
+    --border-radius: 0;
+     color: #000000;
+     --background: #ffffff;
+     margin-right: 17px;
+     border: 1px solid black;
+  }
+  .proceed_btn{
+    --border-radius: 0;
+    color: #ffffff;
+    --background: #6596A0;
+  }
+  .confirm_cancel_div{
+    margin-top: 3rem;
+  }
+  .confirm_cancel_booking{
+    margin-top: 3rem;
+  }
+  

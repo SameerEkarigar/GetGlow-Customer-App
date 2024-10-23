@@ -1,0 +1,439 @@
+ion-toolbar{
+  --background: white !important;
+   color: black;
+   padding-left: 18px !important;
+}
+ion-content{
+  --background: white !important;
+   color: black;
+   
+}
+.tab_logo_div{
+  width: 45%;
+  margin-top: 6px;
+}
+.header_icon{   
+  margin-left: 133px;
+  margin-top: 7px;  
+}
+.outer_icon_div{
+display: flex;
+}
+.arrow_div{
+  color: black;
+}
+.section_heading p{
+color: black;
+margin: 0;
+font-size: 14px !important;
+}
+.outer_content{
+  padding: 0 8px;
+}
+.slide-content ion-button{
+  --border-radius: 0;
+  font-size: 13px;
+  color: #6596a0;
+  height: 5vh;
+  --background: white;
+  border: 1px solid #707070;
+  white-space: nowrap;
+  width: 97%;
+}
+.service_colmn h2, p{
+  color: black;
+}
+.service_colmn  p{   
+  font-size: 12px;
+  margin: 0;
+  line-height: 22px;
+}
+
+.service_colmn h2{
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+.outer_div_add_btn{
+  display: flex;
+  padding: 4px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #E6DFDF;
+}
+.prfsnl_slide p{
+  font-size: 13px;
+  white-space: normal;
+}
+.outer_div_add_btn ion-button{
+  --border-radius: 0;
+   color: white;
+   --background: #6596A0;
+   width: -webkit-fill-available;
+   margin: 0;
+}
+.outer_div_add_btn div{
+  border: 0.5px solid #D1CDCD;
+  margin-top: 12px;
+  // margin-right: 12px;
+  width: 90%;
+  min-width: 30%;
+}
+.outer_div_add_btn p{
+  text-align: center;
+  margin: 8px;
+  font-size: 12px;
+}
+.outer_div_add_btn ion-col{
+  width: 30% !important;
+  max-width: 27% !important;
+  padding: 0;
+}
+.bold_css{
+  font-weight: 600;
+}
+.know_more_css{
+  color: #6596A0;
+}
+.padding_top_services{
+  padding: 10px 0px;
+}
+
+.view_boking_btn ion-button{
+  --border-radius: 0;
+   color: white;
+   --background: #6596A0;
+}
+.view_boking_btn {
+  text-align: end;
+}
+.cart_amount{
+  text-align: start;
+} 
+// .ion-padding{
+//     --background: pink !important;
+//     border: 1px solid black;
+// }
+
+
+.custom-modal {
+  position: absolute;
+  top: 91%;
+  left: 0;
+  right: 0;
+  background-color: #E6DFDF;
+  padding: 40px;
+}
+
+//   .cart_amount p {
+//     font-size: 23px;
+//     font-weight: bold;
+//   }
+
+//   .view_booking_btn {
+//     text-align: right;
+//   }
+.after_add{
+  display: flex;
+  width: 100% !important;
+  margin-top: 0 !important;
+  border: none !important;
+}
+.before_add{
+  width: 100% !important;
+  margin-top: 0 !important;
+  border: none !important;
+}
+.less_btn{
+  width: 25% !important;
+  min-width: 22% !important;
+}
+.add_btn{
+  width: 27% !important;
+  min-width: 40% !important;
+}
+.plus_btn{
+  width: 25% !important;
+  min-width: 22% !important;
+}
+.cart_amnt_btn{
+  float: inline-start;
+}
+.cart_view_btn{
+  float: inline-end;
+}
+.cart_view_btn ion-button{
+  --border-radius: 0;
+  color: white;
+  --background: #6596A0;
+}
+.interactive-background .modal-wrapper ion-content {
+  pointer-events: auto;
+}
+.interactive-background {
+  pointer-events: auto;
+}
+.color_black h4, p{
+  color: black;
+}
+.color_black h4{
+  font-size: 14px;
+}
+.color_black  p{
+  font-size: 12px;
+}
+.color_black ul li{
+  color: black;
+}
+
+.color_black ul {
+  padding-left: 20px;
+}
+.view_add_btn ion-button{
+  --border-radius: 0;
+  font-size: 11px;
+  position: absolute;
+  color: white;
+  --background: #6596A0;
+  white-space: nowrap;
+  width: -webkit-fill-available;
+  top: 15px;
+}
+.frequent_Add_btn ion-button{
+  --border-radius: 0;
+  font-size: 11px;
+  color: white;
+  --background: #6596A0;
+  white-space: nowrap;
+  width: 100;
+}
+.frequent_Add_btn p, ion-button{
+  text-align: center;
+  margin-bottom: 2px;
+  margin-top: 1px;
+}
+.intial_start{
+  text-align: start;
+}
+.start_end{
+  text-align: end;
+}
+
+.margin_0{
+  margin: 0;
+}
+.text_color_theme{
+  color: #6596A0;
+  font-size: 10px;
+}
+.font_10px{
+  font-size: 12px;
+}
+.continue_to_address_btn {
+  --border-radius: 0;
+  font-size: 11px;
+  color: white;
+  --background: #6596A0;
+  white-space: nowrap;
+  width: 100%;
+ 
+}
+.bottom_btn_fix{
+  position: fixed;
+  bottom: 0;
+  width: 95%;
+}
+.bg_white{
+  --background: white;
+   color: #000;
+}
+ion-checkbox{
+  --checkbox-background: black;
+  --border-color: black;
+  --border-width: 1px;
+  --border-color-checked: black;
+  --checkbox-background-checked: white;
+  --size: 10px;
+ 
+}
+.checkbox-icon path{
+stroke: azure !important;
+display: none !important;
+}
+.display_flex{  
+  display: flex;
+  justify-content: end;
+}
+.clr_red{
+  color: #FF0000;
+}
+.margin_left_3px{
+margin-left: 3px;
+}
+.margin_right_3px{
+margin-right: 3px;
+}
+.inner_div_profsnl_slide{
+  text-align: center;
+  padding: 4px;
+  border: 1px solid black;
+  height: 130px;
+}
+ion-datetime{
+--background: white;
+color: black;
+}
+.any_proff img {
+width: 52%;
+}
+// :host.calendar-day>.calendar-day-active {
+//   color: white !important;
+//   font-weight: 400 !important;
+//   background: #6596A0 !important;
+// }
+// .calendar-day-active {
+//   color: white !important;
+//   font-weight: 400 !important;
+//   background: #6596A0 !important;/ Replace with your desired color /
+// }
+//  .calendar-day.calendar-day-today.calendar-day-active{
+//   --color: white !important;
+//   --font-weight: 400 !important;
+//   --background: #6596A0 !important;
+//  }
+.select_date::part(day-column) {
+background-color: #dd0c0c;
+color: #000;
+}
+
+.select_date:host .calendar-day-today .calendar-day-active{
+background-color: #ec0808;
+color: #000;
+}
+
+.select_date::part(year-column) {
+background-color: #ee0808;
+color: #000;
+}
+.slide-content ion-button{
+--border-radius: 0;
+font-size: 18px;
+color: #6596A0;
+height: 5vh;
+--background: white;
+border: 1px solid #707070;
+white-space: nowrap;
+}
+.active_slide ion-button{
+--border-radius: 0;
+font-size: 18px;
+color: #ffffff;
+height: 5vh;
+--background: #6596A0;
+border: 1px solid #707070;
+white-space: nowrap;
+}
+.view_all p{
+ color: #6596A0;
+ margin-top: 0;
+ font-size: 13px;
+}
+
+.header_close_btn{
+  font-size: 12px;
+}
+.time_btn_grid ion-button{
+--border-radius: 0;
+font-size: 18px;
+color: #000000;
+height: 5vh;
+--background: white;
+width: 100%;
+border: 1px solid #707070;
+white-space: nowrap;
+}
+.active_time ion-button{
+--border-radius: 0;
+font-size: 18px;
+color: #ffffff;
+height: 5vh;
+--background: #6596A0;
+width: 100%;
+border: 1px solid #707070;
+white-space: nowrap;
+}
+.bottom_btn_fix{
+position: fixed;
+width: 90%;
+top: 74%;
+background: white;
+}
+.continue_to_address_btn {
+--border-radius: 0;
+font-size: 11px;
+color: white;
+--background: #6596A0;
+white-space: nowrap;
+width: 100%;
+
+}
+.margin_bottom_time_slot{
+margin-bottom: 17rem;
+}
+ion-datetime {
+max-width: 400px !important;
+font-size: 13px;
+}
+
+.datetime-time{
+--display: none !important;
+}
+ion-datetime .calendar-day .calendar-day-today{
+color: var(--ion-datetime-today-color) !important;
+}
+// .time_btn:hover{
+//   --border-radius: 0;
+//   font-size: 18px;
+//   color: #ffffff !important;
+//   height: 5vh;
+//   --background: #6596A0 !important;
+//   width: 100%;
+//   border: 1px solid #707070;
+//   white-space: nowrap;
+// }
+.active-button{
+--border-radius: 0;
+  font-size: 18px;
+  color: #ffffff !important;
+  height: 5vh;
+  --background: #6596A0 !important;
+  width: 100%;
+  border: 1px solid #707070;
+  white-space: nowrap;
+}
+.active-proff-button{
+box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.fix_payment_detail_div{
+position: sticky;
+bottom: 0;
+background: #e9e9e9;
+z-index: 10 !important;
+margin-top: 13rem;
+padding: 12px;
+box-shadow: 5px 5px 5px 5px #9b9b9b;
+}
+.img_outer_div img{
+max-width: 65%;
+border-radius: 50%;
+}
+.margin_select_date{
+  margin-top: -23px;
+}
+.fix_payment_detail_div p{
+  margin: 0;
+  font-size: 13px;
+}
+ion-button.time_btn {
+  font-size: 13px !important;
+}

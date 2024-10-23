@@ -1,0 +1,211 @@
+
+<app-header-component></app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content">
+    <app-backbutton></app-backbutton>
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>My Profile</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css">
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <p class="margin_0 font_14px">{{first_name}}</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <div id="editName" class="start_end edit_outer_div ">
+          <p class="margin_0 font_14px"> Edit</p>
+        </div>
+        <ion-modal trigger="editName" [initialBreakpoint]="0.2" class="ion_modal">
+          <ng-template>
+            <div class="padding_12px">
+              <ion-row>
+                <ion-col size="6">
+                  <div>
+                    <p class="color_black margin_0">Enter New First Name</p>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div>
+                    <p (click)="customClose()" class="start_end color_black margin_0">close</p>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">
+                  <div class="border_bottom_css color_black">
+                    <ion-input placeholder="Enter Your Name" (ionChange)="onFirstNameChange($event)" value="Reshma" [(ngModel)]="first_name"></ion-input>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row size="12">
+                <ion-col size="12">
+                  <ion-button expand="full" (click)="customClose()" class="save_changes_btn">Continue</ion-button>
+                </ion-col>
+              </ion-row>
+            </div>
+
+          </ng-template>
+        </ion-modal>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css">
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <p class="margin_0 font_14px">{{last_name}}</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <div id="editLastName" class="start_end edit_outer_div ">
+          <p class=" margin_0 font_14px"> Edit</p>
+        </div>
+        <ion-modal trigger="editLastName" [initialBreakpoint]="0.2" class="ion_modal">
+          <ng-template>
+            <div class="padding_12px">
+              <ion-row>
+                <ion-col size="6">
+                  <div>
+                    <p class="color_black margin_0">Enter New Last Name</p>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div>
+                    <p (click)="customClose()" class="start_end color_black margin_0">close</p>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">
+                  <div class="border_bottom_css color_black">
+                    <ion-input placeholder="Enter Your Name" (ionChange)="onLastNameChange($event)" value="Joshi" [(ngModel)]="last_name"></ion-input>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row size="12">
+                <ion-col size="12">
+                  <ion-button expand="full" (click)="customClose()" class="save_changes_btn">Continue</ion-button>
+                </ion-col>
+              </ion-row>
+            </div>
+
+          </ng-template>
+        </ion-modal>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css">
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <p class="margin_0 font_14px">{{phone_country_code}}{{phone}}</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <div id="savechanges" class="start_end edit_outer_div ">
+          <p class=" margin_0 font_14px"> Edit</p>
+        </div>
+        <ion-modal trigger="savechanges" [initialBreakpoint]="0.3" class="ion_modal">
+          <ng-template>
+            <div class="padding_12px">
+              <ion-row>
+                <ion-col size="6">
+                  <div>
+                    <p class="color_black">Enter New Mobile No.</p>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div>
+                    <p (click)="customClose()" class="start_end color_black">close</p>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row size="12">
+                <ion-col >
+                <div class="outer_number_div margin_bottom12px">
+                  <ion-select [value] ="phone_country_code" class="country_dropdown" (ionChange)="onChangeCountryCode($event)">
+                    <ion-select-option  [value] ="code.telephonePrefix" *ngFor ="let code of CountryCode" > 
+                      {{code.telephonePrefix}}  
+                    </ion-select-option>    
+                  </ion-select>
+                  <ion-item lines="full" class="login_number_div2">
+                    <ion-input [(ngModel)]="phone"  name="phoneNumber" type="tel" placeholder="Enter your phone number" (ionInput)="onPhoneNumberChange($event)"></ion-input>
+                  </ion-item>
+                </div>
+              </ion-col>
+                <ion-col size="12">
+                  <ion-button id="getotp" expand="full" class="save_changes_btn">Get OTP</ion-button>
+                  <ion-modal trigger="getotp" [initialBreakpoint]="0.3" class="ion_modal">
+                    <ng-template>
+                      <div class="padding_12px">
+                        <ion-row>
+                          <ion-col size="6">
+                            <div>
+                              <p class="color_black margin_0">Enter OTP</p>
+                            </div>
+                          </ion-col>
+                          <ion-col size="6">
+                            <div>
+                              <p (click)="customClose()" class="start_end color_black margin_0">close</p>
+                            </div>
+                          </ion-col>
+                          <ion-row class="">
+                            <ion-col>
+                              <div>
+                                <p class="margin_0 color_black text_align_center">Please enter the 4 digit One Time Passcode sent on your mobile number.</p>
+                              </div>
+                              <ion-row class="otp_colums otp_outer_div">
+                                <ion-col size="1.5" class="otp-input">
+                                  <ion-input type="tel" maxlength="1"></ion-input>
+                                </ion-col>
+                                <ion-col size="1.5" class="otp-input">
+                                  <ion-input type="tel" maxlength="1"></ion-input>
+                                </ion-col>
+                                <ion-col size="1.5" class="otp-input">
+                                  <ion-input type="tel" maxlength="1"></ion-input>
+                                </ion-col>
+                                <ion-col size="1.5" class="otp-input">
+                                  <ion-input type="tel" maxlength="1"></ion-input>
+                                </ion-col>
+                              </ion-row>
+                              <div class="timer_div color_black text_align_center ">02:00</div>
+                            </ion-col>
+                          </ion-row>
+                        </ion-row>
+                        <ion-row size="12">
+                          <ion-col size="12">
+                            <ion-button expand="full" (click)="customClose()" class="save_changes_btn">Continue</ion-button>
+                          </ion-col>
+                        </ion-row>
+                      </div>
+
+                    </ng-template>
+                  </ion-modal>
+                </ion-col>
+              </ion-row>
+            </div>
+
+          </ng-template>
+        </ion-modal>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css">
+      <ion-col size="6" class="profile_rows ">
+        <p class="margin_0 font_14px"> <ion-input class="email_input" (ionChange)="onEmailChange($event)" placeholder="Enter Your Email" value="Joshi" [(ngModel)]="email"></ion-input> </p>
+        
+      </ion-col>
+      <ion-col size="6" class="profile_rows padding_top30px">
+        <!-- <div class="start_end edit_outer_div ">
+       <p class=" margin_0 font_14px"> Edit</p>
+      </div> -->
+      </ion-col>
+    </ion-row>
+
+
+  </div>
+  <app-tabs></app-tabs>
+  <div class="bottom_btn_fix">
+    <ion-row size="12">
+      <ion-col size="12">
+        <div class="save_btn_outer_div">
+          <ion-button expand="full" (click)="getUserDetailToUpdate()" class="save_changes_btn">Save Changes</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+
+
+</ion-content>

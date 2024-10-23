@@ -1,0 +1,28 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>terms-condition</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+<app-header-component></app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content" >
+    <ion-row size="12">
+      <app-backbutton></app-backbutton>
+    </ion-row>
+    <div *ngFor="let item of termConditionData">
+
+   
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>{{item.heading}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="color_black">
+      <div [innerHTML]="item.content"></div>
+      </ion-col>
+    </ion-row>
+  </div>
+  </div>
+</ion-content>
+<app-tabcomponent></app-tabcomponent>

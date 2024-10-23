@@ -1,0 +1,145 @@
+
+<app-header-component></app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content">
+    <app-backbutton></app-backbutton>
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <p>My Account</p>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <h4 class="font_bold">{{first_name}} {{last_name}}</h4>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToAccountPage()">
+      <ion-col size="6" class="profile_rows">
+        <p class="text_bold margin_0 font_bold">Account Details</p>
+        <p class="text_align_left margin_0 font_14px">My Profile</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToPackage()">
+      <ion-col size="6" class="profile_rows">
+        <p class="text_bold margin_0 font_bold" >Packages & Subscriptions</p>
+        <p class="text_align_left margin_0 font_14px">My Packages</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToTermCondition()">
+      <ion-col size="6" class="profile_rows">
+        <p class="margin_0 font_bold">Legal & Policies</p>
+        <p class="text_align_left margin_0 font_14px">Terms & Conditions</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToPrivacyPolicy()">
+      <ion-col size="6" class="profile_rows padding_top">
+        <!-- <p class="text_bold margin_0">Packages & Subscriptions</p> -->
+        <p class=" margin_0 font_14px">Privacy Policy</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div2">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToCancelPolicy()">
+      <ion-col size="6" class="profile_rows padding_top">
+        <!-- <p class="text_bold margin_0">Packages & Subscriptions</p> -->
+        <p class=" margin_0 font_14px">Cancellation Policy</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div2">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToFaq()">
+      <ion-col size="6" class="profile_rows">
+        <p class="text_bold margin_0 font_bold">Help & Support</p>
+        <p class="text_align_left margin_0 font_14px">Frequently Asked Questions</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css" (click)="navigateToContactus()">
+      <ion-col size="6" class="profile_rows padding_top">
+        <!-- <p class="text_bold margin_0">Packages & Subscriptions</p> -->
+        <p class=" margin_0 font_14px">Contact Us</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div2">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12" class="border_bottom_css">
+      <ion-col size="12" class="profile_rows">
+        <div class="checkbox_outer_div">
+          <p class="text_bold margin_0 font_bold">My Consents</p>
+          <ion-checkbox  [(ngModel)]="checkboxResponse" class="bg_white custom_margin font_14px color_black" labelPlacement="end" (ionChange)="onCheckboxChange()">
+            <p class="remove_white_space">Yes, I’d like to receive promotional messages and emails including the deals,
+              discounts, newsletters and more.</p>
+          </ion-checkbox>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row id="present-alert" size="12" class="border_bottom_css">
+      <ion-col size="6" class="profile_rows padding_top">
+        <p  class="margin_0 font_14px color_red" >Logout</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div2">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row id="delete-account" size="12" class="border_bottom_css">
+      <ion-col size="6" class="profile_rows padding_top">
+        <p  class=" margin_0 font_14px color_red">Delete Account</p>
+      </ion-col>
+      <ion-col size="6" class="profile_rows">
+        <div class="start_end right_arrow_outer_div2">
+          <!-- <ion-img src="assets/right_arrow.png"></ion-img> -->
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+  <ion-alert
+  trigger="delete-account"
+  header="Are you sure you want to delete your Account"
+  [buttons]="deleteButtons"
+ 
+></ion-alert>
+<ion-alert
+trigger="present-alert"
+header="Are you sure you want to log out?"
+[buttons]=" alertButtons"
+
+></ion-alert>
+  <app-tabcomponent></app-tabcomponent>
+</ion-content>

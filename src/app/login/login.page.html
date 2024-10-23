@@ -1,0 +1,34 @@
+<ion-content [fullscreen]="true">
+  <div class="enter_mb_no_outer_div">
+ 
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col color="light">
+        <ion-img src="/assets/header-logo.png" class="logo-img"></ion-img>
+        <ion-row size="12" class="mb_txt_row">
+          <ion-col size="12">
+            <p class="">Please Enter Your Mobile Number</p>
+          </ion-col>
+        </ion-row>
+        <div class="outer_number_div" >
+          <ion-select value="+971"  class="country_dropdown">
+            <ion-select-option  *ngFor="let data of CountryCode" [value]="data.telephonePrefix">
+              {{data.telephonePrefix}}
+            </ion-select-option>    
+          </ion-select>
+          <ion-item lines="full" class="login_number_div2">
+            <ion-input type="tel"  [(ngModel)]="phoneNumber"  placeholder="Enter your phone number" (ionInput)="onPhoneNumberChange($event)"></ion-input>
+          </ion-item>
+        </div>
+        <div style="color: red; margin-top: 8px;">{{pleaseEnterPhone}}</div>
+      </ion-col>
+    </ion-row>
+    <ion-row class="get_otp_outer_div">
+      <ion-col class="get_otp_btn">
+        <ion-button expand="block" (click)="navigateToCompleteLoginPage()">Get OTP</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+     
+</div>
+</ion-content>

@@ -1,0 +1,16 @@
+
+
+    <div>Quantity</div>
+    <div slot="end">
+      <button (click)="close()">Close</button>
+    </div>
+
+
+
+<div class="ion-padding">
+  <div class="quantity-section">
+    <button (click)="decrementQuantity()">-</button>
+    <span class="quantity">{{ quantity }}</span>
+    <button (click)="incrementQuantity()">+</button>
+  </div>
+</div>

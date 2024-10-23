@@ -1,0 +1,29 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>FAQ</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+<app-header-component></app-header-component>
+<ion-content [fullscreen]="true">
+  <div class="outer_content">
+    <app-backbutton></app-backbutton>
+    
+
+   
+    <ion-row size="12" *ngIf="faqData1">
+      <ion-col size="12" class="section_heading">
+        <p>{{faqData1.main_heading}}</p>
+      </ion-col>
+    </ion-row>
+
+    <div  *ngFor="let fAq of faqData">
+    <ion-row size="12">
+      <ion-col size="12" class="section_heading">
+        <h5>{{fAq.question}}</h5>
+        <p>{{fAq.answer}}</p>
+      </ion-col>
+    </ion-row>
+  </div>
+  </div>
+
+</ion-content>

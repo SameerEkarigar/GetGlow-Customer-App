@@ -1,0 +1,28 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+:root {
+    --ion-color-primary:#6596A0;
+    // --ion-color-secondary: #0cd1e8;
+    --ion-datetime-today-color: yellow;
+    // --ion-color-base-rgb: #348fa1 !important;
+    // --ion-color-success: #10dc60;
+    // --ion-color-base-rgb:#348fa1 !important;
+    // --ion-color-warning: #ffce00;
+    // --ion-color-primary-rgb:#348fa1 !important;
+    // --ion-color-danger: #f04141;
+    // --ion-color-dark: #222428;
+    // --ion-color-medium: #989aa2;
+    // --ion-color-light: #f4f5f8;
+    // --ion-color-white: #ffffff;
+     
+    // Custom colors
+    --ion-color-primary-shade: #6596A0;
+    --ion-color-custom1: #ff5733;
+    --ion-color-custom2: #33ff57;
+    // 
+      --ion-font-family: 'Gordita', sans-serif;
+    
+  }
+  :root.ios{
+    // --ion-text-color: #0000 !important;
+  } 
