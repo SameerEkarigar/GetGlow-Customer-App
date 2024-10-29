@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { Storage } from '@ionic/storage-angular';
-
 @Component({
   selector: 'app-select-date-time',
   templateUrl: './select-date-time.page.html',
   styleUrls: ['./select-date-time.page.scss'],
 })
 export class SelectDateTimePage implements OnInit {
- 
+  
   @ViewChild('timeSlotSection') timeSlotSection!: ElementRef;
   @ViewChild('professionalSection') professionalSection!: ElementRef;
 
@@ -22,7 +21,7 @@ export class SelectDateTimePage implements OnInit {
   service_variant: any;
   selectedTime: any;
   printProffesionalData: any;
-  activeTimeSlot: string | null = null;
+  activeTimeSlot: any;
   activeprofessional: string| null= null; 
   selectedOrNOt: any;
   printSelectedDate: any;
@@ -79,26 +78,16 @@ export class SelectDateTimePage implements OnInit {
   }
 
   async onDateChange(event: any) {
-    const selectedDate = event.detail.value;
-    const date = new Date(selectedDate);
-    const hours = String(date.getHours()).padStart(2, '0'); // Pad with zero if needed
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const time = `${hours}:${minutes}`;
-    this.currentTime = time;
-
-    this.servicedate  = this.extractDate(selectedDate);
-    this.printTimeSlot(selectedDate);
-    const formattedDate = this.formatDate(new Date(selectedDate));
-    
-    await this.storage.set('formattedDate', formattedDate); //set native storage
-    this.printTimeSlot(selectedDate);
+    const getselectedDate = event.detail.value;
+    const selectedDateOnly = getselectedDate.split('T')[0]; //split the time and get only date
+    this.servicedate  = selectedDateOnly;
+    const selectedDate = this.servicedate;
+    // console.log('ondatechange',selectedDate)
     if (selectedDate) {
-      const dateObject = new Date(selectedDate);
-      this.servicedate = this.extractDate(selectedDate);
-      this.dayOfWeek = this.getDayOfWeek(dateObject);  
-      
-   }
-  await this.storage.set('DayofWeek', this.dayOfWeek); //set native storage
+      const formattedDate = this.formatDate(new Date(selectedDate));
+      await this.storage.set('formattedDate', formattedDate);
+      this.printTimeSlot(selectedDate);
+   } 
   } 
   
   getDayOfWeek(date: Date): string {
@@ -107,67 +96,55 @@ export class SelectDateTimePage implements OnInit {
   }
   
   // Helper function to split the date and time
- async extractDate(dateTimeString: any) {
-    const [servicedate] = dateTimeString.split('T');
-    this.printSelectedDate = servicedate;
-    await this.storage.set('servicedate', this.printSelectedDate); //set native storage
-    return {
-      servicedate,       
-    };
-  }
-  formatDate(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
-    const weekday = date.toLocaleString('default', { weekday: 'long' });
-    // Get the ordinal suffix for the day
-    const suffix = (day: number) => {
-        if (day > 3 && day < 21) return 'th'; // Catch all numbers ending with 4-20
-        switch (day % 10) {
-            case 1: return 'st';
-            case 2: return 'nd';
-            case 3: return 'rd';
-            default: return 'th';
-        }
-    };
-    return `${weekday}, ${day}${suffix(day)} ${month}`;
-  }
+  async extractDate(dateTimeString: any) {
+      const [servicedate] = dateTimeString.split('T');
+      this.printSelectedDate = servicedate;
+      await this.storage.set('servicedate', this.printSelectedDate); //set native storage
+      return {
+        servicedate,       
+      };
+    }
+
+    formatDate(date: Date): string {
+      const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+      const day = date.getDate();
+      const month = date.toLocaleString('default', { month: 'long' });
+      const weekday = date.toLocaleString('default', { weekday: 'long' });
+      // Get the ordinal suffix for the day
+      const suffix = (day: number) => {
+          if (day > 3 && day < 21) return 'th'; // Catch all numbers ending with 4-20
+          switch (day % 10) {
+              case 1: return 'st';
+              case 2: return 'nd';
+              case 3: return 'rd';
+              default: return 'th';
+          }
+      };
+      return `${weekday}, ${day}${suffix(day)} ${month}`;
+    }
 
   async selectTimeSlot(time_slot: any) {
-      console.log('selected time slot from view all time slot',time_slot);
     if(time_slot){
       await this.storage.set('servicetime', time_slot);
-     }
-    const servicetime = time_slot; 
-    this.activeTimeSlot = time_slot;
-    
-    // console.log(this.activeTimeSlot)
-    // Ensure both date and time are selected before calling printProfessional this.extractDate(this.selectedDate)
-    
-      const servicedate = this.selectedTime; // Extract date if not done yet
+      const servicetime = time_slot; 
+      this.activeTimeSlot = time_slot;
+
+      const servicedate = this.servicedate;  // from ondatechange function
+
       await this.printProfessional(servicetime, servicedate);
-      if(servicedate){
-        await this.printProfessional(servicetime, servicedate);
-        this.scrollToProfessionals();
-      }   
+      this.scrollToProfessionals();
+
+     }     
   }
+
   async selectTimeSlot1(time_slot: any) {
-    console.log('selected time slot from view all time slot',time_slot);
     if(time_slot){
       await this.storage.set('servicetime', time_slot);
+      const servicetime = time_slot; 
+      this.activeTimeSlot = time_slot; // for showing time slot active in frontend
+      const servicedate = this.servicedate;
+      await this.printProfessional(servicetime, servicedate)
      }
-    const servicetime = time_slot; 
-    this.activeTimeSlot = time_slot;
-    
-    // console.log(this.activeTimeSlot)
-    // Ensure both date and time are selected before calling printProfessional this.extractDate(this.selectedDate)
-    
-      const servicedate = this.selectedTime; // Extract date if not done yet
-      await this.printProfessional(servicetime, servicedate);
-      if(servicedate){
-        await this.printProfessional(servicetime, servicedate);
-        this.scrollToProfessionals();
-      } 
   }
 
 
@@ -192,39 +169,63 @@ export class SelectDateTimePage implements OnInit {
     }
   }
 
-  printTimeSlot(selectedDate: any){
-    
+  printTimeSlot(selectedDate: any){ 
     this.apiService.getTimeSlotApi().subscribe((response)=>{
       if(response.status === true){
-        this.printslot = response.message.filter((slot: { time_slot: string; }) => !this.isPastSlot(slot.time_slot));
-       this.selectedDate = new Date(selectedDate);
-       this.currentTime = new Date();
-      //  console.log('prt time',this.printslot);
+       this.printslot = response.message;
+       this.selectedDate = selectedDate;
+       const currentDate = new Date();
+       const isToday = this.isSameDate(new Date(selectedDate), currentDate);
+
+       // If today, filter out past time slots
+       if (isToday) {
+         this.printslot.forEach((slot: { time_slot: string; disabled: boolean; }) => {
+           const slotTime = this.getDateTimeObject(selectedDate, slot.time_slot); // Convert slot to Date object
+           slot.disabled = slotTime <= currentDate; // Mark as disabled if slot time is in the past
+         });
+       }
       }
     })
   }
-
-  isPastSlot(slotTime: string): boolean {
-    const [hours, minutes] = slotTime.split(':').map(Number);
-    const slotDate = new Date(this.selectedDate);
-    slotDate.setHours(hours, minutes, 0, 0); // Set the time to the slot time
-    return slotDate < this.currentTime; // Compare with current time
+  
+  isSameDate(date1: Date, date2: Date): boolean {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
   }
 
+  getDateTimeObject(date: string, time: string): Date {
+    const [hours, minutes] = time.split(':').map(Number); // Split time like "12:15" into hours and minutes
+    const dateObj = new Date(date); // Create a Date object from the selected date
+    dateObj.setHours(hours, minutes, 0, 0); // Set the time for the Date object
+    return dateObj;
+  }
+
+
  async printProfessional(servicetime: any, servicedate: any) {
-  console.log('function run');
+  // console.log('function run');
    const service_location = await this.storage.get('ServiceLocation');
   //  console.log('service-location',service_location)
     var cart_data_list = JSON.parse(localStorage.getItem('cart') || '[]');
+    console.log('cart', cart_data_list)
     // Map the service_variant array to get the IDs
     const service_variant_array = cart_data_list.map((item: any) => item.services_variants_id);
     
     // Convert the array into a comma-separated string
     const service_variant = service_variant_array.join(',');
-    this.apiService.getProfessional(service_variant, servicedate, servicetime, service_location).subscribe((response) => {
-      if(response.status === true) {
+    console.log('serice variant',service_variant)
+    console.log('servicetime',servicetime)
+    console.log('servicedate',servicedate)
+    console.log('service_location',service_location)
+    this.apiService.getProfessional(service_variant, servicetime, servicedate, service_location).subscribe((response) => {
+      if(response) {
         this.printProffesionalData = response.message;  
-        console.log('print---',this.printProffesionalData);
+        this.showAdditionalDetails = true;
+         console.log('print---', this.printProffesionalData);
+      } else{
+        console.log('no')
       }
     });
   }

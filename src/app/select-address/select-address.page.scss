@@ -25,6 +25,7 @@ ion-content{
 }
 .outer_content{
     padding: 0 10px;
+    padding-bottom: 50%;
 }
 .slide-content ion-button{
    --border-radius: 0;
@@ -230,7 +231,23 @@ ion-content{
   bottom: 0;
   padding: 14px;
   width: 100%;
-  background: #fff;
+  background: #ededed;
+  z-index: 99;
+}
+.footer_form_box{
+  position: fixed;
+  bottom: 0;
+  padding: 14px;
+  width: 100%;
+  background: #ededed;
+  z-index: 999;
+  margin-bottom: 0%;
+  transition: .5s;
+  box-shadow: inset 0px 0px 10px #cdcdcd;
+}
+.show_footer_form_box{
+  margin-bottom: -100% !important;
+  transition: .5s;
 }
 .bg_white{
     --background: white;
@@ -261,6 +278,10 @@ ion-checkbox{
 }
 .address_div{
   display: flex;
+  width: 100%;
+}
+.map_div{
+  height: 300px;
   width: 100%;
 }
 .clr_red{
@@ -343,24 +364,31 @@ ion-radio.radio-checked::part(mark) {
   bottom: -43px;
 }
 .live_location_div{
-  width: 10%;
-  // position: relative;
-  top: -163px;
-  right: -20.8rem;
-  background: white;
-  text-align: center;
+  width: 100%;
+  text-align: right;
+  padding: 10px 5px 0px 0px;
 }
 .live_location_div ion-icon{
   color: black;
   font-size: 25px;
 }
 .map_header{
-  position: fixed;
-  background-color: white;
-  padding: 10px;
-  z-index: 1000;
-  width: 100%;
+  // position: fixed;
+  // background-color: white;
+  padding: 10px 0px;
+  // z-index: 1000;
+  // width: 100%;
 }
 p{
   font-size: 13px;
 }
+.map_div_outer{
+  background: #efebeb;
+  width: 100%;
+  padding: 0px 15px;
+}
+// ion-modal{
+  // height: 50%;
+  // top: auto;
+  // background: red;
+// }

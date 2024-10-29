@@ -27,7 +27,7 @@
       </ion-row>
       <ion-row size="12">
         <ion-col size="12">
-          <swiper-container class="mySwiper" loop="false" slides-per-view="2.2" space-between="5">
+          <swiper-container class="mySwiper" loop ="false" slides-per-view="2.2" space-between="5">
             <swiper-slide *ngFor="let service of servicesArray; let i = index">
               <div class="slide-content variant_slide" (click)="changeToactive(i)">
                 <!-- Highlight the active button using ngClass -->
@@ -157,7 +157,7 @@
                     [ngClass]="{'active-button': activeIndex === i}" 
                     (click)="onclickpackageServiceName($event, i, package.service_name)"  
                     size="small">
-                    {{ package.package_name }}
+                    {{ package.name }}
                   </ion-button>
                 </div>
               </swiper-slide>
@@ -191,13 +191,14 @@
             <ion-col size="12">
               <div >
                 <p>{{ packageVariant.services_variants_name.split(' - ')[0].trim() }}</p>
-                <p>{{ packageVariant.sv_duration_time }} mins</p>
+                <p>{{ packageVariant.package_duration }} days</p>
                 <p class="bold_css">AED {{ packageVariant.package_amount }}</p>
             
                 <!-- Show Add button if the item is not added or the quantity is 0 -->
                  <!-- <div *ngIf="static_btn" >
                   <ion-button class="before_add"  size="small" >Add</ion-button>
                  </div> -->
+                 
                 <div *ngIf="!packageVariant.addButton || packageVariant.quantity < 1">
                     <ion-button #sv_people class="before_add" [attr.sv_people]="packageVariant.sv_people" size="small" (click)="showAddButtons(i, $event)">Add</ion-button>
                 </div>

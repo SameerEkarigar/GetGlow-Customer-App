@@ -122,6 +122,10 @@ const routes: Routes = [
     path: 'location-access',
     loadChildren: () => import('./location-access/location-access.module').then( m => m.LocationAccessPageModule)
   },
+  {
+    path: 'packages',
+    loadChildren: () => import('./packages/packages.module').then( m => m.PackagesPageModule)
+  },
  
   // {
   //   path: 'know-more-modal',

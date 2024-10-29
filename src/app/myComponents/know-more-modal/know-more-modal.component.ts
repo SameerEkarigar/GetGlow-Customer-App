@@ -26,7 +26,7 @@ export class KnowMoreModalComponent  implements OnInit {
   ngOnInit() {
         // Get the data passed from the parent component
         this.packageInnerDescription =   this.navParams.get('packageInnerDescription');
-        console.log('fuck you bitch',this.packageInnerDescription);
+        console.log('fuck you bitch', this.packageInnerDescription);
         
         this.serviceData = this.navParams.get('serviceData');
         this.wahtIncludeData = this.navParams.get('wahtIncludeData');

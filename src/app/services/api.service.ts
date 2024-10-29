@@ -56,6 +56,7 @@ export class ApiService {
   updateLastSelectedAddressApi = this.base_path+ 'update_default_address';
   package_innerdescriptionApi = this.base_path+ 'service_page_description_packages';
   package_innerFeaturesApi = this.base_path+ 'service_page_fetures_packages';
+  PreviousbookedPackageApi = this.base_path+ 'customer_packages';
   constructor(private http: HttpClient) { }
 
   get_splash_content(): Observable<any> {
@@ -215,12 +216,16 @@ export class ApiService {
     const body = { service_variant: service_variant };
     return this.http.post<any>(this.package_innerdescriptionApi, body, { headers })
   }
- packageInnerFeatures(service_variant: any){
+  packageInnerFeatures(service_variant: any){
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   const body = { service_variant: service_variant };
   return this.http.post<any>(this.package_innerFeaturesApi, body, { headers })
  }
-
+  previousBookPackage(user_id: any, service_name: any, service_variant: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_id: user_id, service_name: service_name, service_variant: service_variant };
+    return this.http.post<any>(this.PreviousbookedPackageApi, body, { headers })
+  }
   updateLastselectedAddress(index_id: any, value: any){
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { index_id: index_id, value: value };

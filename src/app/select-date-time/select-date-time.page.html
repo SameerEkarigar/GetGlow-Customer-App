@@ -41,7 +41,7 @@
             <swiper-slide *ngFor="let slot of printslot"  #selectTime>
               <div class="slide-content ">
                 <ion-button [ngClass]="{'active-button': activeTimeSlot  === slot.time_slot}"  size="small" (click)="selectTimeSlot(slot.time_slot)"
-                class="time_btn">{{slot.time_slot}}</ion-button>
+                 class="time_btn" [disabled]="slot.disabled">{{slot.time_slot}}</ion-button>
               </div>
             </swiper-slide>
           </swiper-container>
@@ -52,6 +52,7 @@
           </div>
         </ion-col>
       </ion-row>
+      
       <ion-modal #modal trigger="view_all_times" [initialBreakpoint]="0.8">
         <ng-template>
           <ion-header>
@@ -67,7 +68,7 @@
               <ion-col size="3" *ngFor="let Innerslot of printslot">
                 <div class="time_btn_grid">
                   <ion-button [ngClass]="{'active-button': activeTimeSlot  === Innerslot.time_slot}"  size="small" (click)="selectTimeSlot1(Innerslot.time_slot)"
-            class="time_btn">{{Innerslot.time_slot}}</ion-button>
+             class="time_btn" [disabled]="Innerslot.disabled">{{Innerslot.time_slot}}</ion-button>
                 </div>
               </ion-col>
             </ion-row>

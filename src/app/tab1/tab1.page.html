@@ -1,4 +1,4 @@
-<app-header-component></app-header-component>
+<app-header-component [cart_quantity]="HeaderQyt"></app-header-component>
 <app-check-location></app-check-location>
 <ion-content [fullscreen]="true">
   <div class="outer_content">
@@ -182,11 +182,10 @@
         </ion-col> 
       </ion-row>
       <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
-        <swiper-slide *ngFor="let packages of packagesData | search: searchText" (click)="onClickPackages(packages.service_category, packages.category_name,packages.service_name, packages.static_name
-)">
+        <swiper-slide *ngFor="let packages of packagesData | search: searchText" (click)="onClickPackages(packages.service_category, packages.name,packages.service_name, packages.static_name)">
           <div class="slide-content margin_0 ">
             <img [src]="packages.image_name">
-            <p>{{packages.package_name }}</p>
+            <p>{{packages.name}}</p>
             <!-- <p>{{packages.sv_name}}</p>
             <p>AED {{packages.sv_price}}</p> -->
           </div>
@@ -228,17 +227,18 @@
             <ion-img [src] ="Mpdata.image_name"></ion-img>
             <p>{{Mpdata.name}}</p>
             <p>{{Mpdata.sv_name}}</p>
-            <p>AED {{Mpdata.sv_price}}</p>    
-            <div class="most_popular_btn_div" *ngIf="!addButton">
+            <p>AED {{Mpdata.sv_price}}</p>  
+
+            <div class="most_popular_btn_div" *ngIf="!Mpdata.addButton || Mpdata.quantity < 1">
               <ion-button class="before_add" size="small" (click)="ShowAddbutton(i)">Add</ion-button>
            </div>
         
-          <!-- Show quantity controls if the item is added -->
-          <div *ngIf="addButton " class="after_add">
-              <ion-button class="less_btn" size="small" (click)="decreaseQuantity(i)">-</ion-button>
-              <ion-button class="add_btn" size="small">{{ quantities[i] }}</ion-button> {{i}}
-              <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
-          </div>
+            <!-- Show quantity controls if the item is added -->
+            <div *ngIf="Mpdata.addButton && Mpdata.quantity > 0" class="after_add">
+                <ion-button class="less_btn" size="small" (click)="decreaseQuantity(i)">-</ion-button>
+                <ion-button class="add_btn" size="small">{{ Mpdata.quantity }}</ion-button> 
+                <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
+            </div>
           </div>
         </swiper-slide>
       </swiper-container>
@@ -310,5 +310,18 @@
   
   </div>
     <app-tabcomponent></app-tabcomponent>
+  </div>
+
+  <div *ngIf="showcart" class="view_cart_div">
+    <ion-row size="12">
+      <ion-col size="6">
+        <p>AED {{overallTotalAmount}} </p>
+      </ion-col>
+      <ion-col size="6">
+        <div class="start_end">
+          <ion-button (click)="navigateToViewBooking()">View Bookings</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
   </div>
 </ion-content>

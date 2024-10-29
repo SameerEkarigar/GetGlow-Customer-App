@@ -162,3 +162,22 @@ swiper-slide img{
   .after_add ion-button{
     --border-radius: 0;
   }
+
+  .view_cart_div{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+    background: white;
+    padding: 0px 12px;
+  }
+  .view_cart_div ion-button{
+    --border-radius: 0 !important;
+    color: white;
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+  .view_cart_div p{
+    font-size: 13px;
+    font-weight: 600;
+  }

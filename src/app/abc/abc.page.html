@@ -1,21 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Map Example</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content [fullscreen]="true">
-  <div class="modalpage">
-  <app-header-component></app-header-component>
-  <div class="outer_content">
-  
-  
-    <!-- <ion-content>
-      <div #section1 (click)="scrollToSection(section2)">
-        </div>
-      <div #section2 (click)="scrollToSection(section3)">
-        </div>
-      <div #section3>
-        </div>
-    </ion-content>
-     -->
-</div>
-
-
-
-
+<ion-content>
+  <ion-radio-group [(ngModel)]="selectedValue">
+    <ion-radio value="1">Option 1</ion-radio>
+    <ion-radio value="2">Option 2</ion-radio>
+    <!-- <ion-radio value="3">Option 2</ion-radio> -->
+    </ion-radio-group>
+</ion-content>

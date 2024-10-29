@@ -10,11 +10,13 @@ import { Router } from '@angular/router';
 export class HeaderComponentComponent  implements OnInit {
   @Input() cart_quantity: any = '';
 
-  constructor(private router: Router,) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
    const header_cart =  localStorage.getItem('headerCart');
    this.cart_quantity = header_cart;
+  //  console.log(this.cart_quantity);
+  //  console.log(header_cart);
   }
 
   navigateToTabsTab1(){
@@ -24,6 +26,4 @@ export class HeaderComponentComponent  implements OnInit {
   navigateToViewCart(){
     this.router.navigate(['/view-booking']);
   }
-
- 
 } 

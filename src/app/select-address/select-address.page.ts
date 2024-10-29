@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, IonModal, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
@@ -8,6 +8,12 @@ import { Storage } from '@ionic/storage';
 import { HttpClient } from '@angular/common/http';
 import { LoadingServiceService } from '../services/loading-service.service';
 
+import { MapService } from '../map.service';
+import { Geolocation } from '@capacitor/geolocation';
+import { GeocodingService } from '../geocoding.service';
+
+// import { AdvancedMarkerElement } from '@googlemaps/marker';
+
 @Component({
   selector: 'app-select-address',
   templateUrl: './select-address.page.html',
@@ -16,6 +22,10 @@ import { LoadingServiceService } from '../services/loading-service.service';
   // imports: [SafePipe] 
 })
 export class SelectAddressPage implements OnInit {
+
+  map: google.maps.Map | undefined;
+  clickableMarker: google.maps.Marker | null = null;
+
   @ViewChild(IonModal)
   modal!: IonModal;
   @ViewChild('editParagraph', { static: false }) editParagraph!: ElementRef;
@@ -43,7 +53,7 @@ export class SelectAddressPage implements OnInit {
   updateData: any;
   addAddress: string ='Add Address';
   addanotherAddress: string = 'Add Another Address';
-   buttonText: string = '';
+  buttonText: string = '';
   showValidationError: boolean = false;
   deleteId: any;
   selectedAddressData: any;
@@ -56,10 +66,14 @@ export class SelectAddressPage implements OnInit {
   searchInput = '';
   defaultAddress: any;
   value: any;
-
- // Selected location
- 
-  constructor(private modalController: ModalController ,
+  address: any;
+  isModalOpen: boolean = false;
+  isContentVisible: boolean = false;
+  IsActiveFoot: boolean = false; // show footer form
+  selectedAddressStatus: number = 0;
+  
+  constructor(
+    private modalController: ModalController ,
     private router: Router,
     private apiService: ApiService,
     private sanitizer: DomSanitizer,
@@ -67,29 +81,35 @@ export class SelectAddressPage implements OnInit {
     private storage: Storage,
     private http : HttpClient,
     private route: ActivatedRoute,
-    private loadingService: LoadingServiceService
-) { 
-       this.selectedOption = 'option1';
-       this.init();
-    }
+    private loadingService: LoadingServiceService,
+    private geocodingService: GeocodingService,
+    private mapService: MapService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.selectedOption = 'option1';
+    this.init();
+  }
 
-    async init() {
-      await this.storage.create();
-    }
-    ngAfterViewInit() {
-      
-    }
- async ngOnInit() {
+  async init() {
+    await this.storage.create();
+  }
 
+  async ngOnInit() {
+    this.IsActiveFoot = true;
+    // this.loadMap();
+   
     this.selectedDiscountCode = await this.storage.get('selectedDiscountCode');
     this.selectedDiscountAmount = await this.storage.get('selectedDiscountAmount');
     this.AmountAfterDeductDiscount = await this.storage.get('AmountAfterDeductDiscount');
-    this.openLiveLocation();
+    // this.openLiveLocation();
     this.printServiceLocation();
     this.getAddress();
     const overallTotalAmount = localStorage.getItem('overallTotalAmount');
     this.totalAmount = overallTotalAmount;
-    
+  }
+
+  ngAfterViewInit() {
+    this.openLiveLocation(); // Now safe to call as the view is initialized
   }
  
   async confirmDelete(deleteParagraph: HTMLElement) {
@@ -118,6 +138,16 @@ export class SelectAddressPage implements OnInit {
   
     await alert.present();  // Show the alert
   }
+
+  hide_custom_footer_content() {
+    this.IsActiveFoot = true;  // Hide footer
+    this.cdr.detectChanges();  // Ensure UI updates
+  }
+  
+  show_custom_footer_content() {
+    this.IsActiveFoot = false;  // Show footer
+    this.cdr.detectChanges();  // Ensure UI updates
+  }
  
   refreshPage() {
     window.location.reload();
@@ -134,7 +164,7 @@ export class SelectAddressPage implements OnInit {
       if(response.status===true){
         const printEditAddress = response.message[0];
         const addressParts = printEditAddress.address.split(',').map((part: string) => part.trim());
-
+        this.check_states_data(printEditAddress.service_location);
         // Assign the parts to flatNumber and buildingName
         this.flatNumber = addressParts.length > 0 ? addressParts[0] : ''; // Get the first part as flatNumber
         this.buildingName = addressParts.length > 1 ? addressParts.slice(1).join(', ') : ''; // Join the rest as buildingName
@@ -161,6 +191,7 @@ export class SelectAddressPage implements OnInit {
     this.modalController.dismiss(); 
     this.refreshPage(); // This will close the modal
   }
+
   printServiceLocation(){
      this.apiService.getServiceLocation().subscribe((response)=>{
       if(response.status===true){
@@ -178,28 +209,30 @@ export class SelectAddressPage implements OnInit {
       location.name.toLowerCase().includes(searchTerm)
     );
   }
+
   onLocationChange1(event: any) {
     this.location = event.detail.value;
   }
  
-
- async inserAddressInDb(updateId: any){
+  async inserAddressInDb(updateId: any){
     // this.generateMapLink();
     if(!updateId){
       const user_id = await this.storage.get('user_index_id');
       const address =  `${this.flatNumber}, ${this.buildingName}, ${this.selectedDistrict}, ${this.selectedStateEmirate}`;
-      const location_url = this.mapUrl;
+      const LocationUrl = this.address+', '+`${this.flatNumber}, ${this.buildingName}, ${this.selectedDistrict}, ${this.selectedStateEmirate}`;
+      // const location_url = this.mapUrl;
       const service_location_id =  this.location;
       const state_emirate  = this.selectedStateEmirate;
       const district  = this.selectedDistrict;
       const title = this.nickname;
+      const location_url = this.generateGoogleMapsLink(LocationUrl);
       if (!this.flatNumber || !this.buildingName || !this.location || !this.nickname) {
         this.showValidationError = true;
         return; 
-      }  else{
+      }  else {
         this.apiService.saveUserAddress(user_id, address, location_url, title, service_location_id, district, state_emirate).subscribe((response)=>{
           if(response){
-            this.customClose();
+            this.customClose(); 
           }
         })
       } 
@@ -208,11 +241,14 @@ export class SelectAddressPage implements OnInit {
      if(updateId){
       const id = updateId;
       const address =  `${this.flatNumber}, ${this.buildingName}`;
-      const location_url = this.mapUrl;
+      const LocationUrl = this.address+', '+`${this.flatNumber}, ${this.buildingName}, ${this.selectedDistrict}, ${this.selectedStateEmirate}`;
+      // const location_url = this.mapUrl;
       const service_location_id =  this.location;
       const state_emirate  = this.selectedStateEmirate;
       const district  = this.selectedDistrict;
       const title = this.nickname;
+      const location_url = this.generateGoogleMapsLink(LocationUrl);
+      // console.log(LocationUrl);
       this.apiService.UpdateAddress(id, address, location_url, title, service_location_id, district, state_emirate).subscribe((response)=>{
         if(response.status === true){
               this.updateData = response.message;
@@ -221,6 +257,11 @@ export class SelectAddressPage implements OnInit {
         }
       })
      }
+  }
+
+  generateGoogleMapsLink(address: string): string {
+    const encodedAddress = encodeURIComponent(address);
+    return `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
   }
 
   onLocationChange(event: any) {
@@ -233,17 +274,30 @@ export class SelectAddressPage implements OnInit {
     }
   }
   
-async onSelectAddress(event: any, addressData: any) {
+  check_states_data(selectedId: any){
+    const selectedLocation = this.printServiceLocationData.find((location: { id: any; }) => location.id === selectedId);
+    if (selectedLocation) {
+      this.selectedDistrict = selectedLocation.district;
+      this.selectedStateEmirate = selectedLocation.state_emirate_name;
+    }
+  }
+
+  async onSelectAddress(event: any, addressData: any) {
  
     const selectedValue = event.detail.value;
-    this.value = event.detail.value === this.selectedAddress;
-    console.log(this.value);
+    
+    if (event.detail.value === addressData.id) {
+      this.selectedAddressStatus = 1; // Set status to 1 when selected
+    } else {
+      this.selectedAddressStatus = 0; // Reset to 0 when unselected
+    }
+
+    // this.value = event.detail.value === this.selectedAddress;
+    // console.log(this.value);
 
     this.selectedAddressData = this.printAddress.find((address: { title: any; }) => address.title === selectedValue);
     
     if (this.selectedAddressData) {
-    
-     
       const serviceLocation = this.selectedAddressData.service_location;
       const locationUrl = this.selectedAddressData.location_url;
       await this.storage.set('selectedLocationUrl', locationUrl);
@@ -268,62 +322,120 @@ async onSelectAddress(event: any, addressData: any) {
     this.mapUrl = `https://www.google.com/maps?q=${encodedAddress}+&output=embed`;
     
     // Sanitize the URL to make it safe for the iframe
-    this.sanitizedMapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.mapUrl);
-    
-    
+    this.sanitizedMapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.mapUrl);   
   }
- 
+
   openLiveLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Get user's current latitude and longitude
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
+    this.mapService.getCurrentPosition().then(position => {
+      const lat = position.latitude;
+      const lon = position.longitude;
 
-          // Generate a Google Maps link with the user's current location
-          const liveLocationUrl = `https://www.google.com/maps?q=${lat},${lon}&output=embed`;
-          // console.log('live Location : ',liveLocationUrl);
-          // Update the iframe's source with live location URL
-          this.sanitizedMapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(liveLocationUrl);
-          // console.log('Live Location Map URL:', this.sanitizedMapUrl);
-          this.getAddressFromCoordinates(lat, lon);
-        },
-        (error) => {
-          console.error('Error retrieving location:', error);
-          alert('Unable to retrieve your location.');
-        }
-      );
-    }
+      // Load the map with current location
+      this.loadMap(lat, lon);
+
+      // Get address for the current location
+      this.getAddressFromCoordinates(lat, lon);
+    }).catch(error => {
+      console.error('Error retrieving location:', error);
+      alert('Unable to retrieve your location.');
+    });
   }
-    // Function to get the address using Nominatim
-  getAddressFromCoordinates(lat: number, lon: number) {
-      const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-  
-      // Make an HTTP request to Nominatim
-      this.http.get(geocodeUrl).subscribe((response: any) => {
-        if (response && response.address) {
-          const addressComponents = response.address;
-          const suburb = addressComponents.suburb;
-          const live_city = addressComponents.county;
-          this.live_country = addressComponents.country;
-          const live_postcode = addressComponents.postcode;
-          const live_state = addressComponents.state;
-          const live_neighbourhood = addressComponents.neighbourhood;
 
-          // console.log('Live addres--', suburb,',',live_city,',',live_state,',',live_country,',',live_postcode);
-          // Extract relevant parts of the address
-          // this.flatNumber = live_neighbourhood;
-          // this.buildingName = live_neighbourhood;
-          // this.location = live_city + live_state + live_country;
-  
-        } else {
-          console.error('Unable to get address from coordinates');
-          alert('Unable to retrieve address.');
-        }
+  async loadMap(lat: number, lon: number) {
+    const coordinates = await Geolocation.getCurrentPosition();
+    const location = {
+      lat: coordinates.coords.latitude,
+      lng: coordinates.coords.longitude,
+    };
+
+    this.map = new google.maps.Map(document.getElementById('map_canvas') as HTMLElement, {
+      center: location,
+      zoom: 15,
+    });
+
+    // Add a marker for the user's current location
+    new google.maps.Marker({
+      position: location,
+      map: this.map,
+      title: 'You are here!',
+    });
+
+    // Handle map click to add a clickable marker
+    this.map.addListener('click', (event) => {
+      this.show_custom_footer_content();
+      this.handleMapClick(event.latLng);
+    });
+
+  }
+
+  handleMapClick(latLng: google.maps.LatLng) {
+    // console.log('fdlgdfkv');
+    // this.IsActiveFoot = true;
+    this.show_custom_footer_content();
+    this.mapService.reverseGeocode(latLng.lat(), latLng.lng()).then((data: any) => {
+      if (data.results && data.results.length) {  
+        // this.IsActiveFoot = false;
+        this.address = data.results[0].formatted_address;
+        this.show_custom_footer_content();
+        console.log('Address:', this.address);
+      }
+    }).catch(error => {
+      console.error('Error during geocoding:', error);
+    });
+
+    // If a marker already exists, move it; otherwise, create a new one
+    if (this.clickableMarker) {
+      this.clickableMarker.setPosition(latLng);
+      this.show_custom_footer_content();
+    } else {
+      this.show_custom_footer_content();
+      this.clickableMarker = new google.maps.Marker({
+        position: latLng,
+        map: this.map,
+        title: 'Selected location',
+        icon: {
+          url: 'https://dashboard.getglowsalon.ae/staging/template/map-pin.png', // Use your desired icon
+        },
       });
     }
+    this.cdr.detectChanges();
+  }
 
+  getAddressFromCoordinates(lat: number, lon: number) {
+    this.mapService.reverseGeocode(lat, lon).then((data: any) => {
+      if (data.results && data.results.length) {
+        this.address = data.results[0].formatted_address; // Adjust according to your geocoding API response
+        // this.isModalOpen = true;
+      }
+    }).catch((error) => {
+      console.error('Error during geocoding:', error);
+      alert('Unable to retrieve address.');
+    });
+  }
+
+  // getAddressFromCoordinates(lat: number, lon: number) {
+  //   console.log('lat : ',lat, 'lon : ',lon);
+  //   this.mapService.reverseGeocode(lat, lon).then((data: any) => {
+  //     if (data.results && data.results.length) {
+  //       const addressComponents = data.results[0].address_components; // Modify as per your geocoding API response
+  //       const suburb = addressComponents.suburb || '';
+  //       const liveCity = addressComponents.city || addressComponents.locality || ''; // Fallbacks for city
+  //       const liveCountry = addressComponents.country || '';
+  //       const livePostcode = addressComponents.postcode || '';
+  //       const liveState = addressComponents.state || '';
+  //       const liveNeighbourhood = addressComponents.neighbourhood || '';
+
+  //       console.log('Live Address:', suburb, liveCity, liveState, liveCountry, livePostcode);
+  //     } else {
+  //       console.error('Unable to get address from coordinates');
+  //       alert('Unable to retrieve address.');
+  //     }
+  //   }).catch((error) => {
+  //     console.error('Error during geocoding:', error);
+  //     alert('Unable to retrieve address.');
+  //   });
+  // }
+  
  async getAddress(){
   this.loadingService.presentLoading(); 
     const user_id = await this.storage.get('user_index_id');
@@ -335,6 +447,7 @@ async onSelectAddress(event: any, addressData: any) {
           this.printAddress = response.message;
           this.buttonText = this.addanotherAddress;
           this.defaultAddress = this.printAddress.find((address: { default_address: any; }) => address.default_address === '1');
+          
           if (this.defaultAddress) {
             this.selectedAddress = this.defaultAddress.title; // Set to title of default address
           } else {
@@ -348,7 +461,9 @@ async onSelectAddress(event: any, addressData: any) {
         }
         // console.log('address array', this.printAddress);
       }
-      this.loadingService.dismissLoading();
+      setTimeout(() => {
+        this.loadingService.dismissLoading();
+      }, 3000);
     });
   }
 
@@ -363,9 +478,9 @@ async onSelectAddress(event: any, addressData: any) {
   }
 
   navigateToSelectAddress(){
-    const value = this.value;
+    const value = this.selectedAddressStatus;
     const index_id = this.selectedAddressData.id; // get id to update last Selected addresss by user
-    console.log('Your Attribute Value:', index_id);
+    console.log(' Value:', value);
     this.apiService.updateLastselectedAddress(index_id, value).subscribe((response)=>{
       if(response.status === true){
             this.updateData = response.message;

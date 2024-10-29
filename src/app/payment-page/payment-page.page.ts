@@ -55,6 +55,7 @@ export class PaymentPagePage implements OnInit {
     this.AmountAfterDeductDiscount = await this.storage.get('AmountAfterDeductDiscount');
     this.PrintCartData();
     this.GetAllLocalData();
+    this.printPreviousBookedPackage();
     // this.CashPayBook();
   }
 
@@ -124,14 +125,18 @@ export class PaymentPagePage implements OnInit {
 
   async GetAllLocalData(){
     
-    
-    
-    
-    // this.employee_id = await this.storage.get('EmployeeID');
-    
-    // this.pay_byCard = true;
-    
-    
+  }
+ async printPreviousBookedPackage(){
+    // const user_id = await this.storage.get('user_index_id');
+    // console.log(user_id)
+    const user_id = 1033;
+    const service_name = 11;
+    const service_variant = 34;
+    this.apiService.previousBookPackage(user_id , service_name, service_variant).subscribe((response)=>{
+       if(response){
+        console.log(response);
+       }
+    });
   }
   navigateTothankyou() {
     this.router.navigate(['/thankyou']);
@@ -153,7 +158,7 @@ export class PaymentPagePage implements OnInit {
     const booking_comment = 'Testing';
 
     var CartList = JSON.parse(localStorage.getItem('cart') || '[]');
-
+    
     const updatedCartDataList = CartList.map((item: any) => {
       return {
         customer_id: customer_id,

@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { LoadingServiceService } from '../services/loading-service.service';
-
+import { Location } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-view-booking',
   templateUrl: './view-booking.page.html',
@@ -29,7 +30,9 @@ export class ViewBookingPage implements OnInit {
     private route: ActivatedRoute,
     private apiService: ApiService,
     private Storage: Storage,
-    private loadingService: LoadingServiceService
+    private loadingService: LoadingServiceService,
+    private location: Location,
+    private cdr: ChangeDetectorRef,
   ){
     this.init();
   }
@@ -72,7 +75,7 @@ export class ViewBookingPage implements OnInit {
   }
 
  async printFrequentlyBooked() {
-    this.loadingService.presentLoading(); 
+    // this.loadingService.presentLoading(); 
     // const service_category_id = this.route.snapshot.paramMap.get('service_category');
     const service_category_id = await this.Storage.get('service_category');
     this.apiService.getFrequentlyBooked(service_category_id).subscribe((response) => {
@@ -90,9 +93,9 @@ export class ViewBookingPage implements OnInit {
           };
 
         });
-        
+        console.log('fre : ',this.frequentData);
       }
-      this.loadingService.dismissLoading();
+      // this.loadingService.dismissLoading();
     });
   }
 
@@ -126,6 +129,7 @@ export class ViewBookingPage implements OnInit {
        this.selectedDiscountAmount = '';
     }
   }
+
   IncreaseCartQuantity(i: number) {
     // Increase the quantity of the item
     this.cart_data[i].quantity += 1;
@@ -155,6 +159,7 @@ export class ViewBookingPage implements OnInit {
       const new_totalAmount = this.cart_data[i].totalAmount;
       
       this.UpdateCartItem(item_id,new_quantity,new_totalAmount);
+      this.cdr.detectChanges();
 
     } else {
 
@@ -170,6 +175,7 @@ export class ViewBookingPage implements OnInit {
         this.frequentData.push({ ...item_row });
       }
       this.CalculateHeaderItem();
+      this.cdr.detectChanges();
     }
   }
 
@@ -244,67 +250,253 @@ export class ViewBookingPage implements OnInit {
     }
   }
 
+  // addItemToBooking(index: number) {
+  //   const item = this.frequentData[index];
+  //   item.addButton = true;
+  //   // Check if item is already in the "Your Bookings" section
+  //   const existingItemIndex = this.addedItems.findIndex(added => added.name === item.name);
+  //   if (existingItemIndex === -1) {
+  //     // Set totalAmount to the discounted_price for new items
+  //     this.cart_data.push({ ...item, totalAmount: item.discounted_price }); // Add new item
+  //     this.PushCartDisCountPrice();
+  //     this.CalculateHeaderItem();
+  //   } else {
+  //     this.addedItems[existingItemIndex].quantity++;
+  //   }
+  //   this.frequentData.splice(index, 1);
+   
+  // }
+
   addItemToBooking(index: number) {
-    const item = this.frequentData[index];
-    // console.log(item);
+    const item = this.frequentData[index]; // Get the item to be added
+  
+    // Create a temporary item to check for conflicts BEFORE adding it to cart_data
+    const tempItem = { ...item, totalAmount: item.discounted_price, quantity: 1 };
+  
+    // Add the temporary item to a copy of the current cart for validation
+    const tempCart = [...this.cart_data, tempItem];
+  
+    // Check for service type conflicts and duration limits
+    const hasConflict = this.hasServiceTypeConflict(tempCart);
+    const exceedsDuration = this.exceedsDurationLimit(tempCart);
+  
+    if (hasConflict) {
+      alert(`This service cannot be added. There are conflicting services in your cart.`);
+      return; // Exit if there is a service type conflict
+    }
+  
+    if (exceedsDuration) {
+      alert(`We are unable to set a maximum massage duration of 180 minutes.`);
+      return; // Exit if the duration limit is exceeded
+    }
+  
+    // Set addButton to true only after passing all checks
     item.addButton = true;
-    // Check if item is already in the "Your Bookings" section
+  
+    // Add the validated item to the cart
     const existingItemIndex = this.addedItems.findIndex(added => added.name === item.name);
     if (existingItemIndex === -1) {
-      // Set totalAmount to the discounted_price for new items
-      this.cart_data.push({ ...item, totalAmount: item.discounted_price }); // Add new item
+      this.cart_data.push(tempItem); // Add the item to the cart
       this.PushCartDisCountPrice();
       this.CalculateHeaderItem();
     } else {
+      // If item already exists, increment its quantity
       this.addedItems[existingItemIndex].quantity++;
     }
+  
+    // Remove the item from frequentData after adding it to cart
     this.frequentData.splice(index, 1);
-   
   }
+  
+  // Helper function to check for service type conflicts
+  hasServiceTypeConflict(cart: any[]): boolean {
+    const serviceTypes = [...new Set(cart.map(item => item.service_type))];
+    return serviceTypes.length > 1; // Conflict exists if more than one unique service type
+  }
+  
+  // Helper function to check if the total duration exceeds the limit
+  exceedsDurationLimit(cart: any[]): boolean {
+    const totalDuration = cart.reduce(
+      (sum, item) => sum + Number(item.duration_number), 
+      0
+    );
+    return totalDuration > 180; // Return true if total duration exceeds 180 minutes
+  }  
+  
 
+  // extractDurationNumber(duration: string): number {
+  //   const match = duration.match(/\d+/); // Extract numeric part using regex
+  //   return match ? Number(match[0]) : 0; // Convert to number or return 0 if not found
+  // }
   // This Funtion Is used for when initially item add to cart and also increase the overall amount
   // this functionis used for addItemToBooking() function
+  // PushCartDisCountPrice() {
+  //   const prev_cart_data = localStorage.getItem('cart');
+  //   let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+  
+  //   const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+
+  //   const newCartItems = this.cart_data
+  //     .filter(variant => variant.addButton && variant.quantity > 0) // Only save variants that have been added and have quantity
+  //     .map(variant => ({
+  //       id: variant.id,
+  //       name: variant.name,
+  //       quantity: variant.quantity,
+  //       duration: variant.sv_duration,
+  //       totalAmount: Number(variant.discounted_price),
+  //       services_variants_id: variant.service_variants,
+  //       unitAmount: Number(variant.discounted_price),
+  //       booking_type: 'frequent',
+  //       user_id: this.user_id,
+  //       service_category: variant.service_category,
+  //       duration_number: this.extractDurationNumber(variant.sv_duration),
+  //       service_type: variant.sv_name.split(' - ')[0].trim(),
+  //     }));
+
+  //   const newServiceTypes = [...new Set(newCartItems.map(item => item.service_type))];
+  //   const hasConflict = existingServiceTypes.length > 0 &&
+  //                       !newServiceTypes.every(type => existingServiceTypes.includes(type));
+  //   console.log(hasConflict);
+  //   if (hasConflict) {
+  //       alert(`This service cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
+  //       return; // Exit early to prevent adding conflicting items
+  //   }
+
+  //     const totalDurationFromPrevious = previousCart.reduce(
+  //       (sum: number, item: { duration_number: any }) => sum + Number(item.duration_number), 0
+  //   );
+
+  //   // Calculate total duration from new cart items
+  //   const totalDurationFromNew = newCartItems.reduce(
+  //       (sum: number, item: { duration_number: any }) => sum + Number(item.duration_number), 0
+  //   );
+
+  //   // Combine total duration
+  //   const totalDuration = totalDurationFromPrevious + totalDurationFromNew;
+
+  //   // Check if the total duration exceeds 180 minutes
+  //   if (totalDurationFromNew > 180) {
+  //       alert(`We are unable to set a maximum massage duration of 180 minutes.`);
+  //       return; // Exit early to prevent saving the cart
+  //   }  
+
+  
+  //   // Merge previous cart data with new cart items
+  //   newCartItems.forEach(newItem => {
+  //     const existingItem = previousCart.find((item: { id: any }) => item.id === newItem.id);
+  //     if (existingItem) {
+  //       existingItem.quantity = newItem.quantity;
+  //       existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure totalAmount is set to discounted_price
+  //       existingItem.unitAmount = Number(newItem.unitAmount);
+  //     } else {
+  //       previousCart.push({ ...newItem });
+  //     }
+  //   });
+
+  //   localStorage.setItem('cart', JSON.stringify(previousCart));
+
+  //   let OverAllTotal = previousCart.reduce((accumulator: number, item: { totalAmount: number, unitAmount: number, quantity: number }) => {
+  //     return accumulator + (item.unitAmount * item.quantity);
+  //   }, 0);
+
+  //   this.total_amount = OverAllTotal;
+
+  //   localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
+  // }
+
   PushCartDisCountPrice() {
     const prev_cart_data = localStorage.getItem('cart');
     let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
   
+    // Get unique service types from the previous cart items
+    const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+  
+    // Filter and map new cart items with necessary fields
     const newCartItems = this.cart_data
-      .filter(variant => variant.addButton && variant.quantity > 0) // Only save variants that have been added and have quantity
+      .filter(variant => variant.addButton && variant.quantity > 0)
       .map(variant => ({
         id: variant.id,
         name: variant.name,
         quantity: variant.quantity,
         duration: variant.sv_duration,
-        totalAmount: Number(variant.discounted_price),  // Convert to number
+        totalAmount: Number(variant.discounted_price),
         services_variants_id: variant.service_variants,
-        unitAmount: Number(variant.discounted_price),  // Convert to number
+        unitAmount: Number(variant.discounted_price),
         booking_type: 'frequent',
         user_id: this.user_id,
-        service_category: variant.service_category
+        service_category: variant.service_category,
+        duration_number: this.extractDurationNumber(variant.sv_duration), // Extract numeric duration
+        service_type: variant.sv_name.split(' - ')[0].trim(),
       }));
   
-    // Merge previous cart data with new cart items
+    // Get the unique service types from the new items
+    const newServiceTypes = [...new Set(newCartItems.map(item => item.service_type))];
+  
+    // Check for conflicting service types
+    const hasConflict = existingServiceTypes.length > 0 &&
+      !newServiceTypes.every(type => existingServiceTypes.includes(type));
+  
+    if (hasConflict) {
+      alert(`This service cannot be added. Your cart already contains services of type: ${existingServiceTypes.join(', ')}`);
+      return; // Exit early to prevent adding conflicting items
+    }
+  
+    // Calculate total duration from the previous cart
+    const totalDurationFromPrevious = previousCart.reduce(
+      (sum: number, item: { duration_number: any; }) => sum + Number(item.duration_number),
+      0
+    );
+  
+    // Calculate total duration from the new cart items
+    const totalDurationFromNew = newCartItems.reduce(
+      (sum, item) => sum + Number(item.duration_number),
+      0
+    );
+  
+    // Combine the total duration
+    const totalDuration = totalDurationFromPrevious + totalDurationFromNew;
+  
+    // Check if the combined total duration exceeds the 180-minute limit
+    if (totalDuration > 180) {
+      alert(`We are unable to set a maximum massage duration of 180 minutes.`);
+      return; // Exit early to prevent saving the cart
+    }
+  
+    // Merge the new items into the previous cart
     newCartItems.forEach(newItem => {
-      const existingItem = previousCart.find((item: { id: any }) => item.id === newItem.id);
+      const existingItem = previousCart.find((item: { id: any; }) => item.id === newItem.id);
       if (existingItem) {
+        // Update existing item's quantity and prices
         existingItem.quantity = newItem.quantity;
-        existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure totalAmount is set to discounted_price
+        existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure discounted_price is used
         existingItem.unitAmount = Number(newItem.unitAmount);
       } else {
+        // Add new item to the cart if it doesn't exist
         previousCart.push({ ...newItem });
       }
     });
-
+  
+    // Save the updated cart back to localStorage
     localStorage.setItem('cart', JSON.stringify(previousCart));
-
-    let OverAllTotal = previousCart.reduce((accumulator: number, item: { totalAmount: number, unitAmount: number, quantity: number }) => {
-      return accumulator + (item.unitAmount * item.quantity);
-    }, 0);
-
+  
+    // Calculate the overall total amount
+    const OverAllTotal = previousCart.reduce(
+      (accumulator: number, item: { unitAmount: number; quantity: number; }) => accumulator + (item.unitAmount * item.quantity),
+      0
+    );
+  
+    // Save the overall total amount in the component and localStorage
     this.total_amount = OverAllTotal;
-
     localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
   }
+  
+  // Extract numeric part from the duration string (e.g., "90min" -> 90)
+  extractDurationNumber(duration: string): number {
+    const match = duration.match(/\d+/); // Match the numeric part
+    return match ? Number(match[0]) : 0;  // Convert to number or return 0 if no match
+  }
+  
+
   // This Funtion Is used for when initially item add to cart and also increase the overall amount
 
  async navigateToselectAddress(){
@@ -314,7 +506,8 @@ export class ViewBookingPage implements OnInit {
     this.router.navigate(['/select-address']);
   }
 async navigateTospaLadies(){
-    // window.location.reload();
+    //  window.location.reload();
+    // this.location.reload();
     // const SpaLadiesURL1 = localStorage.getItem('spa_ladies_url_1'); 
     // window.location.reload();
     const SpaLadiesURL1 = await this.Storage.get('spa_ladies_url_1')
@@ -322,9 +515,12 @@ async navigateTospaLadies(){
     // const SpaLadiesURL2 = localStorage.getItem('spa_ladies_url_2');
     const SpaLadiesURL2 = await this.Storage.get('spa_ladies_url_2');
     // window.location.reload();
+   
     this.router.navigate(['/spa-ladies',SpaLadiesURL1,SpaLadiesURL2]);
     // window.location.reload();
   }
+
+
   customClose() {
     this.modalController.dismiss();
   }
