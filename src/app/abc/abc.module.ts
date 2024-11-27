@@ -15,6 +15,7 @@ import { SharedModule } from "../shared/shared.module";
     FormsModule,
     IonicModule,
     AbcPageRoutingModule,
+    IonicModule.forRoot(),
     SharedModule
 ],
   declarations: [AbcPage],

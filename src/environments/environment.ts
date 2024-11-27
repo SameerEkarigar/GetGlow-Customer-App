@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  tapApiKey: 'sk_test_ParN2MZDGgdbkqLcmIuznVTH',
   firebaseConfig: {
     apiKey: "AIzaSyA8G8eC-LWBtmLg8-7J2EYDO6IqvzJx9Ew",
     authDomain: "YOUR_AUTH_DOMAIN",

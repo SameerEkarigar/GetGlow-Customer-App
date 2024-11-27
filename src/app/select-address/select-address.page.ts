@@ -70,7 +70,9 @@ export class SelectAddressPage implements OnInit {
   isModalOpen: boolean = false;
   isContentVisible: boolean = false;
   IsActiveFoot: boolean = false; // show footer form
-  selectedAddressStatus: number = 0;
+  selectedAddressStatus: any;
+  booking_type: any;
+  selectedAddressId: any;
   
   constructor(
     private modalController: ModalController ,
@@ -97,6 +99,7 @@ export class SelectAddressPage implements OnInit {
   async ngOnInit() {
     this.IsActiveFoot = true;
     // this.loadMap();
+    this.booking_type = await this.storage.get('booking_type');
    
     this.selectedDiscountCode = await this.storage.get('selectedDiscountCode');
     this.selectedDiscountAmount = await this.storage.get('selectedDiscountAmount');
@@ -122,7 +125,7 @@ export class SelectAddressPage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Deletion canceled');
+            // console.log('Deletion canceled');
           }
         },
         {
@@ -286,14 +289,14 @@ export class SelectAddressPage implements OnInit {
  
     const selectedValue = event.detail.value;
     
-    if (event.detail.value === addressData.id) {
+    if (event.detail.value !== addressData.id) {
       this.selectedAddressStatus = 1; // Set status to 1 when selected
     } else {
       this.selectedAddressStatus = 0; // Reset to 0 when unselected
     }
 
-    // this.value = event.detail.value === this.selectedAddress;
-    // console.log(this.value);
+    this.value = event.detail.value === this.selectedAddress;
+ 
 
     this.selectedAddressData = this.printAddress.find((address: { title: any; }) => address.title === selectedValue);
     
@@ -369,15 +372,12 @@ export class SelectAddressPage implements OnInit {
   }
 
   handleMapClick(latLng: google.maps.LatLng) {
-    // console.log('fdlgdfkv');
-    // this.IsActiveFoot = true;
     this.show_custom_footer_content();
     this.mapService.reverseGeocode(latLng.lat(), latLng.lng()).then((data: any) => {
       if (data.results && data.results.length) {  
-        // this.IsActiveFoot = false;
         this.address = data.results[0].formatted_address;
         this.show_custom_footer_content();
-        console.log('Address:', this.address);
+
       }
     }).catch(error => {
       console.error('Error during geocoding:', error);
@@ -413,43 +413,22 @@ export class SelectAddressPage implements OnInit {
     });
   }
 
-  // getAddressFromCoordinates(lat: number, lon: number) {
-  //   console.log('lat : ',lat, 'lon : ',lon);
-  //   this.mapService.reverseGeocode(lat, lon).then((data: any) => {
-  //     if (data.results && data.results.length) {
-  //       const addressComponents = data.results[0].address_components; // Modify as per your geocoding API response
-  //       const suburb = addressComponents.suburb || '';
-  //       const liveCity = addressComponents.city || addressComponents.locality || ''; // Fallbacks for city
-  //       const liveCountry = addressComponents.country || '';
-  //       const livePostcode = addressComponents.postcode || '';
-  //       const liveState = addressComponents.state || '';
-  //       const liveNeighbourhood = addressComponents.neighbourhood || '';
-
-  //       console.log('Live Address:', suburb, liveCity, liveState, liveCountry, livePostcode);
-  //     } else {
-  //       console.error('Unable to get address from coordinates');
-  //       alert('Unable to retrieve address.');
-  //     }
-  //   }).catch((error) => {
-  //     console.error('Error during geocoding:', error);
-  //     alert('Unable to retrieve address.');
-  //   });
-  // }
   
  async getAddress(){
   this.loadingService.presentLoading(); 
     const user_id = await this.storage.get('user_index_id');
-    this.apiService.getSelectAddress(user_id).subscribe((response)=>{
-      // console.log(response);
-
+    this.apiService.getSelectAddress(user_id).subscribe(async (response)=>{
       if (response) {
         if (Array.isArray(response.message)) {
           this.printAddress = response.message;
           this.buttonText = this.addanotherAddress;
           this.defaultAddress = this.printAddress.find((address: { default_address: any; }) => address.default_address === '1');
-          
+          const default_service_location = this.defaultAddress?.service_location;
+          // console.log('default_service_location',default_service_location)
           if (this.defaultAddress) {
-            this.selectedAddress = this.defaultAddress.title; // Set to title of default address
+            this.selectedAddress = this.defaultAddress.title;
+            await this.storage.set('ServiceLocation', default_service_location);
+           // Set to title of default address
           } else {
             console.warn('No default address found');
             this.selectedAddress = ''; // Clear if none found
@@ -478,24 +457,23 @@ export class SelectAddressPage implements OnInit {
   }
 
   navigateToSelectAddress(){
-    const value = this.selectedAddressStatus;
-    const index_id = this.selectedAddressData.id; // get id to update last Selected addresss by user
-    console.log(' Value:', value);
-    this.apiService.updateLastselectedAddress(index_id, value).subscribe((response)=>{
-      if(response.status === true){
-            this.updateData = response.message;
-            console.log('updated or not', this.updateData)
-            // this.customClose();
-            // this.refreshPage();
-      }
-    })
 
     if(this.selectedAddressData || this.defaultAddress){
       this.router.navigate(['/select-date-time']);  
     } else{
-       console.log('please choose address')
-    }
+      //  console.log('please choose address')
+    } 
+    const value = this.selectedAddressStatus;
+    const index_id = this.selectedAddressData.id; // get id to update last Selected addresss by user
     
+    this.apiService.updateLastselectedAddress(index_id, value).subscribe((response)=>{
+      if(response.status === true){
+            this.updateData = response.message;
+            // console.log('updated or not', this.updateData);
+      }
+    })
+    
+  
   }
 
   navigateToviewBooking(){

@@ -1,151 +1,197 @@
-
 <ion-content [fullscreen]="true">
-<app-header-component></app-header-component>
+<div *ngIf="!connectToPaymentGateway" >
+
+
+  <app-header-component></app-header-component>
 
   <div class="outer_content">
     <ion-row size="12">
       <ion-col size="12">
         <div class="arrow_div" (click)="navigateToSelectdatetime()">
-          <ion-icon size="large"  name="arrow-back-outline"></ion-icon>
+          <ion-icon size="large" name="arrow-back-outline"></ion-icon>
         </div>
       </ion-col>
     </ion-row>
-    <ion-row size="12">
+  <ion-row size="12">
       <ion-col size="12" class="section_heading">
         <p style="font-size: 16px;">Your Bookings</p>
       </ion-col>
+      <ion-col size="12" class="section_heading" *ngIf="slecetDatePackage">
+        <p style="font-size: 16px;">Select Start Date For Packages</p>
+      </ion-col>
     </ion-row>
-    <div *ngFor="let cartitem of CartList">
+
+    <div *ngFor="let cartitem of CartList; let i = index">
       <ion-row size="12">
         <ion-col size="7">
           <p style="margin-top: 5px; margin-bottom: 5px;">{{cartitem.name}} - {{cartitem.duration}}</p>
         </ion-col>
         <ion-col size="3">
-          <p style="margin-top: 5px; margin-bottom: 5px; font-size: 14px;">AED {{cartitem.totalAmount}} </p>
+          <p style="margin-top: 5px; margin-bottom: 5px; font-size: 14px;">AED {{cartitem.totalAmount}}</p>
         </ion-col>
         <ion-col size="2" class="view_add_btn">
           <ion-button size="small" style="top: 4px !important;">{{cartitem.quantity}}</ion-button>
         </ion-col>
       </ion-row>
-    </div>
-    
-    <ion-row size="12">
-      <ion-col size="8">
-        <div class="">
-          <p style="font-size: 16px; margin-bottom: 10px;">Address</p>
-          <p class="drop_Margin_0" style="font-size: 16px;">{{Title}}</p>
-          <p class="font_10px drop_Margin_0">{{Address}}</p>
-        </div>
-      </ion-col>
-    </ion-row>
 
-    <ion-row size="12">
-      <ion-col size="12" class="section_heading">
-        <p style="font-size: 16px; margin-bottom: 3px;">Service Date & Time </p>
-        <p class="font_10px drop_Margin_0">{{formattedDate}}{{selectedTime}}</p>
-      </ion-col>
-    </ion-row>
+      <ion-row *ngIf="showCalender">
+        <ion-col size="6">
+          <!-- Loop for quantity, will display multiple calendar inputs -->
+          <div *ngFor="let i of [].constructor(cartitem.quantity); let dateIndex = index" class="custom-date">
+            <ion-input type="date" [min]="today" placeholder="Select Date"
+              [(ngModel)]="cartitem.selectedDates[dateIndex]" (ionChange)="updateSelectedDate(cartitem, dateIndex)">
+            </ion-input>
+            <ion-icon name="calendar" class="custom-icon"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+      <div *ngIf="cartitem.package_arr && cartitem.package_arr.length > 0">
+        <ion-row *ngIf="showpackageDropdown">
+          <ion-col size="6">
+            <ion-checkbox [(ngModel)]="cartitem.isChecked" name="isChecked2"  (ionChange)="onCheckboxChange(cartitem, $event)" class="bg_white custom_margin"
+              labelPlacement="end" required style="position: relative; z-index: 999;">
+              <p>Book from Package</p>
+            </ion-checkbox>
+          </ion-col>
+          <ion-col size="6">
+            <ion-select [disabled]="!cartitem.isChecked" [(ngModel)]="cartitem.selectedPackageId"
+              (ngModelChange)="onPackageSelect(cartitem,i)" class="map_input" placeholder="Search package">
+              <ion-select-option *ngFor="let pastbooking of cartitem.package_arr" [value]="pastbooking.ID">
+                {{ pastbooking.package_name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </div>
+</div>
+    
+    <div *ngIf="showAddressAndDate">
+      <ion-row size="12">
+        <ion-col size="8">
+          <div class="">
+            <p style="font-size: 16px; margin-bottom: 10px;">Address</p>
+            <p class="drop_Margin_0" style="font-size: 16px;">{{Title}}</p>
+            <p class="font_10px drop_Margin_0">{{Address}}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row size="12">
+        <ion-col size="12" class="section_heading">
+          <p style="font-size: 16px; margin-bottom: 3px;">Service Date & Time</p>
+          <p class="font_10px drop_Margin_0">{{formattedDate}}{{selectedTime}}</p>
+        </ion-col>
+      </ion-row>
+    </div>
 
     <ion-row size="12" class="padding_top_10px">
       <ion-col size="12" class="section_heading">
-        <p  style="font-size: 16px;">Payment Summary</p>
+        <p style="font-size: 16px;">Payment Summary</p>
       </ion-col>
     </ion-row>
     <ion-row size="12">
       <ion-col size="6">
         <div class="intial_start margin_0">
           <p>Booking Total</p>
-        </div> 
+        </div>
       </ion-col>
       <ion-col size="6">
-        <div class="start_end margin_0" >
-          <p>AED {{overalltotal}}</p>
+        <div class="start_end margin_0">
+          <p>AED {{totalAmountBeforeAnyDeduction}}</p>
         </div>
       </ion-col>
     </ion-row>
-    <ion-row size="12">
-      <ion-col size="6" >
+    <ion-row size="12" *ngIf="hideDiscountRow">
+      <ion-col size="6">
         <div class="intial_start margin_0">
-          <p>Discounts  & Offers</p>
+          <p>Discounts & Offers</p>
           <p class="text_color_theme">{{selectedDiscountCode}}</p>
-        </div>       
+        </div>
       </ion-col>
-      <ion-col size="6" >
-        <div class="start_end margin_0" >
+      <ion-col size="6">
+        <div class="start_end margin_0">
           <p>AED {{selectedDiscountAmount}}</p>
-        </div>   
+        </div>
       </ion-col>
     </ion-row>
-   <div *ngIf="addCashPaymentCharges">
-    <ion-row size="12">
-      <ion-col size="6" >
-        <div class="intial_start margin_0">
-          <p>Service Charge - CBS</p>
-        </div>       
-      </ion-col>
-      <ion-col size="6" >
-        <div class="start_end margin_0" >
-          <p>AED 20</p>
-        </div>   
-      </ion-col>
-    </ion-row>
-  </div>
-    <ion-row size="12">
-      <ion-col size="6" >
-        <div class="intial_start ">
-          <p>Total</p>
-        </div>       
-      </ion-col>
-      <ion-col size="6" >
-        <div class="start_end ">
-          <p *ngIf="!selectCashPay">AED {{AmountAfterDeductDiscount}}</p>
-          <p *ngIf="selectCashPay">AED {{finalAmount}}</p>
-          <p class="font_10px">Includes 5% VAT = AED 15.71</p>
-        </div>   
-      </ion-col>
-    </ion-row>
-<!-- payment-options -->
-    <ion-row size="12">
-      <ion-col size="12">
-        
-      </ion-col>
-    </ion-row>
-<!----->
-     <ion-item class="payment_radio_btn_div">
-          <ion-radio-group value="custom-checked" [(ngModel)]="selectedPaymentMethod">
-            <div class="radio_btn display_flex">
-             <ion-radio (click)="visiblePay()" value="creditCard" aria-label="Custom checkbox"></ion-radio>
-             <ion-label><p class="radio_p">Pay by Credit/Debit Card</p></ion-label>
-            </div>
-           <div class="radio_btn display_flex">
-             <ion-radio (click)="cashPay()" value="custom-checked" aria-label="Custom checkbox that is checked"></ion-radio>
-             <ion-label><p>Pay by Cash before service</p></ion-label>
-           </div>
-         </ion-radio-group>
-        </ion-item> 
-        <!-- *ngIf="pay_byCard" -->
-    <div class="bottom_btn_fix" >  
+    <div *ngIf="addCashPaymentCharges">
       <ion-row size="12">
-       <ion-col size="12">
-        <!-- <p class="font_10px">I agree to Terms & Conditions & Cancellation Policy</p> -->
-        <p class="font_10px">
-          I agree to <a [routerLink]="['/terms-condition']">Terms & Conditions</a> & <a [routerLink]="['/cancelation-policy']">Cancellation Policy</a>.
-      </p>
-       </ion-col> 
-      </ion-row>
-      <ion-button *ngIf="!creditPay" expand="full" class="continue_to_address_btn">Pay</ion-button>
-      <ion-button *ngIf="creditPay" expand="full" (click)="CashPayBook()" class="continue_to_address_btn">Confirm Booking</ion-button>
-     </div> 
-  
-
-     <!-- <div class="bottom_btn_fix">
-      <ion-row size="12">
-        <ion-col size="12">
-          <div class="save_btn_outer_div">
-            <ion-button expand="full"  class="continue_to_address_btn">Continue To Address</ion-button>
+        <ion-col size="6">
+          <div class="intial_start margin_0">
+            <p>Service Charge - CBS</p>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="start_end margin_0">
+            <p>AED 20</p>
           </div>
         </ion-col>
       </ion-row>
-      </div> -->
+    </div>
+    <ion-row size="12">
+      <ion-col size="6">
+        <div class="intial_start ">
+          <p>Total</p>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div class="start_end ">
+          <!-- <p *ngIf="!selectCashPay">AED {{AmountAfterDeductDiscount}}</p>  *ngIf="selectCashPay"-->
+          <p >AED {{finalAmount}}</p>
+          <!-- <p *ngIf="!ifpackagethenTotalAmount">AED {{totalAmountBeforeAnyDeduction}}</p> -->
+          <p class="font_10px">Includes 5% VAT = AED {{vatAmount}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <!-- payment-options -->
+    <ion-row size="12">
+      <ion-col size="12">
+
+      </ion-col>
+    </ion-row>
+    <!----->
+    <ion-item class="payment_radio_btn_div" *ngIf="hideRadioButton">
+      <ion-radio-group value="custom-checked" [(ngModel)]="selectedPaymentMethod" (ionChange)="onPaymentMethodChange($event)">
+        <div class="radio_btn display_flex">
+          <ion-radio (click)="visiblePay()" value="creditCard" aria-label="Custom checkbox"></ion-radio>
+          <ion-label>
+            <p class="radio_p">Pay by Credit/Debit Card</p>
+          </ion-label>
+        </div>
+        <div class="radio_btn display_flex">
+          <ion-radio (click)="cashPay()" value="cashpay"
+            aria-label="Custom checkbox that is checked"></ion-radio>
+          <ion-label>
+            <p style="margin-right: 5px;">Pay by Cash before service</p>
+          </ion-label>
+        </div>
+      </ion-radio-group>
+    </ion-item>
+
+    <!-- *ngIf="pay_byCard" -->
+    <div class="bottom_btn_fix">
+      <ion-row size="12">
+        <ion-col size="12">
+          <!-- <p class="font_10px">I agree to Terms & Conditions & Cancellation Policy</p> -->
+          <p class="font_10px">
+            I agree to <a [routerLink]="['/terms-condition']">Terms & Conditions</a> & <a
+              [routerLink]="['/cancelation-policy']">Cancellation Policy</a>.
+          </p>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-button  expand="full" (click)="onPaymentClick()"
+      class="continue_to_address_btn">Pay test</ion-button> -->
+
+      <ion-button *ngIf="!creditPay" expand="full" (click)="onPaymentClick()"
+        class="continue_to_address_btn">Pay</ion-button>
+      <ion-button *ngIf="creditPay" expand="full" (click)="CashPayBook()" class="continue_to_address_btn">Confirm
+        Booking</ion-button>
+    </div>
   </div>
+
+</div>
+<div *ngIf="connectToPaymentGateway" >
+   <p class="conectToPG">Connecting to Payment gateway</p> 
+   <!-- <p>{{tapId}}</p> -->
+</div>
 </ion-content>

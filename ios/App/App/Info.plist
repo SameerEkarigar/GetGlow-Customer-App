@@ -47,5 +47,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+
+	<key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>ggcustomer</string> <!-- Your custom URL scheme -->
+            </array>
+        </dict>
+    </array>
+	
 </dict>
+
 </plist>

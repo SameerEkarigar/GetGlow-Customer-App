@@ -83,7 +83,9 @@
         </ng-template>
       </ion-modal>
     </div>
+  
     <div *ngIf="showAdditionalDetails" #professionalSection>
+      
       <ion-row size="12">
         <ion-col size="12" class="section_heading">
           <p style="font-size: 13px;
@@ -92,11 +94,34 @@
       </ion-row>
       <ion-row size="12">
         <ion-col size="12" class="font_10px ">
-          <p style="margin-top: 0;">The selected professional is subject to availability. We will notify if the professional is not available.
+          <p style="margin-top: 0; font-style: italic;">The selected professional is subject to availability. We will notify if the professional is not available.
           </p>
         </ion-col>
       </ion-row>
-      <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
+      <div *ngIf="loading" class="swiper-slide loader-slide">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+      <div *ngIf="!loading" >
+        <div *ngIf="LastBookedProffesional">
+          <ion-row >
+            <ion-col size="4" class="lasBookedProfCol">
+              <div class="slide-content prfsnl_slide">
+                <div  class="inner_div_profsnl_slide margin_0">
+                  <div class="img_outer_div"><img [src] = "LastBookedProffesional.emp_image"></div>    
+                   <p>{{LastBookedProffesional.emp_name}}</p>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="8">
+              <p class="lastBookMessage_p">{{LastBookedProffesional.message}}</p>
+              <ion-button size="small" class="bookProfessional" (click)="onSelectLastBookedProffesional(LastBookedProffesional.emp_id, LastBookedProffesional.emp_name)">Book</ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+           <p class="lastBookMessage">Other available professionals</p>
+          </ion-row>
+        </div>
+        <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
           <swiper-slide><div class="slide-content prfsnl_slide" [ngClass]="{'active-proff-button': isActive}" >
             <div class="inner_div_profsnl_slide margin_0"  (click)="getValue($event)">
               <div  class="any_proff"><img src = "./assets/users-icon.png"></div>    
@@ -104,7 +129,8 @@
             </div>
           </div>
         </swiper-slide>
-              
+       
+        <!-- <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>  -->
         <swiper-slide *ngFor="let prof_data of printProffesionalData">
           <div class="slide-content prfsnl_slide">
             <div  class="inner_div_profsnl_slide margin_0" (click)="onselectprofessional(prof_data.first_name, prof_data.last_name,prof_data.id)"  [ngClass]="{'active-proff-button': activeprofessional === prof_data.first_name + ' ' + prof_data.last_name}">
@@ -114,6 +140,8 @@
           </div>
         </swiper-slide>
       </swiper-container>
+      </div>
+      
     </div>
 
   </div>
@@ -157,7 +185,7 @@
       <ion-col size="6">
         <div class="start_end ">
           <p>AED {{AmountAfterDeductDiscount}}</p>
-          <p class="font_10px">Includes 5% VAT = AED 15.71</p>
+          <p class="font_10px">Includes 5% VAT = AED {{vatAmount}}</p>
         </div>
       </ion-col>
     </ion-row>

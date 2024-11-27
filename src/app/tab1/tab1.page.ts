@@ -47,6 +47,8 @@ export class Tab1Page implements OnInit {
   }
 
  async ngOnInit() {
+    const check= await this.storage.set('tap_id','');
+    console.log('check', check);
     this.loadData();
     this.user_id = await this.storage.get('user_index_id');
     this.CalculateHeaderItem();
@@ -55,6 +57,14 @@ export class Tab1Page implements OnInit {
   async init() {
     await this.storage.create();
   }
+
+  // ionViewWillEnter() {
+  //   //console.log('ionViewWillEnter - Runs every time the page is entered');
+  //   this.navigateToTabPage(); // Reload cart data each time user navigates to this page
+  // }
+  // navigateToTabPage(){
+  //   this.router.navigate(['/tabs/tab1']);
+  // }
   // Method to load all data and manage loading state
   async loadData() {
     this.loading = true; // Start loading
@@ -141,6 +151,7 @@ export class Tab1Page implements OnInit {
           return service1;
         });
         this.categoryName1 = this.PrintService1[0].category_name;
+       
       }
     } catch (error) {
       console.error('Error fetching service 1 data:', error);
@@ -177,7 +188,7 @@ export class Tab1Page implements OnInit {
       if (mostpopular.status === true) {
         this.mostPopularData = mostpopular.data;
         this.mostPopularData_1 = mostpopular.data[0];
-        console.log('Most Popular Data-', this.mostPopularData);
+        // console.log('Most Popular Data-', this.mostPopularData);
 
         const storedCartString = localStorage.getItem('cart') || '[]';
 
@@ -224,15 +235,15 @@ export class Tab1Page implements OnInit {
     this.apiservice.packages().subscribe((response)=>{
       if(response.status === true){
         this.packagesData = response.message;
-        // console.log('packages-',this.packagesData);     
+        //console.log('packages-',this.packagesData);     
       }
     })
   }
 
-  async onClickPackages(service_category: any, name: any, service_name: any, static_name: any ){
+  async onClickPackages(service_category: any, name: any, service_name: any, static_name: any, service_category_name: any ){
     await this.storage.set('service_name', service_name);
     await this.storage.set('ItemType', static_name);
-    this.router.navigate(['/spa-ladies', service_category, name]); 
+    this.router.navigate(['/spa-ladies', service_category, service_category_name]); 
   }
   
     // Method to increase quantity
@@ -276,40 +287,40 @@ export class Tab1Page implements OnInit {
     }
   
   ShowAddbutton(index: number) {
-       // Extract the new service type and duration dynamically
-       const newServiceType = this.mostPopularData[index].sv_name.split(' - ')[0].trim();
-       const newDurationNumber = this.mostPopularData[index].sv_duration_time;
-   
-       // Retrieve previous cart data
-       const prev_cart_data = localStorage.getItem('cart');
-       const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
-   
-       const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
-       const hasConflict = existingServiceTypes.length > 0 &&
-                           !existingServiceTypes.includes(newServiceType);
-   
-       if (hasConflict) {
-           alert(`This service cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
-           return; // Exit early to prevent UI updates
-       }
-       
-       const totalDuration = previousCart.reduce((sum: number, item: { duration_number: any; }) => {
-         // Parse the duration_number to ensure it's a number
-         const duration = parseInt(item.duration_number, 10);
-         
-         // Check if the duration is a valid number
-         if (!isNaN(duration)) {
-             return sum + duration; // Add the parsed duration to the sum
-         } else {
-             console.error(`Invalid duration_number: ${item.duration_number}`);
-             return sum; // If invalid, just return the current sum
-         }
-       }, 0) + (typeof newDurationNumber === 'number' ? newDurationNumber : parseInt(newDurationNumber, 10));
-     
-       if (totalDuration > 180) {
-           alert(`We are unable to set a maximum massage duration of 180 minutes.`);
-           return; // Exit early to prevent UI updates
-       }
+      // Extract the new service type and duration dynamically
+      const newServiceType = this.mostPopularData[index].sv_name.split(' - ')[0].trim();
+      const newDurationNumber = this.mostPopularData[index].sv_duration_time;
+  
+      // Retrieve previous cart data
+      const prev_cart_data = localStorage.getItem('cart');
+      const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+  
+      const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+      const hasConflict = existingServiceTypes.length > 0 &&
+                          !existingServiceTypes.includes(newServiceType);
+  
+      if (hasConflict) {
+          alert(`This service cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
+          return; // Exit early to prevent UI updates
+      }
+      
+      const totalDuration = previousCart.reduce((sum: number, item: { duration_number: any; }) => {
+        // Parse the duration_number to ensure it's a number
+        const duration = parseInt(item.duration_number, 10);
+        
+        // Check if the duration is a valid number
+        if (!isNaN(duration)) {
+            return sum + duration; // Add the parsed duration to the sum
+        } else {
+            console.error(`Invalid duration_number: ${item.duration_number}`);
+            return sum; // If invalid, just return the current sum
+        }
+      }, 0) + (typeof newDurationNumber === 'number' ? newDurationNumber : parseInt(newDurationNumber, 10));
+    
+      if (totalDuration > 180) {
+          alert(`We are unable to set a maximum massage duration of 180 minutes.`);
+          return; // Exit early to prevent UI updates
+      }
 
 
 
@@ -322,7 +333,7 @@ export class Tab1Page implements OnInit {
       this.saveCart();
       this.CalculateHeaderItem();
       
-    }
+  }
 
   updateTotalAmount(index: number){
       const variant1 = this.mostPopularData[index]; 
@@ -372,7 +383,8 @@ export class Tab1Page implements OnInit {
         quantity: any,
         sv_name: any,
         id: any,
-        sv_duration_time: any
+        sv_duration_time: any,
+        services_id: any
         
         })=>({
           id: mostPopularVariant.id,
@@ -386,7 +398,8 @@ export class Tab1Page implements OnInit {
           service_category: mostPopularVariant.service_category,
           user_id: this.user_id,
           quantity: mostPopularVariant.quantity,
-          service_type: mostPopularVariant.sv_name.split(' - ')[0].trim() 
+          service_type: mostPopularVariant.sv_name.split(' - ')[0].trim(),
+          services_id: mostPopularVariant.services_id
 
         }));
         
@@ -438,7 +451,7 @@ export class Tab1Page implements OnInit {
           this.overallTotalAmount = total;
 
           const cart_length = previousCart.length;
-          console.log(cart_length);
+          //console.log(cart_length);
           if(cart_length != 0){
             this.HeaderQyt = cart_length;
             localStorage.setItem('headerCart',  this.HeaderQyt);

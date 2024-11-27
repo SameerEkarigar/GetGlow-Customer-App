@@ -1,7 +1,7 @@
-<div *ngIf="!showpackages">
+
 <ion-content [fullscreen]="true">
   <app-header-component [cart_quantity]="HeaderQyt"></app-header-component><!--[serviceCategory] ="servicecategory"-->
-
+  <div *ngIf="!showpackages">
   <div class="outer_content">
     <ion-row size="12">
       <ion-col size="12">
@@ -106,9 +106,8 @@
       </ion-col>
     </ion-row>
   </div>
-</ion-content>
 </div> 
-<!-- --------- -->
+ <!-- --------- -->
 <!-- <div *ngIf="showcart" class="view_cart_div">
   <ion-row size="12">
     <ion-col size="6">
@@ -121,10 +120,9 @@
     </ion-col>
   </ion-row>
 </div> -->
-
-<div class="ifpackages" *ngIf="showpackages">     
-  <ion-content [fullscreen]="true">
-    <app-header-component [cart_quantity]="HeaderQyt"></app-header-component> <!-- //[serviceCategory] ="servicecategory" -->
+<div class="ifpackages" *ngIf="showpackages" >     
+  <!-- <ion-content [fullscreen]="true" >
+    <app-header-component [cart_quantity]="HeaderQyt"></app-header-component> //[serviceCategory] ="servicecategory" -->
     
     <div class="outer_content">
       <ion-row size="12">
@@ -142,7 +140,7 @@
         </ion-row>
         <ion-row size="12">
           <ion-col size="12" class="">
-            <div class="bannerImgOuterDiv">
+            <div class="bannerImgOuterDiv" >
               <ion-img [src]="serviceImgbanner" alt=""></ion-img>
             </div>
           </ion-col>
@@ -157,7 +155,7 @@
                     [ngClass]="{'active-button': activeIndex === i}" 
                     (click)="onclickpackageServiceName($event, i, package.service_name)"  
                     size="small">
-                    {{ package.name }}
+                    {{ package.service_name_name }}
                   </ion-button>
                 </div>
               </swiper-slide>
@@ -170,7 +168,7 @@
       <!-- jj -->
   
        <!-- jj -->
-        <div *ngFor="let packageVariant of printPackageVariant; let i = index">
+        <div *ngFor="let packageVariant of printPackageVariant; let i = index" class="package_variant_outer_div">
 
           <div *ngIf="packageVariant"> 
             <ion-row size="12" class="padding_top_services">    
@@ -187,18 +185,13 @@
           </ion-row>   
          </div>
 
-          <ion-row size="12" class="outer_div_add_btn">
+          <ion-row size="12" class="outer_div_add_btn outer_div_marign_0">
             <ion-col size="12">
               <div >
                 <p>{{ packageVariant.services_variants_name.split(' - ')[0].trim() }}</p>
                 <p>{{ packageVariant.package_duration }} days</p>
                 <p class="bold_css">AED {{ packageVariant.package_amount }}</p>
             
-                <!-- Show Add button if the item is not added or the quantity is 0 -->
-                 <!-- <div *ngIf="static_btn" >
-                  <ion-button class="before_add"  size="small" >Add</ion-button>
-                 </div> -->
-                 
                 <div *ngIf="!packageVariant.addButton || packageVariant.quantity < 1">
                     <ion-button #sv_people class="before_add" [attr.sv_people]="packageVariant.sv_people" size="small" (click)="showAddButtons(i, $event)">Add</ion-button>
                 </div>
@@ -231,9 +224,9 @@
         </ion-col>
       </ion-row>
     </div>
-  
-  <div class="ifpackages">
-      
-  </div>
-  </ion-content> 
+  <!-- </ion-content>  -->
 </div>
+</ion-content>
+
+
+

@@ -20,13 +20,38 @@ export class KnowMoreModalComponent  implements OnInit {
   whatincludeData: any;
   getBeforeYoubookData: any;
   packageInnerDescription: any;
+  packageFeatureData: any;
+  packageInnerVideo: any
+  packageInnerWhatWeGet: any
+  packageInnerWhatWeInclude: any;
+  packageInnerBeforeYouBook: any;
+  service_type: any;
+  ifPackage: boolean = false;
   // serviceId: string; 
   constructor(private modalController: ModalController, private apiService: ApiService,private navParams: NavParams) { }
   
   ngOnInit() {
         // Get the data passed from the parent component
+        this.service_type = this.navParams.get('service_type');
+        if(this.service_type === 'package'){
+           this.ifPackage = true;
+        }else{
+          this.ifPackage = false;
+        }
         this.packageInnerDescription =   this.navParams.get('packageInnerDescription');
-        console.log('fuck you bitch', this.packageInnerDescription);
+        this.packageFeatureData =   this.navParams.get('packageFeatureData');
+        this.packageInnerVideo =   this.navParams.get('packageInnerVideo');
+        this.packageInnerWhatWeGet = this.navParams.get('packageInnerWhatWeGet');
+        this.packageInnerWhatWeInclude = this.navParams.get('packageInnerWhatWeInclude');
+        this.packageInnerBeforeYouBook = this.navParams.get('packageInnerBeforeYouBook');
+        
+        console.log('packageInnerDescription', this.packageInnerDescription);
+        console.log('packageFeatureData', this.packageFeatureData);
+        console.log('packageInnerVideo', this.packageInnerVideo);
+        console.log('packageInnerWhatWeGet', this.packageInnerWhatWeGet);
+        console.log('packageInnerWhatWeInclude', this.packageInnerWhatWeInclude);
+        console.log('packageInnerBeforeYouBook', this.packageInnerBeforeYouBook);
+        console.log('service_type', this.service_type);
         
         this.serviceData = this.navParams.get('serviceData');
         this.wahtIncludeData = this.navParams.get('wahtIncludeData');
@@ -37,7 +62,7 @@ export class KnowMoreModalComponent  implements OnInit {
         this.ourProfVideoData = this.navParams.get('ourProfVideoData');
         this.whatincludeData = this.navParams.get('whatincludeData');
         this.getBeforeYoubookData = this.navParams.get('getBeforeYoubookData');
-        console.log(this.getBeforeYoubookData);
+        //console.log(this.getBeforeYoubookData);
   }
  // Property to store service_id
   

@@ -13,88 +13,85 @@
   </ion-row>
   <ion-row size="12">
     <ion-col size="6" class="">
-      <ion-button size="small" class="upcoming_btn margin_0"><p>Upcoming</p></ion-button>
+      <ion-button size="small" class="upcoming_btn margin_0" [ngClass]="{ 'active-button': activeButton === 'upcoming', 'inactive-button': activeButton !== 'upcoming' }"
+      (click)="setActiveButton('upcoming')"><p>Upcoming</p></ion-button>
     </ion-col>
     <ion-col size="6" class="">
-      <ion-button size="small" class="past_btn margin_0"><p>Past</p></ion-button>
+      <ion-button size="small" class="past_btn margin_0" [ngClass]="{ 'active-button': activeButton === 'past', 'inactive-button': activeButton !== 'past' }"
+      (click)="setActiveButton('past')" (click)="onclickPastBooking()"><p>Past</p></ion-button>
     </ion-col>
   </ion-row>
-  <div class="cancel-booking-div" *ngIf="showFirstDiv && confirmbooking">
-  <ion-row size="12">
+  <div *ngIf="loading" class="swiper-slide loader-slide">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div class="cancel-booking-div" *ngIf="showFirstDiv && confirmbooking && showUpcommingBooking">
+  <ion-row class="upcomming_booking_row_css" size="12" *ngFor=" let upComBooking of upComingBookingData">
     <ion-col size="4" class="upcoming_outer_booking_div">
-      <h5 class="">Swedish Massage</h5>
-      <p class="">30/07/2024</p>
-      <p class="">Single - 60 mins</p>
-      <p class="">AED 169</p>
+      <h5 class="">{{upComBooking.services_name}}</h5>
+      <p class="">{{upComBooking.servicedate}}</p>
+      <p class="">{{upComBooking.sv_name}}</p>
+      <p class="">AED {{upComBooking.total_price}}</p>
     </ion-col>
-    <ion-col size="4" class="">
+    <ion-col size="5" class="">
       <div class="prof_img">
-        <ion-img src="assets/prof_img.png"></ion-img>
-        <p>Ayu dayawanti</p>
+        <img class="rounded-img" [src]="upComBooking.profile_pic">
+        <p>{{upComBooking.employee_fname}} {{upComBooking.employee_lname}}</p>
       </div>
     </ion-col>
-    <ion-col size="4" class="cancel_btn_div">
+    <ion-col size="3" class="cancel_btn_div">
       <div class="color_black text-end ">
-        <p>GGB-1234</p>
+        <p>GGB-{{upComBooking.booking_id}}</p>
       </div>
       <div class="cancel_btn_outer_div">
-        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs()">Cancel</ion-button>
-      </div>
-    </ion-col>
-  </ion-row>
-  <ion-row size="12">
-    <ion-col size="4" class="upcoming_outer_booking_div">
-      <h5 class="">Swedish Massage</h5>
-      <p class="">30/07/2024</p>
-      <p class="">Single - 60 mins</p>
-      <p class="">AED 169</p>
-    </ion-col>
-    <ion-col size="4" class="">
-      <div class="prof_img">
-        <ion-img src="assets/prof_img.png"></ion-img>
-        <p>Ayu dayawanti</p>
-      </div>
-    </ion-col>
-    <ion-col size="4" class="cancel_btn_div">
-      <div class="color_black text-end ">
-        <p>GGB-1234</p>
-      </div>
-      <div class="cancel_btn_outer_div">
-        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs()">Cancel</ion-button>
-      </div>
-    </ion-col>
-  </ion-row>
-  <ion-row size="12">
-    <ion-col size="4" class="upcoming_outer_booking_div">
-      <h5 class="">Swedish Massage</h5>
-      <p class="">30/07/2024</p>
-      <p class="">Single - 60 mins</p>
-      <p class="">AED 169</p>
-    </ion-col>
-    <ion-col size="4" class="">
-      <div class="prof_img">
-        <ion-img src="assets/prof_img.png"></ion-img>
-        <p>Ayu dayawanti</p>
-      </div>
-    </ion-col>
-    <ion-col size="4" class="cancel_btn_div">
-      <div class="color_black text-end ">
-        <p>GGB-1234</p>
-      </div>
-      <div class="cancel_btn_outer_div">
-        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs()">Cancel</ion-button>
+        <ion-button size="small" class="cacnel_btn" (click)="toggleDivs(upComBooking.booking_id, upComBooking.servicetime, upComBooking.servicedate)">Cancel</ion-button>
       </div>
     </ion-col>
   </ion-row>
 </div>
+
+<div *ngIf="noDataFound" class="nopastbooking">
+  <p>No Past Bookings</p>
+</div>
+<div *ngIf="noUpcomingFound" class="nopastbooking">
+  <p>No Upcoming Bookings</p>
+</div>
+<div *ngIf="!showUpcommingBooking">
+  <ion-row class="upcomming_booking_row_css" size="12" *ngFor=" let pastBooking of pastBooking">
+    <ion-col size="4" class="upcoming_outer_booking_div">
+      <h5 class="">{{pastBooking.services_name}}</h5>
+      <p class="">{{pastBooking.servicedate}}</p>
+      <p class="">{{pastBooking.sv_name}}</p>
+      <p class="">AED {{pastBooking.total_price}}</p>
+    </ion-col>
+    <ion-col size="5" class="text_center">
+      <div class="prof_img">
+        <div class="img_outer_div">
+          <img class="rounded-img" [src]="pastBooking.profile_pic">
+        </div>  
+        <p>{{pastBooking.employee_fname}} {{pastBooking.employee_lname}}</p>     
+      </div>
+      
+    </ion-col>
+    <ion-col size="3" class="cancel_btn_div">
+      <div class="color_black text-end ">
+        <p>GGB-{{pastBooking.booking_id}}</p>
+      </div>
+    </ion-col>
+  </ion-row>
+</div>
+
 <div *ngIf="!showFirstDiv" class="color_black text-center confirm_cancel_booking" >
   <p class="font_bold">Are you sure you want to cancel ?</p> 
-  <p>Your Booking GGB-1234 will be cancelled and the <br>
+  <p *ngIf="textAfter90min">Your Booking GGB-1234 will be cancelled and the <br>
      amount will be refunded to your credit/debit card. This <br>
      cannot be undone when you click on Proceed. <br>
      Do you wish to continue?</p>
+     <p *ngIf="!textAfter90min">Your Booking GGB-1234 will be cancelled and as per the <a href="/cancelation-policy"  rel="noopener noreferrer">
+      Cancellation policy
+    </a> 10% amount will be deducted and the balance amount will be refunded to your credit/debit card. This   cannot be undone when you click on Proceed. 
+      Do you wish to continue?</p>
      <div class="back-proceed-outer-dv">
-      <div><ion-button size="small" class="back_btn">
+      <div><ion-button size="small" class="back_btn" (click)="backTObooking()"> 
         Back
       </ion-button ></div>  
       <div><ion-button (click)="proceed()" size="small" class="proceed_btn">
@@ -103,12 +100,11 @@
       </div>
 </div>
 <div class="confirm_cancel_div" *ngIf="!confirmbooking">
- <p class="color_black text-center font_bold">Cancelling your booking <br>
-     Please Wait</p>
+ <p class="color_black text-center font_bold">{{statusText}}</p>
 </div>
-<div *ngIf="!showCancelStatus">
+<!-- <div *ngIf="!showCancelStatus">
   <p class="color_black font_bold text-center">Booking Cancelled</p>
-</div>
+</div> -->
 
 <!-- <div  class="color_black text-center confirm_cancel_booking" >
   <p class="font_bold">Are you sure you want to cancel ?</p> 

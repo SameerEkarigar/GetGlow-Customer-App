@@ -325,6 +325,16 @@ ion-radio.radio-checked::part(mark) {
   margin-right: 15px;
   padding-bottom: 15px;
 }
+.conectToPG{
+  color: #000;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  height: 90vh;
+  width: 100%;
+}
 .radio_p {
   margin-right: 18px !important;
 }
@@ -339,4 +349,48 @@ ion-radio.radio-checked::part(mark) {
 }
 .second_div_payment{
   margin-top: -15px;
+}
+
+ion-select-option {
+  --ion-background-color: #ffffff; /* Background color of the dropdown options */
+  --ion-text-color: #000000; /* Text color of the options */
+}
+ion-select{
+  color: black;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+}
+.custom-date {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 80%;
+}
+.custom-date ion-input{
+  color: black;
+  border: 1px solid;
+  padding: 0px 10px !important;
+}
+
+.custom-icon {
+  position: absolute;
+  right: 10px; /* Adjust this as needed */
+  color: #000000; /* Change icon color here */
+}
+
+ion-input {
+  padding-right: 30px; /* Extra space for the icon */
+}
+ion-checkbox{
+  --checkbox-background: white;
+  --border-color: black;
+  --border-width: 1px;
+  --border-radius: 0;
+  --border-color-checked: black;
+  --checkbox-background-checked: white;
+  float: left;
+  --checkmark-color: rgb(0, 0, 0) !important;
 }

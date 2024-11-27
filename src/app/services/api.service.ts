@@ -56,7 +56,20 @@ export class ApiService {
   updateLastSelectedAddressApi = this.base_path+ 'update_default_address';
   package_innerdescriptionApi = this.base_path+ 'service_page_description_packages';
   package_innerFeaturesApi = this.base_path+ 'service_page_fetures_packages';
+  package_innerVideoApi = this.base_path+ 'service_page_videos_packages';
+  package_innerWhatweget = this.base_path+ 'service_page_what_we_get_packages';
+  package_whatIncludeContent = this.base_path+ 'service_page_whats_included_content_packages';
+  package_beforeYouBook = this.base_path+ 'service_page_before_you_book_packages';
   PreviousbookedPackageApi = this.base_path+ 'customer_packages';
+  insertOnlypackageApi = this.base_path+ 'insert_packages';
+  upComingBookingApi = this.base_path+ 'upcoming_bookings';
+  CreditPaymentApi = this.base_path+ 'processPayment';
+  pastBookingApi = this.base_path+ 'previous_bookings';
+  cancelBookingApi = this.base_path+ 'cancel_booking';
+  getAllpurchasedApi = this.base_path+ 'getCustomerALlPackages';
+  getAllpurchasedInnerApi = this.base_path+ 'getCustomerALlPackages_inner_data';
+  CheckPaymentStatusApi = this.base_path+ 'App_payment_check_process';
+  lastBookedProffessionalApi = this.base_path+ 'last_time_employee_booked';
   constructor(private http: HttpClient) { }
 
   get_splash_content(): Observable<any> {
@@ -216,6 +229,26 @@ export class ApiService {
     const body = { service_variant: service_variant };
     return this.http.post<any>(this.package_innerdescriptionApi, body, { headers })
   }
+  packageInnerVideo(service_variant: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { service_variant: service_variant };
+    return this.http.post<any>(this.package_innerVideoApi, body, { headers })
+  }
+  packageInnerWhatWeGet(service_variant: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { service_variant: service_variant };
+    return this.http.post<any>(this.package_innerWhatweget, body, { headers })
+  }
+  packageInnerWhatWeInclude(service_variant: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { service_variant: service_variant };
+    return this.http.post<any>(this.package_whatIncludeContent, body, { headers })
+  }
+  packageInnerBeforeYouBook(service_variant: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { service_variant: service_variant };
+    return this.http.post<any>(this.package_beforeYouBook, body, { headers })
+  }
   packageInnerFeatures(service_variant: any){
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   const body = { service_variant: service_variant };
@@ -230,6 +263,51 @@ export class ApiService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { index_id: index_id, value: value };
     return this.http.post<any>(this.updateLastSelectedAddressApi, body, { headers })
+  }
+  insertOnlypackage(resultJson: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { resultJson: resultJson};
+    return this.http.post<any>(this.insertOnlypackageApi, body, { headers })
+  }
+  upComingBookings(user_id: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_id: user_id};
+    return this.http.post<any>(this.upComingBookingApi, body, { headers })
+  }
+  pastbookings(user_id: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_id: user_id};
+    return this.http.post<any>(this.pastBookingApi, body, { headers })
+  }
+  creditPayment(paymentData: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { paymentData: paymentData};
+    return this.http.post<any>(this.CreditPaymentApi, body, { headers })
+  }
+  cancelBooking(booking_id: any, cancel_reason: any, cancel_other_reason: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { booking_id: booking_id, cancel_reason: cancel_reason, cancel_other_reason: cancel_other_reason};
+    return this.http.post<any>(this.cancelBookingApi, body, { headers })
+  }
+  purchasedPackages(user_id: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_id: user_id};
+    return this.http.post<any>(this.getAllpurchasedApi, body, { headers })
+  }
+  purchasedInnerPackageData(user_id: any, package_id: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_id: user_id, package_id: package_id};
+    return this.http.post<any>(this.getAllpurchasedInnerApi, body, { headers })
+  }
+  CheckPaymentStatus(tap_id: any, Order_id: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { tap_id: tap_id, Order_id: Order_id};
+    return this.http.post<any>(this.CheckPaymentStatusApi, body, { headers })
+  }
+  lastBookedProffesional(user_id :any, service_variant : any, servicetime : any, servicedate : any,service_location : any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_id : user_id , service_variant : service_variant, servicetime : servicetime, servicedate : servicedate,service_location :service_location};
+    return this.http.post<any>(this.lastBookedProffessionalApi, body, { headers })
   }
   packages(){
     return this.http.get<any>(this.packagesApi);

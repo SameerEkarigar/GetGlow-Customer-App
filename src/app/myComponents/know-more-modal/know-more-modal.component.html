@@ -6,6 +6,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
+  <div *ngIf="!ifPackage">
   <div *ngIf="servicePageDescription">
     <ion-row size="12">
       <ion-col size="12">
@@ -24,7 +25,7 @@
  
   </ion-row>
  
-  <ion-row size="12" class="outer_div_add_btn">
+  <!-- <ion-row size="12" class="outer_div_add_btn">
     <ion-col size="12">
       <div *ngFor="let arrayOfservice of servicePAgeDEscriptionArray">
       <div>
@@ -42,7 +43,7 @@
       </div>
     </div>
     </ion-col>
-  </ion-row>
+  </ion-row> -->
 </div>
 
   <ion-row size="12">
@@ -227,34 +228,230 @@
       </div>
     </ion-col>
   </ion-row>
-  <!-- <ion-row size="12" class="outer_div_add_btn">
-    <ion-col size="4">
+</div>
+
+<!-- -----------for packages------------- -->
+
+<div *ngIf="ifPackage" >
+  <div *ngIf="packageInnerDescription">
+    <ion-row size="12">
+      <ion-col size="12">
+        <img [src]="packageInnerDescription.banner_img" alt="">
+      </ion-col>
+    </ion-row>
+
+  <ion-row size="12" class="padding_top_services">
+    <ion-col size="12" class="service_colmn">
       <div>
-        <p>60 mins</p>
-        <p class="bold_css">AED 165</p>
-        <div *ngIf="" class="before_add">
-          <ion-button size="small" id="open-modal">Add</ion-button>
-        </div>
+        <h2 class="color_black">{{packageInnerDescription.description}}</h2>
+        <p class="color_black">{{packageInnerDescription.short_description}}</p>
+        <!-- <p class="know_more_css">Know More</p> -->
       </div>
-      <div *ngIf="" class="after_add">
-        <ion-button class="less_btn" size="small" (click)="decrement(0)">-</ion-button>
-        <ion-button class="add_btn" size="small">{{ quantities[0] }}</ion-button>
-        <ion-button class="plus_btn" size="small" (click)="increment(0)">+</ion-button>
-      </div> 
     </ion-col>
-    <ion-col size="4">
+ 
+  </ion-row>
+ 
+  <!-- <ion-row size="12" class="outer_div_add_btn">
+    <ion-col size="12">
+      <div *ngFor="let arrayOfservice of servicePAgeDEscriptionArray">
       <div>
-        <p>90 mins</p>
-        <p class="bold_css">AED 220</p>
-        <div *ngIf="" class="before_add">
+        <p>{{arrayOfservice.splitSvName }}</p>
+        <p>{{arrayOfservice.sv_duration_time}} mins</p>
+        <p class="bold_css">AED {{arrayOfservice.sv_price}}</p>
+        <div *ngIf="!addbtn && !showcart" (click)="showbtn()" class="before_add">
           <ion-button size="small">Add</ion-button>
         </div>
       </div>
-    <div *ngIf="" class="after_add">
-        <ion-button class="less_btn" size="small" (click)="decrement(1)">-</ion-button>
-        <ion-button class="add_btn" size="small">{{ quantities[1] }}</ion-button>
-        <ion-button class="plus_btn" size="small" (click)="increment(1)">+</ion-button>
-      </div> 
+      <div *ngIf="addbtn" class="after_add">
+        <ion-button class="less_btn" size="small" (click)="deductquantity()">-</ion-button>
+        <ion-button class="add_btn" size="small">{{quantity}}</ion-button>
+        <ion-button class="plus_btn" size="small" (click)="increasequantity()">+</ion-button>
+      </div>
+    </div>
     </ion-col>
   </ion-row> -->
+</div>
+<ion-row size="12">
+  <ion-col size="6">
+    <div>
+      <ion-img [src]="packageFeatureData.feature_1_img"></ion-img>
+      <div class="feature_div_km color_black">
+        <h2>{{packageFeatureData.feature_1_heading}}</h2>
+        <p>{{packageFeatureData.feature_1_description}}</p>
+      </div>
+    </div>
+
+  </ion-col>
+  <ion-col size="6">
+    <div>
+      <ion-img [src]="packageFeatureData.feature_2_img"></ion-img>
+      <div class="feature_div_km color_black">
+        <h2>{{packageFeatureData.feature_2_heading}}</h2>
+        <p>{{packageFeatureData.feature_2_description}}</p>
+      </div>
+    </div>
+  </ion-col>
+</ion-row>
+<ion-row size="12">
+  <ion-col size="6">
+    <div>
+      <ion-img [src]="packageFeatureData.feature_3_img"></ion-img>
+      <div class="feature_div_km color_black">
+        <h2>{{packageFeatureData.feature_3_heading}}</h2>
+        <p>{{packageFeatureData.feature_3_description}}</p>
+      </div>
+    </div>
+
+  </ion-col>
+  <ion-col size="6">
+    <div>
+      <ion-img [src]="packageFeatureData.feature_4_img"></ion-img>
+      <div class="feature_div_km color_black">
+        <h2>{{packageFeatureData.feature_4_heading}}</h2>
+        <p>{{packageFeatureData.feature_4_description}}</p>
+      </div>
+    </div>
+  </ion-col>
+</ion-row>
+<ion-row size="12" class="padding_global slider_heading">
+  <ion-col size="12">
+    <h2>{{packageInnerVideo.video_text_section}}</h2>
+  </ion-col>
+</ion-row>
+<swiper-container class="mySwiper" loop="true" slides-per-view="3" space-between="10">
+  <swiper-slide>
+    <div class="slide-content">
+      <div class="video-container">
+        <video autoplay muted playsinline loop>
+          <source [src]="packageInnerVideo.video_1_img" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </swiper-slide>
+  <swiper-slide>
+    <div class="slide-content">
+      <div class="video-container">
+        <video autoplay muted playsinline loop>
+          <source  [src]="packageInnerVideo.video_1_img" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </swiper-slide>
+  <swiper-slide>
+    <div class="slide-content">
+      <div class="video-container">
+        <video autoplay muted playsinline loop>
+          <source  [src]="packageInnerVideo.video_1_img" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </swiper-slide>
+</swiper-container>
+<div>
+  <ion-row size="12" class="padding_global slider_heading">
+    <ion-col size="12">
+      <h2>{{packageInnerWhatWeGet.what_we_get_text_section}}</h2>
+    </ion-col>
+  </ion-row>
+  <ion-row size="12">
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="packageInnerWhatWeGet.what_we_get_1_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{packageInnerWhatWeGet.what_we_get_1_heading}}</h2>
+          <p>{{packageInnerWhatWeGet.what_we_get_1_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="packageInnerWhatWeGet.what_we_get_2_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{packageInnerWhatWeGet.what_we_get_2_heading}}</h2>
+          <p>{{packageInnerWhatWeGet.what_we_get_2_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="packageInnerWhatWeGet.what_we_get_3_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{packageInnerWhatWeGet.what_we_get_3_heading}}</h2>
+          <p>{{packageInnerWhatWeGet.what_we_get_3_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+    <ion-col size="6">
+      <div>
+        <ion-img [src]="packageInnerWhatWeGet.what_we_get_4_img"></ion-img>
+        <div class="feature_div_km color_black">
+          <h2>{{packageInnerWhatWeGet.what_we_get_4_heading}}</h2>
+          <p>{{packageInnerWhatWeGet.what_we_get_4_description}}</p>
+        </div>
+      </div>
+    </ion-col> 
+  </ion-row>
+</div>
+<ion-row size="12" class="padding_global slider_heading">
+  <ion-col size="12">
+    <p>{{packageInnerWhatWeInclude.what_Whats_text_section}}</p>
+  </ion-col>
+</ion-row>
+<ion-row size="12">
+  <ion-col size="12">
+    <ion-img [src]="packageInnerWhatWeInclude.whats_included_1_img"></ion-img>
+  </ion-col>
+  <ion-col size="12" class="color_black">
+    <h2>
+      {{packageInnerWhatWeInclude.whats_included_1_heading}}
+    </h2>
+    <p>{{packageInnerWhatWeInclude.whats_included_1_description}}</p>
+  </ion-col>
+</ion-row>
+<ion-row size="12">
+  <ion-col size="12">
+    <ion-img [src]="packageInnerWhatWeInclude.whats_included_2_img"></ion-img>
+  </ion-col>
+  <ion-col size="12" class="color_black">
+    <h2>
+      {{packageInnerWhatWeInclude.whats_included_2_heading}}
+    </h2>
+    <p>{{packageInnerWhatWeInclude.whats_included_2_description}}</p>
+  </ion-col>
+</ion-row>
+<ion-row size="12">
+  <ion-col size="12">
+    <ion-img [src]="packageInnerWhatWeInclude.whats_included_3_img"></ion-img>
+  </ion-col>
+  <ion-col size="12" class="color_black">
+    <h2>
+      {{packageInnerWhatWeInclude.whats_included_3_heading}}
+    </h2>
+    <p>{{packageInnerWhatWeInclude.whats_included_3_description}}</p>
+  </ion-col>
+</ion-row>
+<ion-row size="12">
+  <ion-col size="12">
+    <ion-img [src]="packageInnerWhatWeInclude.whats_included_4_img"></ion-img>
+  </ion-col>
+  <ion-col size="12" class="color_black">
+    <h2>
+      {{packageInnerWhatWeInclude.whats_included_4_heading}}
+    </h2>
+    <p>{{packageInnerWhatWeInclude.whats_included_4_description}}</p>
+  </ion-col>
+</ion-row>
+<ion-row size="12">
+  <ion-col size="12">
+    <div class="color_black">
+      <h2>{{packageInnerBeforeYouBook.before_you_book_text_section}}</h2>
+      <ul class="my-nav byb_ul">
+        <li>{{packageInnerBeforeYouBook.bullet_1}}</li>
+        <li>{{packageInnerBeforeYouBook.bullet_2}}</li>
+        <li>{{packageInnerBeforeYouBook.bullet_3}}</li>
+      </ul>
+    </div>
+  </ion-col>
+</ion-row>
+</div>
 </ion-content>

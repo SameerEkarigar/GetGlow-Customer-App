@@ -39,7 +39,10 @@ export class SelectDateTimePage implements OnInit {
   selectedDiscountAmount: any;
   AmountAfterDeductDiscount: any;
   anyProffesionals: any;
-
+  ServiceDate: any;
+  vatAmount: any;
+  loading: boolean = false; 
+  LastBookedProffesional: any;
   constructor(private modalcontroller: ModalController,
      private router: Router,
      private apiService: ApiService,
@@ -58,7 +61,19 @@ export class SelectDateTimePage implements OnInit {
       this.selectedDiscountAmount = await this.storage.get('selectedDiscountAmount');
       this.AmountAfterDeductDiscount = await this.storage.get('AmountAfterDeductDiscount');
       const overallTotalAmount = localStorage.getItem('overallTotalAmount');
-      this.totalAmount = overallTotalAmount;
+      if(this.AmountAfterDeductDiscount){
+        this.totalAmount = this.AmountAfterDeductDiscount;
+      }else{
+        this.totalAmount = overallTotalAmount;
+      }
+      
+      this.vatAmount = await this.storage.get('vatAmount');
+      // console.log('selectedDiscountCode',this.selectedDiscountCode )
+      // console.log('selectedDiscountAmount',this.selectedDiscountAmount )
+      // console.log('AmountAfterDeductDiscount',this.AmountAfterDeductDiscount )
+      // console.log('overallTotalAmount',this.totalAmount )
+     
+
       this.selectedOrNOt = await this.storage.get('selectedaddressOption');
       
       if(this.selectedOrNOt){
@@ -66,12 +81,7 @@ export class SelectDateTimePage implements OnInit {
         this.Address = await this.storage.get('selectedAddress');
       }
       }
- 
-  getValue(event: any){
-    this.anyProffesionals = 0;
-    // console.log('Slide clicked with value:', this.anyProffesionals);
-    this.isActive = true; // Example logic to mark as active
-  }
+
   
   customClose() {
     this.modalcontroller.dismiss();
@@ -129,10 +139,14 @@ export class SelectDateTimePage implements OnInit {
       const servicetime = time_slot; 
       this.activeTimeSlot = time_slot;
 
-      const servicedate = this.servicedate;  // from ondatechange function
-
+      const servicedate = this.servicedate; 
+      this.ServiceDate = this.servicedate;
+      await this.storage.set('ServiceDate', this.servicedate);// from ondatechange function
+      // console.log('servicedate====',servicedate)
+      localStorage.setItem('ServiceDate', servicedate);
       await this.printProfessional(servicetime, servicedate);
       this.scrollToProfessionals();
+      this.printLastBookedProffesional(servicetime,servicedate);
 
      }     
   }
@@ -143,7 +157,14 @@ export class SelectDateTimePage implements OnInit {
       const servicetime = time_slot; 
       this.activeTimeSlot = time_slot; // for showing time slot active in frontend
       const servicedate = this.servicedate;
+      // console.log('servicedate====',servicedate)
+      await this.storage.set('ServiceDate', this.servicedate); 
+      // console.log('onchagne time',servicetime)
+      localStorage.setItem('ServiceDate', servicedate);
+      // const servicedatetest = await this.storage.get('servicedate');
+      // console.log('servicedate====',servicedatetest)
       await this.printProfessional(servicetime, servicedate)
+      this.printLastBookedProffesional(servicetime,servicedate);
      }
   }
 
@@ -159,7 +180,7 @@ export class SelectDateTimePage implements OnInit {
     }
   }
 
- async onselectprofessional(first_name: string, last_name: string, emp_id: any) {
+  async onselectprofessional(first_name: string, last_name: string, emp_id: any) {
     if (first_name && last_name) {
       const fullName = `${first_name} ${last_name}`;
       this.activeprofessional = fullName;  // Set activeprofessional to full name
@@ -167,6 +188,22 @@ export class SelectDateTimePage implements OnInit {
       await this.storage.set('EmployeeID', emp_id);
       this.navigateToPaymentPage();
     }
+  }
+  async onSelectLastBookedProffesional(emp_id : any, emp_name: any){
+    await this.storage.set('selectedEmployee', emp_name);
+    await this.storage.set('EmployeeID', emp_id);
+    this.navigateToPaymentPage();
+
+  }
+  async getValue(event: any){
+    this.anyProffesionals = 0;
+    // console.log('Slide clicked with value:', this.anyProffesionals);
+    this.isActive = true;
+    await this.storage.set('servicedate', this.ServiceDate);  
+    await this.storage.set('selectedEmployee', '0');
+    await this.storage.set('EmployeeID', '0');
+    this.navigateToPaymentPage();
+     // Example logic to mark as active
   }
 
   printTimeSlot(selectedDate: any){ 
@@ -203,30 +240,40 @@ export class SelectDateTimePage implements OnInit {
     return dateObj;
   }
 
-
- async printProfessional(servicetime: any, servicedate: any) {
-  // console.log('function run');
-   const service_location = await this.storage.get('ServiceLocation');
-  //  console.log('service-location',service_location)
+  async printLastBookedProffesional(servicetime: any, servicedate: any){
+    const user_id= await this.storage.get('user_index_id');
+    const service_location = await this.storage.get('ServiceLocation');
     var cart_data_list = JSON.parse(localStorage.getItem('cart') || '[]');
-    console.log('cart', cart_data_list)
-    // Map the service_variant array to get the IDs
+    // const service_variant = cart_data_list.map((item: any) => item.services_variants_id);
+    const service_variant = cart_data_list.map((item: any) => item.services_variants_id).join(',');
+    // console.log('user_id', user_id)
+    // console.log('service_variant_array',service_variant)
+    // console.log('service_location', service_location)
+    // console.log('servicetime', servicetime)
+    this.apiService.lastBookedProffesional(user_id,service_variant,servicetime,servicedate,service_location).subscribe((response)=>{
+      if(response.status === true){
+        console.log('print last boooked proffesional', response);
+        this.LastBookedProffesional = response;
+      }
+    })
+  }
+  async printProfessional(servicetime: any, servicedate: any) {
+    const service_location = await this.storage.get('ServiceLocation');
+    var cart_data_list = JSON.parse(localStorage.getItem('cart') || '[]');
     const service_variant_array = cart_data_list.map((item: any) => item.services_variants_id);
-    
-    // Convert the array into a comma-separated string
+    const service_type = cart_data_list.map((item: any) => item.service_type); 
+
     const service_variant = service_variant_array.join(',');
-    console.log('serice variant',service_variant)
-    console.log('servicetime',servicetime)
-    console.log('servicedate',servicedate)
-    console.log('service_location',service_location)
+    this.loading = true;
     this.apiService.getProfessional(service_variant, servicetime, servicedate, service_location).subscribe((response) => {
       if(response) {
         this.printProffesionalData = response.message;  
         this.showAdditionalDetails = true;
-         console.log('print---', this.printProffesionalData);
+        // console.log('print---', this.printProffesionalData);
       } else{
-        console.log('no')
+        // console.log('no')
       }
+      this.loading = false;
     });
   }
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-header-component',
@@ -10,10 +10,10 @@ import { Router } from '@angular/router';
 export class HeaderComponentComponent  implements OnInit {
   @Input() cart_quantity: any = '';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private paymentService: PaymentService) { }
 
   ngOnInit() {
-   const header_cart =  localStorage.getItem('headerCart');
+   const header_cart = localStorage.getItem('headerCart');
    this.cart_quantity = header_cart;
   //  console.log(this.cart_quantity);
   //  console.log(header_cart);

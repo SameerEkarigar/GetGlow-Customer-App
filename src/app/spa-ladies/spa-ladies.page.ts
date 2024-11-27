@@ -75,30 +75,39 @@ export class SpaLadiesPage implements OnInit {
   ) {
      this.init();
   }
+
   async init() {
     await this.Storage.create();
   }
- async ngOnInit() {
-    const ItemType = await this.Storage.get('ItemType');
+  
+  refreshPage() {
+    window.location.reload();
+  }
 
+  async ionViewWillEnter() {
+    // This will run every time you navigate to this page
+    // this.refreshPage();
+    // //console.log('ionViewWillEnter called');
+    const ItemType = await this.Storage.get('ItemType');
+    // //console.log('ItemType-',ItemType)
     if(ItemType === 'service'){
       this.showpackages = false;
     }else{
       this.showpackages = true;
     }
-    
+  }
+ 
+  async ngOnInit() {
+
     const index = 0; // Set the appropriate index if needed
     const service_name = await this.Storage.get('service_name'); // Replace with the actual service name or variable
     this.onclickpackageServiceName(null, index, service_name);
 
-    this.printPackages();
+    this.printPackagesServices();
     this.CalculateHeaderItem();
-    this.getPackagesInnerData();
     localStorage.setItem('spa_ladies_url', '');
     localStorage.setItem('spa_ladies_url_1', '');
     localStorage.setItem('spa_ladies_url_2', '');
-
-   
 
     this.user_id = await this.Storage.get('user_index_id');
     this.service_name = await this.Storage.get('service_name');
@@ -173,9 +182,15 @@ export class SpaLadiesPage implements OnInit {
   // ---
 
   async openpackageModal(services_variants: any) {
+    // console.log(services_variants)
     forkJoin({
+        service_type: 'pacakge',
         packageInnerDescription : this.apiService.packageInnerDescription(services_variants),
-        packageFeatureData: this.apiService.packageInnerFeatures(services_variants)
+        packageFeatureData: this.apiService.packageInnerFeatures(services_variants),
+        packageInnerVideo: this.apiService.packageInnerVideo(services_variants),
+        packageInnerWhatWeGet: this.apiService.packageInnerWhatWeGet(services_variants),
+        packageInnerWhatWeInclude: this.apiService.packageInnerWhatWeInclude(services_variants),
+        packageInnerBeforeYouBook: this.apiService.packageInnerBeforeYouBook(services_variants)
       // serviceData: this.apiService.getWhatWeGetContent(services_id),
       // wahtIncludeData: this.apiService.getWhatWeIncludeService(services_id),
       // servicePageDescription: this.apiService.getServicePageDescription(services_id),
@@ -185,14 +200,19 @@ export class SpaLadiesPage implements OnInit {
       // getBeforeYoubookData: this.apiService.getBeforeYoubookData(services_id)        // Add more API calls as needed
       
 
-    }).subscribe(async ({ packageInnerDescription, packageFeatureData, }) => {       
-      if (packageInnerDescription && packageFeatureData ) {
+    }).subscribe(async ({service_type, packageInnerDescription, packageFeatureData,packageInnerVideo,packageInnerWhatWeGet,packageInnerWhatWeInclude, packageInnerBeforeYouBook }) => {       
+      if (service_type && packageInnerDescription && packageFeatureData && packageInnerVideo && packageInnerWhatWeGet && packageInnerWhatWeInclude && packageInnerBeforeYouBook) {
         
         const modal = await this.modalController.create({
           component: KnowMoreModalComponent,
           componentProps: {
-            packageInnerDescription: packageFeatureData.message, // Pass first API response
-            packageFeatureData: packageFeatureData.message, // Pass second API response
+            service_type:'package',
+            packageInnerDescription: packageInnerDescription.message[0], // Pass first API response
+            packageFeatureData: packageFeatureData.message[0],
+            packageInnerVideo: packageInnerVideo.message[0],
+            packageInnerWhatWeGet: packageInnerWhatWeGet.message[0],
+            packageInnerWhatWeInclude: packageInnerWhatWeInclude.message[0],
+            packageInnerBeforeYouBook: packageInnerBeforeYouBook.message[0] // Pass second API response
             
           // Pass third API response
         
@@ -244,7 +264,7 @@ export class SpaLadiesPage implements OnInit {
       if (response) {
         this.variantData1 = response.message[0];
         this.variantData = response.message;
-        console.log('service data : ',this.variantData);
+        console.log('service variant data : ',this.variantData);
         const storedCartString = localStorage.getItem('cart') || '[]';
 
         let storedCart;
@@ -294,19 +314,23 @@ export class SpaLadiesPage implements OnInit {
   quantity: number = 1;
   totalAmount: number = 0;
 
-  printPackages(){
-    this.apiService.packages().subscribe((response)=>{
+  printPackagesServices(){
+    this.servicecategory = this.route.snapshot.paramMap.get('service_category');
+    const packages_service_category = this.servicecategory;
+    this.apiService.packagesInnerData(packages_service_category).subscribe((response)=>{
       if(response.status === true){
-        this.packages = response.message;    
-       // console.log('print pacakges',this.packages);
+        this.packages = response.message; 
+        //  //console.log('packages inner data',response);
       }
     })
+
   }
  
  async showAddButtons(index: number, event: any) {
     const ItemType = await this.Storage.get('ItemType');
-      if(ItemType === 'packages'){ 
-        const newServiceType = this.printPackageVariant[index].services_variants_name.split(' - ')[0].trim();
+      if(ItemType === 'packages'){
+        // const newServiceType = this.printPackageVariant[index].services_variants_name.split(' - ')[0].trim();
+        const newServiceType = 'Package';
         const newDurationNumber = this.printPackageVariant[index].package_duration;
     
         // Retrieve previous cart data
@@ -314,31 +338,14 @@ export class SpaLadiesPage implements OnInit {
         const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
     
         const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+        // //console.log('existingServiceTypes',existingServiceTypes)
         const hasConflict = existingServiceTypes.length > 0 &&
                             !existingServiceTypes.includes(newServiceType);
-    
         if (hasConflict) {
             alert(`This Packages cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
             return; // Exit early to prevent UI updates
         }
-        
-        const totalDuration = previousCart.reduce((sum: number, item: { duration_number: any; }) => {
-          // Parse the duration_number to ensure it's a number
-          const duration = parseInt(item.duration_number, 10);
-          
-          // Check if the duration is a valid number
-          if (!isNaN(duration)) {
-              return sum + duration; // Add the parsed duration to the sum
-          } else {
-              console.error(`Invalid duration_number: ${item.duration_number}`);
-              return sum; // If invalid, just return the current sum
-          }
-        }, 0) + (typeof newDurationNumber === 'number' ? newDurationNumber : parseInt(newDurationNumber, 10));
-      
-        if (totalDuration > 180) {
-            alert(`We are unable to set a maximum massage duration of 180 minutes.`);
-            return; // Exit early to prevent UI updates
-        }
+    
         this.printPackageVariant[index].addButton = true;
         this.printPackageVariant[index].quantity = 1;
         this.updateTotalAmount(index);
@@ -351,30 +358,21 @@ export class SpaLadiesPage implements OnInit {
 
         this.cdr.detectChanges();
 
-      } else{
+      } else {
 
-        // const target = event.target as HTMLElement;
-        // this.sv_people = target.getAttribute('sv_people');
-    
-        // Extract the new service type and duration dynamically
-
-        console.log('Services console box');
-
+        // //console.log('Services');
         const newServiceType = this.variantData[index].sv_name.split(' - ')[0].trim();
+        
         const newDurationNumber = this.variantData[index].sv_duration_time;
         // Retrieve previous cart data
         const prev_cart_data = localStorage.getItem('cart');
         const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
-    
-        // const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
-        // const hasConflict = existingServiceTypes.length > 0 &&
-                            //!existingServiceTypes.includes(newServiceType);
 
         const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: string }) => item.service_type))];
-        console.log('step 3 : ',existingServiceTypes);
+        // //console.log('step 3 : ',existingServiceTypes);
         // Step 4: Check if the new service type conflicts with the existing service types
         const hasConflict = existingServiceTypes.length > 0 && !existingServiceTypes.includes(newServiceType);
-        console.log('step 4 : ',hasConflict);
+        // //console.log('step 4 : ',hasConflict);
         if (hasConflict) {
             alert(`This service cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
             return; // Exit early to prevent UI updates
@@ -420,8 +418,6 @@ export class SpaLadiesPage implements OnInit {
         this.cdr.detectChanges();
 
       }
-
-
    
 }
 
@@ -446,13 +442,13 @@ export class SpaLadiesPage implements OnInit {
 
   async saveCart() {
     const ItemType = await this.Storage.get('ItemType');
-    if(ItemType === 'packages'){ 
+    if(ItemType === 'packages'){
 
       // Packages item rules 
       const prev_cart_data = localStorage.getItem('cart');
       let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
       
-      // console.log(this.printPackageVariant);
+     // //console.log('package Variant',this.printPackageVariant);
       const newCartItems = this.printPackageVariant
       .filter((variant: { addButton: any; quantity: number; }) => variant.addButton && variant.quantity > 0) // Only save items with quantity > 0
       .map((variant: {
@@ -475,7 +471,7 @@ export class SpaLadiesPage implements OnInit {
           user_id: this.user_id,
           service_category: this.servicecategory,
           duration_number: Number(variant.package_duration),
-          service_type: variant.services_variants_name.split(' - ')[0].trim(), // Extract service type dynamically
+          service_type: 'Package', // Extract service type dynamically --- variant.services_variants_name.split(' - ')[0].trim()
       }));
 
       newCartItems.forEach((newItem: { id: any; quantity: any; totalAmount: any; }) => {
@@ -488,10 +484,8 @@ export class SpaLadiesPage implements OnInit {
           }
       });
 
-      // console.log(previousCart);
-
+      // //console.log(previousCart);
       localStorage.setItem('cart', JSON.stringify(previousCart));
-
       let total = previousCart.reduce((accumulator: number, item: { totalAmount: number }) => {
         return accumulator + item.totalAmount;
       }, 0);
@@ -504,13 +498,13 @@ export class SpaLadiesPage implements OnInit {
       this.overallTotalAmount = total;
 
       const cart_length = previousCart.length;
-      console.log(cart_length);
+      //console.log(cart_length);
       if(cart_length != 0){
         this.HeaderQyt = cart_length;
-        localStorage.setItem('headerCart',  this.HeaderQyt);
+        localStorage.setItem('headerCart', this.HeaderQyt);
       }else{
         this.HeaderQyt = '';
-        localStorage.setItem('headerCart',  this.HeaderQyt);
+        localStorage.setItem('headerCart', this.HeaderQyt);
       }
 
     }else{
@@ -519,7 +513,7 @@ export class SpaLadiesPage implements OnInit {
       let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
 
       const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
-
+      // //console.log('this.variantData', this.variantData)
       const newCartItems = this.variantData
           .filter(variant => variant.addButton && variant.quantity > 0) // Only save items with quantity > 0
           .map(variant => ({
@@ -527,6 +521,7 @@ export class SpaLadiesPage implements OnInit {
               name: variant.name,
               quantity: variant.quantity,
               duration: variant.sv_duration,
+              services_id: variant.services_id,
               totalAmount: variant.totalAmount,
               services_variants_id: variant.services_variants_id,
               unitAmount: variant.totalAmount,
@@ -534,7 +529,8 @@ export class SpaLadiesPage implements OnInit {
               user_id: this.user_id,
               service_category: this.servicecategory,
               duration_number: Number(variant.sv_duration_time),
-              service_type: variant.sv_name.split(' - ')[0].trim(), // Extract service type dynamically
+              service_type: variant.sv_name.split(' - ')[0].trim(),
+               // Extract service type dynamically
           }));
 
       const newServiceTypes = [...new Set(newCartItems.map(item => item.service_type))];
@@ -586,7 +582,7 @@ export class SpaLadiesPage implements OnInit {
       this.overallTotalAmount = total;
 
       const cart_lenght = previousCart.length;
-      // console.log('djxsxd : ',cart_lenght);
+      // //console.log('djxsxd : ',cart_lenght);
       if(cart_lenght != 0){
         this.HeaderQyt = cart_lenght;
         localStorage.setItem('headerCart',  this.HeaderQyt);
@@ -636,7 +632,7 @@ export class SpaLadiesPage implements OnInit {
       } else if (this.printPackageVariant[index].quantity === 1) {
           // If quantity is 1 and reduced to 0, remove the item from localStorage
           const check_cart = localStorage.getItem('cart');
-          // console.log('khli hone wala hai : ', check_cart);
+          // //console.log('khli hone wala hai : ', check_cart);
           if (check_cart) {
               let cartItems = JSON.parse(check_cart);
               // Filter out the item that matches this_item id
@@ -750,12 +746,12 @@ export class SpaLadiesPage implements OnInit {
   }
   
   async navigateToTabPage(){
-    // await this.Storage.set('static_name', ' ');
-    await this.Storage.remove('static_name');
+    const static_name = '';
+    await this.Storage.set('static_name', static_name);
     this.router.navigate(['/tabs/tab1']);
   }
 
- async navigateToViewBooking() {
+  async navigateToViewBooking() {
     const serviceCategory = this.route.snapshot.paramMap.get('service_category') || '';
     await this.Storage.set('service_category', serviceCategory);
     await this.Storage.set('spa_ladies_url_1', serviceCategory);
@@ -797,28 +793,18 @@ export class SpaLadiesPage implements OnInit {
     const toastMessage = `Added ${service.quantity} x ${service.duration} service(s) to cart for a total of AED ${(service.quantity * service.price).toFixed(2)}`;
     this.showToast(toastMessage);
   }
-   // ---------packages---------------//
-  getPackagesInnerData(){
-    // this.servicecategory = this.route.snapshot.paramMap.get('service_category');
-    // const packages_service_category = this.servicecategory;
-    // this.apiService.packagesInnerData(packages_service_category).subscribe((response)=>{
-    //   if(response.status === true){
-    //     //  console.log('packages inner data',response);
-    //   }
-    // })
-  }
 
   onclickpackageServiceName(event: any, index: number, service_name: any){
      const packages_service_name =  service_name; 
+     //console.log('packages_service_name',packages_service_name)
      this.apiService.packageVariants(packages_service_name).subscribe((response)=>{
       if(response.status === true){
           this.printPackageVariant = response.message;  
-          console.log('package-variant',this.printPackageVariant);
+          // console.log('package-variant',this.printPackageVariant);
 
           const storedCartString = localStorage.getItem('cart') || '[]';
 
           let storedCart;
-    
           try {
             storedCart = JSON.parse(storedCartString);
           } catch (error) {
@@ -838,7 +824,6 @@ export class SpaLadiesPage implements OnInit {
           } else {
             console.warn('Stored cart data is not an array:', storedCart);
           }
-
       }
      })
   }

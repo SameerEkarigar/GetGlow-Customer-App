@@ -24,6 +24,12 @@ export class ViewBookingPage implements OnInit {
   viewOffer: string = 'View Offers';
   selectedDiscountAmount: any;
   AmountAfterDeductDiscount: any;
+  frequentbookingtext = '';
+  btn_text: string = 'Continue To Address';
+  selectStartDate: boolean = false;
+  ShowIfdiscountSelect: boolean = false;
+  hideDiscountRow: boolean = true;
+  vatAmount: any;
   constructor(
     private modalController: ModalController,
     private router: Router,
@@ -46,16 +52,19 @@ export class ViewBookingPage implements OnInit {
     if (prev_cart_data) {
       const cartItems = JSON.parse(prev_cart_data);
       const cart_len = cartItems.length;
-
+      //console.log('cart_len', cart_len);
       if(cart_len != 0){
         this.HeaderQyt = cart_len;
+        localStorage.setItem('headerCart',  this.HeaderQyt);
         
       }else{
         this.HeaderQyt = '';
+        localStorage.setItem('headerCart',  this.HeaderQyt);
       }
       
     } else {
       this.HeaderQyt = '';
+      localStorage.setItem('headerCart',  this.HeaderQyt);
     }
   }
 
@@ -63,15 +72,44 @@ export class ViewBookingPage implements OnInit {
     this.printDiscountOffer();
     localStorage.setItem('select_address_cat', '');
     this.user_id = await this.Storage.get('user_id');
-    this.Initial_cart_list();
-    this.printFrequentlyBooked();
-    this.total_amount = localStorage.getItem('overallTotalAmount');
+    this.Initial_cart_list();  
+    this.vatAmountOnPAgeLOAd();
+    // console.log(roundedTwoDecimals)
+    // console.log('without dis',vatAmount)
     this.CalculateHeaderItem();
   }
 
-  Initial_cart_list(){
-    var cart_data_list = JSON.parse(localStorage.getItem('cart') || '[]');
+  async vatAmountOnPAgeLOAd(){
+    this.total_amount = localStorage.getItem('overallTotalAmount');
+    const netAmountBeforeVAT = this.total_amount / (1 + 5 / 100);
+    const vatAmount = this.total_amount - netAmountBeforeVAT;
+    this.vatAmount = (Math.round(vatAmount * 100) / 100).toFixed(2);
+    await this.Storage.set('vatAmount', this.vatAmount);
+  }
+
+  async Initial_cart_list() {
+    const cart_data_list = JSON.parse(localStorage.getItem('cart') || '[]');
     this.cart_data = cart_data_list;
+  
+    for (const item of this.cart_data) {
+      const booking_type = item.booking_type;
+      
+      // Await setting booking_type in Storage
+      await this.Storage.set('booking_type', booking_type);
+      
+      if (booking_type !== 'package') {
+        this.printFrequentlyBooked();
+        this.frequentbookingtext = 'Frequently Booked Together';
+      } else if(booking_type === 'package'){
+        this.selectStartDate = true;
+        this.hideDiscountRow = false;
+      }
+    }
+  }
+
+  async navigateToPayment(){
+    await this.Storage.set('backtoViewbooking', 'viewBooking');
+    this.router.navigate(['/payment-page']);
   }
 
  async printFrequentlyBooked() {
@@ -93,22 +131,10 @@ export class ViewBookingPage implements OnInit {
           };
 
         });
-        console.log('fre : ',this.frequentData);
+        // //console.log('frequent- : ',this.frequentData);
       }
       // this.loadingService.dismissLoading();
     });
-  }
-
-  storeDiscountCode() {
-    this.storedDiscountCode = this.enteredDiscountCode;
-    // Perform any additional actions with the storedDiscountCode
-    if(this.storedDiscountCode === ''){
-      this.viewOffer = 'View Offers'
-    } else {
-        this.viewOffer = 'Remove Offers'
-    }
-   
-    console.log('Stored discount code:', this.storedDiscountCode);
   }
 
  async applyAndStoreDiscount(couponName?: string, discountAmount?: any) {
@@ -117,8 +143,16 @@ export class ViewBookingPage implements OnInit {
       this.selectedDiscountAmount = discountAmount;
       await this.Storage.set('selectedDiscountAmount', this.selectedDiscountAmount);
       await this.Storage.set('selectedDiscountCode', this.enteredDiscountCode);
-      this.AmountAfterDeductDiscount = this.total_amount-this.selectedDiscountAmount;
+      this.AmountAfterDeductDiscount = this.total_amount - this.selectedDiscountAmount;
+      const netAmountBeforeVAT = this.AmountAfterDeductDiscount / (1 + 5 / 100);
+      
+      const vatAmount = this.AmountAfterDeductDiscount - netAmountBeforeVAT;
+      this.vatAmount = (Math.round(vatAmount * 100) / 100).toFixed(2);
+      await this.Storage.set('vatAmount', this.vatAmount);
+      // console.log(roundedTwoDecimals);
       await this.Storage.set('AmountAfterDeductDiscount', this.AmountAfterDeductDiscount);
+      this.ShowIfdiscountSelect = true;
+      localStorage.setItem('amount',this.AmountAfterDeductDiscount);
     }
   
     this.storedDiscountCode = this.enteredDiscountCode;
@@ -129,7 +163,41 @@ export class ViewBookingPage implements OnInit {
        this.selectedDiscountAmount = '';
     }
   }
-
+  
+ async storeDiscountCode() {
+    this.storedDiscountCode = this.enteredDiscountCode;
+    // Perform any additional actions with the storedDiscountCode
+    if(this.storedDiscountCode === ''){
+      this.viewOffer = 'View Offers'
+      await this.Storage.remove('selectedDiscountAmount');
+      await this.Storage.remove('selectedDiscountCode');
+      await this.Storage.remove('AmountAfterDeductDiscount');
+    } else {
+        this.viewOffer = 'Remove Offers'
+    }
+   
+    //console.log('Stored discount code:', this.storedDiscountCode);
+  }
+  async clearOffer(viewOffer: string) {
+    // console.log('View Offer Text:', viewOffer);
+    if (viewOffer === 'Remove Offer') {
+      this.vatAmountOnPAgeLOAd();
+      this.ShowIfdiscountSelect = false;
+      localStorage.setItem('amount',this.total_amount)
+      this.enteredDiscountCode = '';
+      this.storedDiscountCode = '';
+      this.selectedDiscountAmount ='';
+      await this.Storage.set('selectedDiscountAmount', '');
+      await this.Storage.set('selectedDiscountCode', '');
+      await this.Storage.set('AmountAfterDeductDiscount', '');
+      // console.log('Removing the offer');
+    } else{
+      await this.Storage.set('AmountAfterDeductDiscount', this.AmountAfterDeductDiscount );
+    }
+  }
+  openOffers(){
+    // console.log('click on Open offer')
+  }
   IncreaseCartQuantity(i: number) {
     // Increase the quantity of the item
     this.cart_data[i].quantity += 1;
@@ -174,6 +242,7 @@ export class ViewBookingPage implements OnInit {
       if(static_type){
         this.frequentData.push({ ...item_row });
       }
+      // this.UpdateCartItem(item_id, 0, 0);
       this.CalculateHeaderItem();
       this.cdr.detectChanges();
     }
@@ -205,12 +274,22 @@ export class ViewBookingPage implements OnInit {
         this.total_amount = total;
         
         localStorage.setItem('overallTotalAmount', total.toString());
+
+        const cart_lenght = cartItems.length;
+        
+        if(cart_lenght != 0){
+          this.HeaderQyt = cart_lenght;
+          localStorage.setItem('headerCart',  this.HeaderQyt);
+        }else{
+          this.HeaderQyt = '';
+          localStorage.setItem('headerCart',  this.HeaderQyt);
+        }
       
       } else {
-        // console.log('Item not found in cart');
+        // //console.log('Item not found in cart');
       }
     } else {
-      // console.log('Cart is empty');
+      // //console.log('Cart is empty');
     }
   }
 
@@ -237,7 +316,7 @@ export class ViewBookingPage implements OnInit {
       localStorage.setItem('cart', JSON.stringify(cartItems));
 
     } else {
-      // console.log('Cart is empty');
+      // //console.log('Cart is empty');
     }
   }
 
@@ -250,53 +329,60 @@ export class ViewBookingPage implements OnInit {
     }
   }
 
-  // addItemToBooking(index: number) {
-  //   const item = this.frequentData[index];
-  //   item.addButton = true;
-  //   // Check if item is already in the "Your Bookings" section
-  //   const existingItemIndex = this.addedItems.findIndex(added => added.name === item.name);
-  //   if (existingItemIndex === -1) {
-  //     // Set totalAmount to the discounted_price for new items
-  //     this.cart_data.push({ ...item, totalAmount: item.discounted_price }); // Add new item
-  //     this.PushCartDisCountPrice();
-  //     this.CalculateHeaderItem();
-  //   } else {
-  //     this.addedItems[existingItemIndex].quantity++;
-  //   }
-  //   this.frequentData.splice(index, 1);
-   
-  // }
 
-  addItemToBooking(index: number) {
+  async addItemToBooking(index: number) {
+    const newServiceType = 'frequent';
+        const newDurationNumber = this.frequentData[index].duration;
+    
+        // Retrieve previous cart data
+        const prev_cart_data = localStorage.getItem('cart');
+        const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+    
+        const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+        // //console.log('existingServiceTypes',existingServiceTypes)
+        const hasConflict = existingServiceTypes.length > 0 &&
+                            !existingServiceTypes.includes(newServiceType);
+
+        const booking_type= await this.Storage.get('booking_type'); 
+        if(booking_type === 'package'){
+          if (hasConflict) {
+            alert(`This Service cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
+            return; // Exit early to prevent UI updates
+        }
+        } 
+
+        const totalDuration = previousCart.reduce((sum: number, item: { duration_number: any; }) => {
+          // Parse the duration_number to ensure it's a number
+          const duration = parseInt(item.duration_number, 10);
+          
+          // Check if the duration is a valid number
+          if (!isNaN(duration)) {
+              return sum + duration; // Add the parsed duration to the sum
+          } else {
+              console.error(`Invalid duration_number: ${item.duration_number}`);
+              return sum; // If invalid, just return the current sum
+          }
+        }, 0) + (typeof newDurationNumber === 'number' ? newDurationNumber : parseInt(newDurationNumber, 10));
+      
+        if (totalDuration > 180) {
+            alert(`We are unable to set a maximum massage duration of 180 minutes.`);
+            return; // Exit early to prevent UI updates
+        }                  
+       
+
     const item = this.frequentData[index]; // Get the item to be added
-  
-    // Create a temporary item to check for conflicts BEFORE adding it to cart_data
-    const tempItem = { ...item, totalAmount: item.discounted_price, quantity: 1 };
-  
-    // Add the temporary item to a copy of the current cart for validation
-    const tempCart = [...this.cart_data, tempItem];
-  
-    // Check for service type conflicts and duration limits
-    const hasConflict = this.hasServiceTypeConflict(tempCart);
-    const exceedsDuration = this.exceedsDurationLimit(tempCart);
-  
-    if (hasConflict) {
-      alert(`This service cannot be added. There are conflicting services in your cart.`);
-      return; // Exit if there is a service type conflict
-    }
-  
-    if (exceedsDuration) {
-      alert(`We are unable to set a maximum massage duration of 180 minutes.`);
-      return; // Exit if the duration limit is exceeded
-    }
-  
-    // Set addButton to true only after passing all checks
-    item.addButton = true;
+    const tempItem = { ...item, 
+      totalAmount: item.discounted_price, 
+      quantity: 1,
+      addButton: true
+    };
+    
+    // item.addButton = true;
   
     // Add the validated item to the cart
     const existingItemIndex = this.addedItems.findIndex(added => added.name === item.name);
     if (existingItemIndex === -1) {
-      this.cart_data.push(tempItem); // Add the item to the cart
+      this.cart_data.push(tempItem);
       this.PushCartDisCountPrice();
       this.CalculateHeaderItem();
     } else {
@@ -322,96 +408,12 @@ export class ViewBookingPage implements OnInit {
     );
     return totalDuration > 180; // Return true if total duration exceeds 180 minutes
   }  
-  
-
-  // extractDurationNumber(duration: string): number {
-  //   const match = duration.match(/\d+/); // Extract numeric part using regex
-  //   return match ? Number(match[0]) : 0; // Convert to number or return 0 if not found
-  // }
-  // This Funtion Is used for when initially item add to cart and also increase the overall amount
-  // this functionis used for addItemToBooking() function
-  // PushCartDisCountPrice() {
-  //   const prev_cart_data = localStorage.getItem('cart');
-  //   let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
-  
-  //   const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
-
-  //   const newCartItems = this.cart_data
-  //     .filter(variant => variant.addButton && variant.quantity > 0) // Only save variants that have been added and have quantity
-  //     .map(variant => ({
-  //       id: variant.id,
-  //       name: variant.name,
-  //       quantity: variant.quantity,
-  //       duration: variant.sv_duration,
-  //       totalAmount: Number(variant.discounted_price),
-  //       services_variants_id: variant.service_variants,
-  //       unitAmount: Number(variant.discounted_price),
-  //       booking_type: 'frequent',
-  //       user_id: this.user_id,
-  //       service_category: variant.service_category,
-  //       duration_number: this.extractDurationNumber(variant.sv_duration),
-  //       service_type: variant.sv_name.split(' - ')[0].trim(),
-  //     }));
-
-  //   const newServiceTypes = [...new Set(newCartItems.map(item => item.service_type))];
-  //   const hasConflict = existingServiceTypes.length > 0 &&
-  //                       !newServiceTypes.every(type => existingServiceTypes.includes(type));
-  //   console.log(hasConflict);
-  //   if (hasConflict) {
-  //       alert(`This service cannot be added. There are already services of type: ${existingServiceTypes.join(', ')} in your cart.`);
-  //       return; // Exit early to prevent adding conflicting items
-  //   }
-
-  //     const totalDurationFromPrevious = previousCart.reduce(
-  //       (sum: number, item: { duration_number: any }) => sum + Number(item.duration_number), 0
-  //   );
-
-  //   // Calculate total duration from new cart items
-  //   const totalDurationFromNew = newCartItems.reduce(
-  //       (sum: number, item: { duration_number: any }) => sum + Number(item.duration_number), 0
-  //   );
-
-  //   // Combine total duration
-  //   const totalDuration = totalDurationFromPrevious + totalDurationFromNew;
-
-  //   // Check if the total duration exceeds 180 minutes
-  //   if (totalDurationFromNew > 180) {
-  //       alert(`We are unable to set a maximum massage duration of 180 minutes.`);
-  //       return; // Exit early to prevent saving the cart
-  //   }  
-
-  
-  //   // Merge previous cart data with new cart items
-  //   newCartItems.forEach(newItem => {
-  //     const existingItem = previousCart.find((item: { id: any }) => item.id === newItem.id);
-  //     if (existingItem) {
-  //       existingItem.quantity = newItem.quantity;
-  //       existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure totalAmount is set to discounted_price
-  //       existingItem.unitAmount = Number(newItem.unitAmount);
-  //     } else {
-  //       previousCart.push({ ...newItem });
-  //     }
-  //   });
-
-  //   localStorage.setItem('cart', JSON.stringify(previousCart));
-
-  //   let OverAllTotal = previousCart.reduce((accumulator: number, item: { totalAmount: number, unitAmount: number, quantity: number }) => {
-  //     return accumulator + (item.unitAmount * item.quantity);
-  //   }, 0);
-
-  //   this.total_amount = OverAllTotal;
-
-  //   localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
-  // }
 
   PushCartDisCountPrice() {
+    
     const prev_cart_data = localStorage.getItem('cart');
     let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
-  
-    // Get unique service types from the previous cart items
-    const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
-  
-    // Filter and map new cart items with necessary fields
+
     const newCartItems = this.cart_data
       .filter(variant => variant.addButton && variant.quantity > 0)
       .map(variant => ({
@@ -425,69 +427,96 @@ export class ViewBookingPage implements OnInit {
         booking_type: 'frequent',
         user_id: this.user_id,
         service_category: variant.service_category,
-        duration_number: this.extractDurationNumber(variant.sv_duration), // Extract numeric duration
+        duration_number: this.extractDurationNumber(variant.sv_duration),
         service_type: variant.sv_name.split(' - ')[0].trim(),
       }));
-  
-    // Get the unique service types from the new items
-    const newServiceTypes = [...new Set(newCartItems.map(item => item.service_type))];
-  
-    // Check for conflicting service types
-    const hasConflict = existingServiceTypes.length > 0 &&
-      !newServiceTypes.every(type => existingServiceTypes.includes(type));
-  
-    if (hasConflict) {
-      alert(`This service cannot be added. Your cart already contains services of type: ${existingServiceTypes.join(', ')}`);
-      return; // Exit early to prevent adding conflicting items
-    }
-  
-    // Calculate total duration from the previous cart
-    const totalDurationFromPrevious = previousCart.reduce(
-      (sum: number, item: { duration_number: any; }) => sum + Number(item.duration_number),
-      0
-    );
-  
-    // Calculate total duration from the new cart items
-    const totalDurationFromNew = newCartItems.reduce(
-      (sum, item) => sum + Number(item.duration_number),
-      0
-    );
-  
-    // Combine the total duration
-    const totalDuration = totalDurationFromPrevious + totalDurationFromNew;
-  
-    // Check if the combined total duration exceeds the 180-minute limit
-    if (totalDuration > 180) {
-      alert(`We are unable to set a maximum massage duration of 180 minutes.`);
-      return; // Exit early to prevent saving the cart
-    }
-  
+
     // Merge the new items into the previous cart
     newCartItems.forEach(newItem => {
       const existingItem = previousCart.find((item: { id: any; }) => item.id === newItem.id);
       if (existingItem) {
-        // Update existing item's quantity and prices
         existingItem.quantity = newItem.quantity;
-        existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure discounted_price is used
+        existingItem.totalAmount = Number(newItem.totalAmount);
         existingItem.unitAmount = Number(newItem.unitAmount);
       } else {
-        // Add new item to the cart if it doesn't exist
         previousCart.push({ ...newItem });
       }
     });
-  
-    // Save the updated cart back to localStorage
+
+    // //console.log(previousCart);
     localStorage.setItem('cart', JSON.stringify(previousCart));
-  
-    // Calculate the overall total amount
+
     const OverAllTotal = previousCart.reduce(
       (accumulator: number, item: { unitAmount: number; quantity: number; }) => accumulator + (item.unitAmount * item.quantity),
       0
     );
-  
-    // Save the overall total amount in the component and localStorage
+
     this.total_amount = OverAllTotal;
     localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // const prev_cart_data = localStorage.getItem('cart');
+    // let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+  
+    // // Get unique service types from the previous cart items
+    // // const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+  
+    // // Filter and map new cart items with necessary fields
+
+    // //console.log("cart items : ",this.cart_data);
+
+    // const newCartItems = this.cart_data
+    //   .filter(variant => variant.addButton && variant.quantity > 0)
+    //   .map(variant => ({
+    //     id: variant.id,
+    //     name: variant.name,
+    //     quantity: variant.quantity,
+    //     duration: variant.sv_duration,
+    //     totalAmount: Number(variant.discounted_price),
+    //     services_variants_id: variant.service_variants,
+    //     unitAmount: Number(variant.discounted_price),
+    //     booking_type: 'frequent',
+    //     user_id: this.user_id,
+    //     service_category: variant.service_category,
+    //     duration_number: this.extractDurationNumber(variant.sv_duration), // Extract numeric duration
+    //     service_type: variant.sv_name.split(' - ')[0].trim(),
+    //   }));
+  
+    // // Merge the new items into the previous cart
+    // newCartItems.forEach(newItem => {
+    //   const existingItem = previousCart.find((item: { id: any; }) => item.id === newItem.id);
+    //   if (existingItem) {
+    //     // Update existing item's quantity and prices
+    //     existingItem.quantity = newItem.quantity;
+    //     existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure discounted_price is used
+    //     existingItem.unitAmount = Number(newItem.unitAmount);
+    //   } else {
+    //     // Add new item to the cart if it doesn't exist
+    //     previousCart.push({ ...newItem });
+    //   }
+    // });
+  
+    // //console.log('previus cart : ',previousCart);
+    // // Save the updated cart back to localStorage
+    // localStorage.setItem('cart', JSON.stringify(previousCart));
+  
+    // // Calculate the overall total amount
+    // const OverAllTotal = previousCart.reduce(
+    //   (accumulator: number, item: { unitAmount: number; quantity: number; }) => accumulator + (item.unitAmount * item.quantity),
+    //   0
+    // );
+  
+    // // Save the overall total amount in the component and localStorage
+    // this.total_amount = OverAllTotal;
+    // localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
   }
   
   // Extract numeric part from the duration string (e.g., "90min" -> 90)
@@ -505,21 +534,18 @@ export class ViewBookingPage implements OnInit {
     localStorage.setItem('select_address_cat', service_category_id);
     this.router.navigate(['/select-address']);
   }
-async navigateTospaLadies(){
-    //  window.location.reload();
-    // this.location.reload();
-    // const SpaLadiesURL1 = localStorage.getItem('spa_ladies_url_1'); 
-    // window.location.reload();
+  async navigateTospaLadies(){
     const SpaLadiesURL1 = await this.Storage.get('spa_ladies_url_1')
-    // console.log(SpaLadiesURL1)
     // const SpaLadiesURL2 = localStorage.getItem('spa_ladies_url_2');
     const SpaLadiesURL2 = await this.Storage.get('spa_ladies_url_2');
     // window.location.reload();
-   
-    this.router.navigate(['/spa-ladies',SpaLadiesURL1,SpaLadiesURL2]);
-    // window.location.reload();
+     if(SpaLadiesURL1){
+      this.router.navigate(['/spa-ladies',SpaLadiesURL1,SpaLadiesURL2]);
+     }
+     else{
+      this.router.navigate(['/tabs/tab1']);
+     }
   }
-
 
   customClose() {
     this.modalController.dismiss();
@@ -531,4 +557,5 @@ async navigateTospaLadies(){
       }
     })
   }
+
 }

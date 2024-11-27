@@ -8,7 +8,7 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchShowDuration: 2000,
       launchAutoHide: true,
-      launchFadeOutDuration: 3000,
+      launchFadeOutDuration: 2000,
       backgroundColor: "#ffffffff",
       androidSplashResourceName: "splash",
       androidScaleType: "CENTER_CROP",
@@ -20,6 +20,14 @@ const config: CapacitorConfig = {
       splashImmersive: true,
       layoutName: "launch_screen",
       useDialog: true,
+    }, 
+    // server: {
+    //   androidScheme: 'https' // Ensure it’s https for compatibility
+    // }  
+    server: {
+      androidScheme: 'https',
+      iosScheme: 'https',
+      customUrlScheme: 'getglowcustomer', // Add this line for custom URL scheme
     },
   },
 };

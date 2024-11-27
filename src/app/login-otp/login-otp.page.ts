@@ -42,7 +42,6 @@ export class LoginOTPPage implements OnInit {
         if (response.status == true) { 
           this.first_login = response.message[0].app_first_login
           const user_index_id = response.message[0].id;
-          console.log()
           await this.storage.set('user_index_id', user_index_id);
           if (user_index_id) {
            
@@ -65,7 +64,7 @@ export class LoginOTPPage implements OnInit {
     this.clearOtpFields();
     clearInterval(this.countdownInterval); // Clear any previous timer
     this.startCountdown(); // Restart the countdown
-    console.log('OTP resent');
+    // console.log('OTP resent');
   }
 
   // Countdown Timer Logic
@@ -115,13 +114,13 @@ export class LoginOTPPage implements OnInit {
       } else{
         this.router.navigate(['/tabs/tab1']);
       }
-        console.log('OTP submitted:', this.isOtpFilled );
+        // console.log('OTP submitted:', this.isOtpFilled );
        
     }
     // Check if first_login is '1'
     // Handle the case when OTP is not filled or timed out
     else if (!this.isOtpFilled || this.isTimeOut) {
-        console.log('OTP is not completely filled or timeout has occurred.');
+        // console.log('OTP is not completely filled or timeout has occurred.');
     }
 }
 
@@ -179,7 +178,6 @@ export class LoginOTPPage implements OnInit {
   }
 
   navigateToLoginPage(){
-    console.log('hii')
     this.router.navigate(['/login']);
   }
 }

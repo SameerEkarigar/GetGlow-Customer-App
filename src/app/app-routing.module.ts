@@ -53,10 +53,6 @@ const routes: Routes = [
     loadChildren: () => import('./select-address/select-address.module').then( m => m.SelectAddressPageModule)
   },
   {
-    path: 'select-professional',
-    loadChildren: () => import('./select-professional/select-professional.module').then( m => m.SelectProfessionalPageModule)
-  },
-  {
     path: 'payment-page',
     loadChildren: () => import('./payment-page/payment-page.module').then( m => m.PaymentPagePageModule)
   },
@@ -123,9 +119,19 @@ const routes: Routes = [
     loadChildren: () => import('./location-access/location-access.module').then( m => m.LocationAccessPageModule)
   },
   {
-    path: 'packages',
-    loadChildren: () => import('./packages/packages.module').then( m => m.PackagesPageModule)
+    path: 'payment-success',
+    loadChildren: () => import('./payment-success/payment-success.module').then( m => m.PaymentSuccessPageModule)
   },
+
+ 
+  // {
+  //   path: 'payment-success',
+  //   loadChildren: () => import('./payment-success/payment-success.module').then( m => m.PaymentSuccessPageModule)
+  // },
+  // {
+  //   path: 'packages',
+  //   loadChildren: () => import('./packages/packages.module').then( m => m.PackagesPageModule)
+  // },
  
   // {
   //   path: 'know-more-modal',

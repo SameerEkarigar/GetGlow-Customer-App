@@ -23,7 +23,7 @@ export class CheckLocationComponent  implements OnInit {
         // Check location permissions
         const permissionStatus = await Geolocation.checkPermissions();
         if (permissionStatus.location !== 'granted') {
-          console.log('Location permission is not granted.');
+          //console.log('Location permission is not granted.');
           this.exitApp(); // Exit the app if location is not granted
           return;
         }
@@ -31,11 +31,11 @@ export class CheckLocationComponent  implements OnInit {
         try {
           // Attempt to get the current position
           await Geolocation.getCurrentPosition();
-          console.log('Location services are enabled.');
+          //console.log('Location services are enabled.');
         } catch (error: unknown) {
           // Handle case where location services are not enabled
           if (error instanceof Error && error.message === 'Location services are not enabled') {
-            console.log('Location services are disabled.');
+            //console.log('Location services are disabled.');
             this.exitApp(); // Exit the app if location services are disabled
           } else {
             console.error('Error getting location:', error);
@@ -43,7 +43,7 @@ export class CheckLocationComponent  implements OnInit {
         }
       } else {
         // For other platforms like web, handle accordingly
-        console.log('Platform not supported for location services check.');
+        //console.log('Platform not supported for location services check.');
       }
     } catch (error: unknown) {
       // General error handling
@@ -56,7 +56,7 @@ export class CheckLocationComponent  implements OnInit {
       // Use Capacitor's App plugin to exit the app 
       App.exitApp();
     } else {
-      console.log('Exiting app is not supported on this platform.');
+      //console.log('Exiting app is not supported on this platform.');
     }
   }
 }

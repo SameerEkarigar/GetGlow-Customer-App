@@ -1,13 +1,78 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>Map Example</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-radio-group [(ngModel)]="selectedValue">
-    <ion-radio value="1">Option 1</ion-radio>
-    <ion-radio value="2">Option 2</ion-radio>
-    <!-- <ion-radio value="3">Option 2</ion-radio> -->
-    </ion-radio-group>
+
+</ion-content> -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Dynamic Sliders with Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Search Bar -->
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    placeholder="Search..."
+    (ionInput)="filterSliders($event)"
+  ></ion-searchbar>
+
+  <!-- Div 1 -->
+  <div class="slider-container" *ngIf="filteredSliders.sliderOne.items.length > 0">
+    <!-- <h2>{{ filteredSliders.sliderOne.name }}</h2> -->
+    <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
+      <swiper-slide *ngFor="let item of filteredSliders.sliderOne.items">
+        <div class="slide-content margin_0 ">
+          <img [src]="item.title ">
+          <p>{{filteredSliders.sliderOne.name}}</p>
+          <!-- <p>{{packages.sv_name}}</p>
+          <p>AED {{packages.sv_price}}</p> -->
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+ 
+  <!-- Div 2 -->
+  <div class="slider-container" *ngIf="filteredSliders.sliderTwo.items.length > 0">
+    <h2>{{ filteredSliders.sliderTwo.name }}</h2>
+    <ion-slides [options]="slideOpts">
+      <ion-slide *ngFor="let item of filteredSliders.sliderTwo.items">
+        <div class="slide-content">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <!-- Div 3 -->
+  <div class="slider-container" *ngIf="filteredSliders.sliderThree.items.length > 0">
+    <h2>{{ filteredSliders.sliderThree.name }}</h2>
+    <ion-slides [options]="slideOpts">
+      <ion-slide *ngFor="let item of filteredSliders.sliderThree.items">
+        <div class="slide-content">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+  <!-- Div 4 -->
+  <div class="slider-container" *ngIf="filteredSliders.sliderFour.items.length > 0">
+    <h2>{{ filteredSliders.sliderFour.name }}</h2>
+    <ion-slides [options]="slideOpts">
+      <ion-slide *ngFor="let item of filteredSliders.sliderFour.items">
+        <div class="slide-content">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
 </ion-content>

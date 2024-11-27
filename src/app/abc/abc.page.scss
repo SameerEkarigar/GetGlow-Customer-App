@@ -62,3 +62,33 @@ hr{
   border-radius: 5px;
   background-color: #f2f2f2;
 }
+
+
+// ----------------
+ion-slides {
+  height: 200px; /* Set a height for the slider */
+}
+
+.slider-container {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.slide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}

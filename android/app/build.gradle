@@ -54,6 +54,8 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    // implementation 'company.tap.goSellSDK:goSellSDK-AndroidX:2.6.5'
+    // implementation 'com.github.Tap-Payments:goSellSDK-AndroidX:3.19.23'
 }
 
 apply from: 'capacitor.build.gradle'

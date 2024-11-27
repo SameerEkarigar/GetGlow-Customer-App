@@ -8,10 +8,10 @@
                <h5>Thank You</h5>
         </ion-col>
       </ion-row>
-      <ion-row size="12">
+      <ion-row size="12" *ngIf="booking_id" >
         <ion-col size="">
-               <!-- <h5>Booking ID<br>
-                GGB-004</h5> -->
+               <h5>Booking ID<br>
+                {{booking_id.booking_suffix}}-{{booking_id.inserted_id}}</h5>
         </ion-col>
       </ion-row>
       <ion-row size="">

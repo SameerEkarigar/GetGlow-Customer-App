@@ -4,10 +4,10 @@
    <div class="outer_content">
      <ion-row size="12">
       <ion-col size="12">
-        <!-- <div class="arrow_div" (click)="navigateTospaLadies()">
+        <div class="arrow_div" (click)="navigateTospaLadies()">
           <ion-icon size="large" name="arrow-back-outline"></ion-icon>
-        </div> -->
-        <app-backbutton></app-backbutton>
+        </div>
+        <!-- <app-backbutton></app-backbutton> -->
       </ion-col>
      </ion-row>
      <!-- ----------- -->
@@ -36,10 +36,12 @@
          </ion-col>
        </ion-row>
      </div>
-     
+      <div> 
+        
+      </div>
      <ion-row size="12" style="margin-top: 15px;">
        <ion-col size="12" class="section_heading">
-         <p style="font-size: 16px;">Frequently Booked Together</p>
+         <p style="font-size: 16px;">{{frequentbookingtext}}</p>
        </ion-col>
      </ion-row>
  
@@ -56,7 +58,6 @@
                   <img src="./assets/empty-img.png">
                 </ng-template>
               
-              
                 <div class="innerFreqDiv">            
                  <p style="height: 30px;">{{ frequent_data.name }}</p>
                  <p style="height: 16px;">{{ frequent_data.duration }}</p>
@@ -65,13 +66,14 @@
                    <ion-button class="before_add" size="small" (click)="addItemToBooking(i)">Add</ion-button>
                  </div>
                </div>
+
               </div>
              </div>
            </swiper-slide>
          </swiper-container>
        </ion-col>
      </ion-row>
-     <div class="payment_summary">
+     <div class="payment_summary" >
      <ion-row size="12">
        <ion-col size="12" class="section_heading">
          <p style="font-size: 16px; margin-top: 14px;">Payment Summary</p>
@@ -89,12 +91,12 @@
          </div>
        </ion-col>
      </ion-row>
-     <ion-row size="12">
+     <ion-row size="12" *ngIf="hideDiscountRow">
        <ion-col size="6" >
          <div class="intial_start ">
            <p>Discounts  & Offers</p>
            <p style="font-weight: 500;">{{storedDiscountCode}}</p>
-           <p id="open_modal" class="text_color_theme">{{viewOffer}}</p>
+           <p id="open_modal" (click)="clearOffer(viewOffer) " class="text_color_theme">{{viewOffer}}</p>
            <ion-modal trigger="open_modal" [initialBreakpoint]="0.4" class="ion_modal">
              <ng-template>
                <div class="block padding_12px">              
@@ -136,10 +138,11 @@
            <p>Total</p>
          </div>       
        </ion-col>
-       <ion-col size="6" >
+       <ion-col size="6">
          <div class="start_end " >
-           <p>AED {{AmountAfterDeductDiscount}}</p>
-           <p class="font_10px">Includes 5% VAT = AED 15.71</p>
+           <p *ngIf="ShowIfdiscountSelect">AED {{AmountAfterDeductDiscount}}</p>
+           <p *ngIf="!ShowIfdiscountSelect">AED {{total_amount}}</p>
+           <p class="font_10px">Includes 5% VAT = AED {{vatAmount}}</p>
          </div>   
        </ion-col>
      </ion-row>
@@ -148,9 +151,13 @@
   
 </div>
 <div class="continue_btn_fixed">
-  <div>
+  <div *ngIf="!selectStartDate">
     <ion-button expand="full" (click)="navigateToselectAddress()" class="continue_to_address_btn">Continue To Address</ion-button>
  </div>  
+
+ <div *ngIf="selectStartDate" >
+  <ion-button expand="full" (click)="navigateToPayment()" class="continue_to_address_btn">Select Start Date</ion-button>
+</div>  
 </div>
    
  </ion-content>

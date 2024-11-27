@@ -21,7 +21,7 @@ export class HomePage implements OnInit {
  async ngOnInit() {
     this.navigateToAnotherPage();
     const phone = await this.storage.get('PhoneNumber');
-    console.log(phone);
+    // console.log(phone);
   }
   
  async navigateToAnotherPage() {

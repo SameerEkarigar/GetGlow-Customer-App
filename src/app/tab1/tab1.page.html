@@ -2,9 +2,9 @@
 <app-check-location></app-check-location>
 <ion-content [fullscreen]="true">
   <div class="outer_content">
-  <ion-searchbar class="ion_searchBar" placeholder="Search salon, specialist…" [(ngModel)]="searchText"></ion-searchbar>
+  <ion-searchbar class="ion_searchBar" placeholder="Search services, packages" [(ngModel)]="searchText"></ion-searchbar>
   <div>
-    <div class="loading" *ngIf="loading">
+    <div class="loading" *ngIf="loading; else content" >
     <div id="1">
       <ion-row size="12" class="padding_global slider_heading" *ngIf="(data_0 | search: searchText)">
         <ion-col size="12">
@@ -156,7 +156,7 @@
         </ng-container>
       </ng-container>
     </div> -->
-    
+    <ng-template #content>
     <div id="1">
       <ion-row size="12" class="padding_global slider_heading" *ngIf="(data_0 | search: searchText)">
         <ion-col size="12">
@@ -182,10 +182,10 @@
         </ion-col> 
       </ion-row>
       <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
-        <swiper-slide *ngFor="let packages of packagesData | search: searchText" (click)="onClickPackages(packages.service_category, packages.name,packages.service_name, packages.static_name)">
+        <swiper-slide *ngFor="let packages of packagesData | search: searchText" (click)="onClickPackages(packages.service_category, packages.name, packages.service_name, packages.static_name, packages.service_category_name)">
           <div class="slide-content margin_0 ">
             <img [src]="packages.image_name">
-            <p>{{packages.name}}</p>
+            <p>{{packages.package_name}}</p>
             <!-- <p>{{packages.sv_name}}</p>
             <p>AED {{packages.sv_price}}</p> -->
           </div>
@@ -221,9 +221,8 @@
       </ion-row>
       <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
         <swiper-slide *ngFor="let Mpdata of mostPopularData | search: searchText  let i = index">
-
           <div class="mostpopular_slide slide-content margin_0">
-            <!-- <img src="./assets/rectangle.png"> -->`
+            <!-- <img src="./assets/rectangle.png"> -->
             <ion-img [src] ="Mpdata.image_name"></ion-img>
             <p>{{Mpdata.name}}</p>
             <p>{{Mpdata.sv_name}}</p>
@@ -307,7 +306,7 @@
         </swiper-slide>
       </swiper-container>
     </div>
-  
+    </ng-template>
   </div>
     <app-tabcomponent></app-tabcomponent>
   </div>

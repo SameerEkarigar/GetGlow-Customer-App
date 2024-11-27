@@ -22,6 +22,41 @@ display: flex;
 .arrow_div{
   color: black;
 }
+ion-spinner {
+  color: #c3c3c3;
+  width: 100%;
+  width: 80px;
+  height: 100px;
+}
+.loader-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Make the spinner take up the entire slide */
+  width: 100%;
+}
+.bookProfessional{
+  --border-radius: 0;
+  font-size: 11px;
+  color: white;
+  --background: #6596A0;
+  white-space: nowrap;
+  width: 45%;
+  margin-bottom: 2.5rem;
+}
+.lastBookMessage{
+  font-size: 12px;
+  font-style: italic;
+  margin: 7px 0px;
+}
+.lastBookMessage_p{
+  font-size: 12px;
+  margin: 0;
+}
+.lasBookedProfCol{
+  padding-left: 0;
+  padding-right: 7px;
+}
 .section_heading p{
 color: black;
 margin: 0;
@@ -62,7 +97,7 @@ font-size: 14px !important;
   border-bottom: 1px solid #E6DFDF;
 }
 .prfsnl_slide p{
-  font-size: 13px;
+  font-size: 12px;
   white-space: normal;
 }
 .outer_div_add_btn ion-button{
@@ -277,7 +312,7 @@ margin-right: 3px;
   text-align: center;
   padding: 4px;
   border: 1px solid black;
-  height: 130px;
+  height: 120px;
 }
 ion-datetime{
 --background: white;

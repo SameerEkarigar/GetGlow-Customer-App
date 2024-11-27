@@ -2,29 +2,41 @@
     color: black;
     padding-top: 10px;
   }
-  .upcoming_btn {
-    --border-radius: 0;
-    font-size: 14px;
-    --background: #6596A0;
-    white-space: nowrap; 
+  p{
+    font-size: 13px;
+  }
+  h5{
+    font-size: 15px;
+  }
+  ion-spinner {
+    color: #c3c3c3;
+    width: 100%;
+    width: 50px;
+    height: 100px;
+  }
+  .loader-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Make the spinner take up the entire slide */
     width: 100%;
   }
-  .upcoming_btn p{
-    color: white;
-  }
-  .past_btn{
-    --border-radius: 0;
-    font-size: 14px;
-    --background: #fcfcfc;
-    white-space: nowrap;
-    width: 100%;
-    border-color: #6596A0 !important;
-    border: 1px solid;
-  }
+  // .upcoming_btn {
+   
+  // }
+  // .upcoming_btn p{
+   
+  // }
+  // .past_btn{
+   
+  // }
   .past_btn p{
     margin: 0;
     color: #000000;
     padding: 5.5px;
+  }
+  .nopastbooking{
+    text-align: center;
   }
   .back-proceed-outer-dv{
     display: flex;
@@ -32,17 +44,23 @@
   }
   .confirm_cancel_booking p{
     line-height: 22px;
+    white-space: normal;
   }
   .upcoming_outer_booking_div h5, p{
    color: black;
    white-space: nowrap;
    margin: 6px;
   }
-  .prof_img{
-    width: 60%;
-    position: relative;
-    left: 45%;
-    top: 10%;
+  img{
+    width: 40%;
+  }
+ 
+  .text_center{
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    height: 100%;          
+    text-align: center;
   }
   .cacnel_btn{
     --border-radius: 0;
@@ -57,8 +75,37 @@
     
   }
   .prof_img p{
-    position: absolute;
-    right: -30%;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .prof_img {
+    text-align: center; /* Center-align content inside the container */
+}
+ .upcomming_booking_row_css{
+  margin-bottom: 12px;
+ }
+.prof_img img {
+      border-radius: 50%; /* Makes the image circular */
+  }
+
+  .active-button {
+    --border-radius: 0;
+    font-size: 14px;
+    --background: #6596A0;
+    white-space: nowrap; 
+    width: 100%;
+  }
+  .active-button p{
+    color: white;
+  }
+  .inactive-button {
+    --border-radius: 0;
+    font-size: 14px;
+    --background: #fcfcfc;
+    white-space: nowrap;
+    width: 100%;
+    border-color: #6596A0 !important;
+    border: 1px solid;
   }
   .cancel_btn_div{
     padding-top: 30px;

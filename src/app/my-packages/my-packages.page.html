@@ -7,6 +7,56 @@
 <ion-content [fullscreen]="true">
   <div class="outer_content">
     <app-backbutton></app-backbutton>
+    <div *ngFor="let packagedata of printPurchasedPackageData">
+      <ion-row size="12">
+        <ion-col size="12" class="section_heading">
+          <p>My Packages</p>
+        </ion-col>
+      </ion-row>
+      <div class="border_bottom_css">
+        <ion-row size="12">
+          <ion-col size="9">
+            <div>
+              <h5>{{ packagedata.package_name }}</h5>
+            </div>      
+          </ion-col>
+          <ion-col size="3">
+            <div [ngClass]="{
+                'active_btn_outer': packagedata.package_status === 'Active',
+                'expired_btn_outer': packagedata.package_status === 'Inactive'
+              }">
+              <ion-button size="small">{{ packagedata.package_status }}</ion-button>
+            </div>       
+          </ion-col>
+        </ion-row>
+        <ion-row size="12">
+          <ion-col size="5">
+            <div>
+              <p class="margin_0">Start Date: {{ packagedata.start_date.split(' ')[0] }}</p>
+            </div>
+          </ion-col>
+          <ion-col size="5">
+            <div>
+              <p class="margin_0">End Date: {{ packagedata.expiry_date.split(' ')[0] }}</p>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row size="12" *ngFor="let packageInnerdata of packagedata.innerData">
+          <ion-col size="9">
+            <div>
+              <p class="margin_0">{{ packageInnerdata.service_name }}</p>
+              <p class="margin_0">
+                {{ packageInnerdata.sv_name }} | Qty - {{ packageInnerdata.total_qty }}
+                | Consumed - {{ packageInnerdata.consumed }} 
+                | Balance - {{ packageInnerdata.balance }}
+              </p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+    
+    <!-- <div *ngFor="let packagedata of printPurchasedPackageData" >
     <ion-row size="12">
       <ion-col size="12" class="section_heading">
         <p>My Packages</p>
@@ -16,46 +66,41 @@
     <ion-row size="12">
       <ion-col size="9">
         <div>
-          <h5>Wellness Package</h5>
+          <h5>{{packagedata.package_name}}</h5>
         </div>      
       </ion-col>
       <ion-col size="3">
-        <div class="active_btn_outer">
-          <ion-button size="small">Active</ion-button>
+        <div  [ngClass]="{
+          'active_btn_outer': packagedata.package_status === 'Active',
+          'expired_btn_outer': packagedata.package_status === 'Inactive'
+        }">
+          <ion-button size="small">{{packagedata.package_status}}</ion-button>
         </div>       
       </ion-col>
     </ion-row>
     <ion-row size="12">
       <ion-col size="5">
          <div>
-          <p  class="margin_0">Start Date: 20/07/2024</p>
+          <p  class="margin_0">Start Date: {{ packagedata.start_date.split(' ')[0] }}</p>
          </div>
       </ion-col>
       <ion-col size="5">
         <div>
-         <p  class="margin_0">End Date: 28/07/2024</p>
+         <p  class="margin_0">End Date: {{ packagedata.expiry_date.split(' ')[0] }}</p>
         </div>
      </ion-col>
     </ion-row>
-    <ion-row size="12">
+    <ion-row size="12" *ngFor="let packageInnerdata of printInnerPackgeData" >
       <ion-col size="9">
          <div>
-          <p class="margin_0">Balinese Massage</p>
-          <p  class="margin_0">Single - 60 mins | Qty - 5 | Balance - 2</p>
-         </div>
-      </ion-col>
-    </ion-row>
-    <ion-row size="12">
-      <ion-col size="9">
-         <div>
-          <p  class="margin_0">Balinese Massage</p>
-          <p  class="margin_0">Single - 60 mins | Qty - 5 | Balance - 2</p>
-          <p>AED 500</p>
+          <p class="margin_0">{{packageInnerdata.service_name}}</p>
+          <p class="margin_0">{{packageInnerdata.sv_name}} | Qty - {{packageInnerdata.total_qty}}| Consumed - {{packageInnerdata.consumed}} | Balance - {{packagedata.balance}}</p>
          </div>
       </ion-col>
     </ion-row>
   </div>
-    <ion-row size="12">
+</div> -->
+    <!-- <ion-row size="12">
       <ion-col size="9">
         <div>
           <h5>Balinese Package</h5>
@@ -94,7 +139,7 @@
           <p  class="margin_0">Single - 60 mins | Qty - 5 | Balance - 2</p>
          </div>
       </ion-col>
-    </ion-row>
+    </ion-row> -->
     </div>
   <!-- <ion-header collapse="condense">
     <ion-toolbar>

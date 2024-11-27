@@ -13,13 +13,14 @@ import { SharedModule } from './shared/shared.module';
 import { SearchPipe } from './search.pipe';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { SafePipe } from './safe.pipe';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
 
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule,IonicModule, IonicStorageModule.forRoot() , IonicModule.forRoot(), AppRoutingModule, SearchPipe, HttpClientModule, SharedModule ,ReactiveFormsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Deeplinks],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

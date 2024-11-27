@@ -18,12 +18,25 @@
             android:launchMode="singleTask"
             android:exported="true">
 
-            <intent-filter>
+            <intent-filter android:label="payment-success">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+<!-- 
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="getglowcustomer" android:host="payment-success" /> -->
             </intent-filter>
-
+            
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="getglowcustomer" android:host="payment-success" />
+            </intent-filter>
+        
         </activity>
+        
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -44,6 +57,6 @@
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

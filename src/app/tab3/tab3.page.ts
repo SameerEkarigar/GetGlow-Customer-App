@@ -32,14 +32,14 @@ export class Tab3Page {
       text: 'Cancel',
       role: 'cancel',
       handler: () => {
-        // console.log('Log Out canceled');
+        // //console.log('Log Out canceled');
       },
     },
     {
       text: 'OK',
       role: 'confirm',
       handler: () => {
-        // console.log('Log Out confirmed');
+        // //console.log('Log Out confirmed');
         this.logOut();
       },
     },
@@ -50,14 +50,14 @@ export class Tab3Page {
       text: 'Cancel',
       role: 'cancel',
       handler: () => {
-        // console.log('delte canceled');
+        // //console.log('delte canceled');
       },
     },
     {
       text: 'OK',
       role: 'confirm',
       handler: () => {
-        // console.log('delete confirmed');
+        // //console.log('delete confirmed');
       },
     },
   ];
@@ -71,7 +71,7 @@ export class Tab3Page {
     const user_index_id = this.user_index_id;
     this.apiService.updateMarketingCheck(user_index_id,marketing_checkbox).subscribe((response)=>{
       if(response){
-         console.log('chcekbox updated');
+         //console.log('chcekbox updated');
       }
     })
   }
