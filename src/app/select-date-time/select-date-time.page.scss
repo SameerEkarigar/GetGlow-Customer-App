@@ -8,6 +8,9 @@ ion-content{
    color: black;
    
 }
+.ion-select{
+  font-size: 12px;
+}
 .tab_logo_div{
   width: 45%;
   margin-top: 6px;
@@ -42,7 +45,15 @@ ion-spinner {
   --background: #6596A0;
   white-space: nowrap;
   width: 45%;
-  margin-bottom: 2.5rem;
+  margin-bottom: -3rem;
+}
+.notAvialslot{
+  color: #000;
+  text-align: center;
+  font-size: 14px;
+}
+.else-condition-class{
+  display: none;
 }
 .lastBookMessage{
   font-size: 12px;
@@ -61,9 +72,11 @@ ion-spinner {
 color: black;
 margin: 0;
 font-size: 14px !important;
+font-weight: 600;
 }
 .outer_content{
   padding: 0 8px;
+  margin-bottom: 25rem;
 }
 .slide-content ion-button{
   --border-radius: 0;
@@ -133,7 +146,12 @@ font-size: 14px !important;
 .padding_top_services{
   padding: 10px 0px;
 }
-
+.bottom_btn_fix2{
+  top: 70%;
+  background: #ffffff;
+  width: 91%;
+  position: fixed
+}
 .view_boking_btn ion-button{
   --border-radius: 0;
    color: white;
@@ -450,13 +468,14 @@ color: var(--ion-datetime-today-color) !important;
 box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .fix_payment_detail_div{
-position: sticky;
-bottom: 0;
-background: #e9e9e9;
-z-index: 10 !important;
-margin-top: 13rem;
-padding: 12px;
-box-shadow: 5px 5px 5px 5px #9b9b9b;
+  position: fixed;
+  bottom: 0;
+  background: #e9e9e9;
+  z-index: 10!important;
+  /* margin-top: 13rem; */
+  padding: 10px 16px;
+  box-shadow: 5px 5px 5px 5px #9b9b9b;
+  width: 100%;
 }
 .img_outer_div img{
 max-width: 65%;

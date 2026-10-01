@@ -53,11 +53,11 @@
 .ion_badge{
   position: absolute;
   top: 6px;
-  right: -2px;
+  right: 3px;
   --background: red;
-  color: white;
-  height: 40%;
-  width: 10%;
+  color: #fff;
+  height: 45%;
+  width: 12%;
   border-radius: 15px;
 }
 .header_icon{   
@@ -86,6 +86,7 @@ ion-searchbar{
 }
 .outer_content{
   padding: 0 8px;
+  
 }
 .margin_0 p{
   margin: 4px;
@@ -144,4 +145,23 @@ ion-datetime{
 }
 .custom-modal-class{
   padding-top: 85px !important;
+}
+
+
+/* Target ion-datetime specifically for iOS devices */
+.ios ion-datetime.custom-datetime {
+  --wheel-font-size: 16px; /* Change font size of the date wheels */
+}
+
+/* Directly target date wheel items */
+.ios ion-datetime.custom-datetime::part(wheel-item) {
+  font-size: 16px !important; /* Force font size for wheel items */
+}
+
+/* Target the grid where dates are displayed */
+.ios ion-datetime.custom-datetime .datetime-grid {
+  font-size: 16px !important;
+}
+.dots_outer_div{
+  display: flex;
 }

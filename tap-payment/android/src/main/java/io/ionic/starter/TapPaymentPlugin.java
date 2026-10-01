@@ -20,7 +20,7 @@ public class TapPaymentPlugin extends Plugin {
         String currency = call.getString("currency");
 
         // Initialize the TAP SDK
-        GoSellSDK.init(getContext(), "sk_test_ParN2MZDGgdbkqLcmIuznVTH", SDKMode.SANDBOX); // Change to SDKMode.PRODUCTION for live
+        GoSellSDK.init(getContext(), "YOUR_TAP_SECRET_KEY", SDKMode.SANDBOX); // Change to SDKMode.PRODUCTION for live
 
         // Set up the payment request
         GoSellSDK.getInstance().setTransactionMode(TransactionMode.PURCHASE)

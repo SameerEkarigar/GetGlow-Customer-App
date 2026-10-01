@@ -13,6 +13,6 @@ public class MainActivity extends BridgeActivity {
     // @Override
     // public void onCreate(Bundle savedInstanceState) {
     //     super.onCreate(savedInstanceState);
-    //     GoSellSDK.init(this, "sk_test_ParN2MZDGgdbkqLcmIuznVTH"); // Use your Tap secret key
+    //     GoSellSDK.init(this, "YOUR_TAP_SECRET_KEY"); // Use your Tap secret key
     // }
 }

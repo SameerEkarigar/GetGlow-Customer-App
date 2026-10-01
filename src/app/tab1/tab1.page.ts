@@ -1,3 +1,4 @@
+import { response } from 'express';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
@@ -6,6 +7,8 @@ import { LoadingServiceService } from '../services/loading-service.service';
 import { firstValueFrom } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 import { ChangeDetectorRef } from '@angular/core';
+import { Browser } from '@capacitor/browser';
+import { App } from '@capacitor/app';
 
 register();
 
@@ -40,32 +43,90 @@ export class Tab1Page implements OnInit {
   totalAmount: number = 0;
   overallTotalAmount: any;
   HeaderQyt: any = '';
+  order_arr: any[]=[];
+
+  packages_arr: any[] = [];
+  packages_arr_header : any;
+  packages_arr_order_id : any;
+
+  service_1_arr: any[] = [];
+  service_1_arr_header : any;
+  service_1_arr_order_id : any;
+
+  service_2_arr: any[] = [];
+  service_2_arr_header : any;
+  service_2_arr_order_id : any;
+
+  service_3_arr: any[] = [];
+  service_3_arr_header : any;
+  service_3_arr_order_id : any;
+
+  service_4_arr: any[] = [];
+  service_4_arr_heading: any;
+  service_4_arr_order_id : any;
+
+  service_5_arr: any[] = [];
+  service_5_arr_header : any;
+  service_5_arr_order_id : any;
+
+  service_6_arr: any[] = [];
+  service_6_arr_header: any;
+  service_6_arr_order_id : any;
+
+  service_7_arr: any[] = [];
+  service_7_arr_header : any;
+  service_7_arr_order_id : any;
+
+  all_over_combined_arr: any[] = [];
+  
+  order: {
+    box1: { order: number, display_text_for_app : string };
+    box2: { order: number, display_text_for_app : string };
+    box3: { order: number, display_text_for_app : string };
+    box4: { order: number, display_text_for_app : string };
+    box5: { order: number, display_text_for_app : string };
+    box6: { order: number, display_text_for_app : string };
+    box7: { order: number, display_text_for_app : string };
+    box8: { order: number, display_text_for_app : string };
+  };
 
 
   constructor(private router: Router, private apiservice: ApiService, private loadingService: LoadingServiceService,private storage: Storage, private cdr: ChangeDetectorRef,) {
      this.init();
+     this.order = {
+      box1: { order: 0, display_text_for_app : 'No Service Name' },
+      box2: { order: 0, display_text_for_app : 'No Service Name' },
+      box3: { order: 0, display_text_for_app : 'No Service Name' },
+      box4: { order: 0, display_text_for_app : 'No Service Name' },
+      box5: { order: 0, display_text_for_app : 'No Service Name' },
+      box6: { order: 0, display_text_for_app : 'No Service Name' },
+      box7: { order: 0, display_text_for_app : 'No Service Name' },
+      box8: { order: 0, display_text_for_app : 'No Service Name' },
+    };
   }
 
  async ngOnInit() {
+
     const check= await this.storage.set('tap_id','');
-    console.log('check', check);
+    
+    // console.log('check', check);
     this.loadData();
     this.user_id = await this.storage.get('user_index_id');
     this.CalculateHeaderItem();
   }
 
+  async doRefresh(event: any) {
+    // Start refreshing
+    await this.loadData(); 
+    
+    // Stop the refresher after data is loaded
+    event.target.complete();
+  }
+
   async init() {
     await this.storage.create();
   }
-
-  // ionViewWillEnter() {
-  //   //console.log('ionViewWillEnter - Runs every time the page is entered');
-  //   this.navigateToTabPage(); // Reload cart data each time user navigates to this page
-  // }
-  // navigateToTabPage(){
-  //   this.router.navigate(['/tabs/tab1']);
-  // }
-  // Method to load all data and manage loading state
+  
   async loadData() {
     this.loading = true; // Start loading
 
@@ -79,7 +140,16 @@ export class Tab1Page implements OnInit {
       await this.printService2data();
       await this.printService3data();
       await this.printMostPopularService();
-      await this.printOrder();
+      await this.printOfferData();
+      await this.changeOrder();
+      await this.printServiceData();
+      await this.printBannerImg();
+      await this.printService1data();
+      await this.printService2data();
+      await this.printService3data();
+      await this.printMostPopularService();
+      this.CalculateHeaderItem();
+      this.updateOverallTotalAmount();
       
     } finally {
       this.loading = false; // Stop loading after data is loaded
@@ -94,9 +164,10 @@ export class Tab1Page implements OnInit {
     this.router.navigate(['/spa-ladies']);
   }
 
-  async openServiceDetails(service_category: any, category_name: any) {
+  async openServiceDetails(service_category: any, category_name: any, service_name:any, static_name:any, sv_name:any, sv_price:any) {
+    localStorage.setItem('heading_Service_name', service_name);
     await this.storage.set('ItemType', 'service');
-    this.router.navigate(['/spa-ladies', service_category, category_name]); // Navigate to spa-ladies page with the service id
+    this.router.navigate(['/spa-ladies', service_category, service_name]); // Navigate to spa-ladies page with the service id
   }
 
   async printServiceData() {
@@ -119,6 +190,7 @@ export class Tab1Page implements OnInit {
         const offerData = response.data;
         this.OfferData_1 = response.data[0];
         this.OfferData = offerData;
+        // console.log(this.OfferData )
       }
     } catch (error) {
       console.error('Error fetching offer data:', error);
@@ -175,6 +247,7 @@ export class Tab1Page implements OnInit {
       const service3data = await firstValueFrom(this.apiservice.getService3());
       if (service3data.status === true) {
         this.printService3 = service3data.data;
+        // console.log('service3',this.printService3)
         this.categoryName3 = this.printService3[0].category_name;
       }
     } catch (error) {
@@ -220,30 +293,401 @@ export class Tab1Page implements OnInit {
     }
   }
 
-  async printOrder() {
-    try {
-      const response = await firstValueFrom(this.apiservice.getOrderApi());
-      if (response.message) {
-        this.OrderPrint = response.message;
+  // async printOrder() {
+  //   try {
+  //     const response = await firstValueFrom(this.apiservice.getOrderApi());
+  //     if (response.message) {
+  //       this.OrderPrint = response.message;
+  //       console.log('order',this.OrderPrint)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching order data:', error);
+  //   }
+  // }
+
+  // async changeOrder() {
+  //   this.apiservice.getOrderApi().subscribe(async (response)=>{
+  //      if(response.status == true){
+  //       const order_arr = response.message;
+  //       console.log('order_arr : ',order_arr);
+  //       const orderValues = order_arr.map((item: any) => item.order);
+  //       console.log('orderValues : ',orderValues);
+        
+  //       this.apiservice.packages().subscribe((response2)=>{
+  //         if(response2.status === true){
+  //           const package_arr = response2.message;
+  //           console.log('package_arr : ',package_arr);
+  //           const package_order_values = package_arr.map((item: any) => item.app_order);
+  //           console.log('package_order_values - ',package_order_values);
+
+  //           const merged_packages_data = order_arr.filter((item: any) => package_order_values.includes(item.order)).map((orderItem: any) => {
+  //             const matchingPackages = package_arr.filter((packageItem: any) => packageItem.app_order === orderItem.order);
+             
+  //             return matchingPackages.map((packageItem: any) => ({
+  //               display_text_for_app: orderItem.display_text_for_app,
+  //               order_id: orderItem.order,
+  //               package_name: packageItem.package_name,
+  //               service_category: packageItem.service_category,
+  //             }));
+  //           });
+  //           console.log('matchingData : ',merged_packages_data);
+  //         }
+  //       });
+
+       
+  //      }
+  //   });
+    
+  // }
+
+  async changeOrder() {
+    this.apiservice.getOrderApi().subscribe(async (response) => {
+      if (response.status === true) {
+        const order_arr = response.message;
+        const orderValues = order_arr.map((item: any) => item.order);  
+        
+        this.apiservice.packages().subscribe((response2) => {
+          if (response2.status === true) {
+            const package_arr = response2.message;
+            const package_order_values = package_arr.map((item: any) => item.app_order);
+            const merged_packages_data = order_arr
+              .filter((orderItem: any) =>
+                package_order_values.includes(orderItem.order)
+              )
+              .flatMap((orderItem: any) => {
+                const matchingPackages = package_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem.order
+                );
+  
+                // Filter out entries with empty `display_text_for_app`
+                return matchingPackages
+                  .filter(() => orderItem.display_text_for_app) // Exclude items with empty `display_text_for_app`
+                  .map((packageItem: any) => ({
+                    header_text: orderItem.display_text_for_app,
+                    order_id: orderItem.order,
+                    package_name: packageItem.package_name,
+                    service_category: packageItem.service_category,
+                    display_image: packageItem.image_name,
+                    service_name: packageItem.service_name,
+                    static_name: packageItem.static_name,
+                    service_category_name: packageItem.service_category_name,
+                  }));
+              });
+            
+            if (merged_packages_data.length > 0) {
+                this.packages_arr = merged_packages_data;
+                this.packages_arr_header = merged_packages_data[0].header_text;
+                this.packages_arr_order_id = merged_packages_data[0].order_id;
+              }
+            // console.log('packages_arr_header',this.packages_arr_header);
+
+          }
+        });
+
+        //2nd api
+        this.apiservice.getService1().subscribe((response3) => {
+          if (response3.status === true) {
+            const service_arr = response3.data;
+            const service_order_values = service_arr.map((item2: any) => item2.app_order);
+            const merged_service_data = order_arr
+              .filter((orderItem2: any) =>
+                service_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+  
+                // Filter out entries with empty `display_text_for_app`
+                return matchingPackages
+                  .filter(() => orderItem2.display_text_for_app) // Exclude items with empty `display_text_for_app`
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: packageItem.name,
+                    service_category: packageItem.service_category,
+                    display_image: packageItem.image_name,
+                    service_name: packageItem.name,
+                    static_name: '',
+                    service_category_name: packageItem.name,
+                    sv_price: '',
+                    sv_name: ''
+                  }));
+              });
+            if (merged_service_data.length > 0) {
+                this.service_1_arr = merged_service_data;
+                this.service_1_arr_header = merged_service_data[0].header_text;
+                this.service_1_arr_order_id = merged_service_data[0].order_id;
+              }
+            // console.log('service_1_arr_header',this.service_1_arr_header);
+          }
+        });
+
+        //3Rd api
+        this.apiservice.getService2().subscribe((response4) => {
+          if (response4.status === true) {
+            const service2_arr = response4.data;
+            const service2_order_values = service2_arr.map((item2: any) => item2.app_order);
+            const merged_service2_data = order_arr
+              .filter((orderItem2: any) =>
+                service2_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service2_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+  
+                return matchingPackages
+                  .filter(() => orderItem2.display_text_for_app) // Exclude items with empty 
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: packageItem.name,
+                    service_category: packageItem.service_category,
+                    display_image: packageItem.image_name,
+                    service_name: packageItem.name,
+                    static_name: '',
+                    service_category_name: packageItem.name,
+                    sv_price: '',
+                    sv_name: ''
+                  }));
+              });
+            if (merged_service2_data?.length > 0) {
+  this.service_2_arr = merged_service2_data;
+  this.service_2_arr_header = merged_service2_data[0].header_text;
+  this.service_2_arr_order_id = merged_service2_data[0].order_id;
+}
+            // console.log('service_2_arr_header',this.service_2_arr_header);
+          }
+        });
+
+        // 4th api
+        this.apiservice.getService3().subscribe((response5) => {
+          if (response5.status === true) {
+            const service3_arr = response5.data;
+            const service3_order_values = service3_arr.map((item2: any) => item2.app_order);
+            const merged_service3_data = order_arr
+              .filter((orderItem2: any) =>
+                service3_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service3_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+  
+                // Filter out entries with empty `display_text_for_app`
+                return matchingPackages
+                  .filter(() => orderItem2.display_text_for_app) // Exclude items with empty `display_text_for_app`
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: packageItem.name,
+                    service_category: packageItem.service_category,
+                    display_image: packageItem.image_name,
+                    service_name: packageItem.name,
+                    static_name: '',
+                    service_category_name: packageItem.name,
+                    sv_price: '',
+                    sv_name: ''
+                  }));
+              });
+           if (merged_service3_data?.length > 0) {
+  this.service_3_arr = merged_service3_data;
+  this.service_3_arr_header = merged_service3_data[0].header_text;
+  this.service_3_arr_order_id = merged_service3_data[0].order_id;
+}
+
+            // console.log('service_3_arr_header',this.service_3_arr_header);
+          }
+        });
+
+        //5th api
+        this.apiservice.getMostPopularService().subscribe((response5) => {
+          // console.log('response3 : ',response3);
+          if (response5.status === true) {
+            const service4_arr = response5.data;
+            const service4_order_values = service4_arr.map((item2: any) => item2.app_order);
+            const merged_service4_data = order_arr
+              .filter((orderItem2: any) =>
+                service4_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service4_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+  
+                // Filter out entries with empty `display_text_for_app`
+                return matchingPackages
+                  .filter(() => orderItem2.display_text_for_app) // Exclude items with empty `display_text_for_app`
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: packageItem.name,
+                    service_category: packageItem.service_category,
+                    display_image: packageItem.image_name,
+                    service_name: packageItem.name,
+                    static_name: '',
+                    service_category_name: packageItem.name,
+                    sv_price: packageItem.sv_price,
+                    sv_name: packageItem.sv_name.split(' - ')[0].trim()
+                  }));
+              });
+            if (merged_service4_data?.length > 0) {
+  this.service_4_arr = merged_service4_data;
+  this.service_4_arr_heading = merged_service4_data[0].header_text;
+  this.service_4_arr_order_id = merged_service4_data[0].order_id;
+}
+            // console.log('service_4_arr_heading',this.service_4_arr_heading);
+          }
+        });
+
+        //6th api
+        this.apiservice.getBannerImg().subscribe((response5) => {
+          // console.log('response5 banner : ',response5);
+          if (response5.status === true) {
+            const service5_arr = response5.data;
+            const service5_order_values = service5_arr.map((item2: any) => item2.app_order);
+           
+            // Flatten the result using `flatMap` and filter to avoid empty `display_text_for_app`
+            const merged_service5_data = order_arr
+              .filter((orderItem2: any) =>
+                service5_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service5_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+  
+                // Filter out entries with empty `display_text_for_app`
+                return matchingPackages
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: '',
+                    service_category: '',
+                    display_image: packageItem.image_name,
+                    service_name: '',
+                    static_name: '',
+                    service_category_name: '',
+                    sv_price: '',
+                    sv_name: ''
+                  }));
+              });
+           if (merged_service5_data?.length > 0) {
+  this.service_5_arr = merged_service5_data;
+  this.service_5_arr_header = merged_service5_data[0].header_text;
+  this.service_5_arr_order_id = merged_service5_data[0].order_id;
+}
+            // console.log('service_5_arr_header',this.service_5_arr_header);
+          }
+        });
+
+        // 7th api
+        this.apiservice.getOfferData().subscribe((response7) => {
+          if (response7.status === true) {
+            const service6_arr = response7.data;
+            const service6_order_values = service6_arr.map((item2: any) => item2.app_order);
+            const merged_service6_data = order_arr
+              .filter((orderItem2: any) =>
+                service6_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service6_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+  
+                return matchingPackages
+                  .filter(() => orderItem2.display_text_for_app) // Exclude items with empty `display_text_for_app`
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: '',
+                    service_category: '',
+                    display_image: packageItem.image_name,
+                    service_name: '',
+                    static_name: '',
+                    service_category_name: '',
+                    sv_price: '',
+                    sv_name: ''
+                  }));
+              });
+           if (merged_service6_data?.length > 0) {
+  this.service_6_arr = merged_service6_data;
+  this.service_6_arr_header = merged_service6_data[0].header_text;
+  this.service_6_arr_order_id = merged_service6_data[0].order_id;
+}
+            // console.log('service_6_arr_header',this.service_6_arr_header);
+          }
+        });
+
+        //8th api
+        this.apiservice.getSeriveName().subscribe((response7) => {
+          if (response7.status === true) {
+            console.log('res',response)
+            const service7_arr = response7.data;
+            const service7_order_values = service7_arr.map((item2: any) => item2.app_order);
+            const merged_service7_data = order_arr
+              .filter((orderItem2: any) =>
+                service7_order_values.includes(orderItem2.order)
+              )
+              .flatMap((orderItem2: any) => {
+                const matchingPackages = service7_arr.filter(
+                  (packageItem: any) => packageItem.app_order === orderItem2.order
+                );
+
+                return matchingPackages
+                  .filter(() => orderItem2.display_text_for_app) // Exclude items with empty `display_text_for_app`
+                  .map((packageItem: any) => ({
+                    header_text: orderItem2.display_text_for_app,
+                    order_id: orderItem2.order,
+                    package_name: '',
+                    service_category: packageItem.service_category,
+                    display_image: packageItem.image_name,
+                    service_name: packageItem.category_name,
+                    static_name: '',
+                    service_category_name: '',
+                    sv_price: '',
+                    sv_name: ''
+                  }));
+              });
+              console.log(merged_service7_data)
+            if (merged_service7_data?.length > 0) {
+  this.service_7_arr = merged_service7_data;
+  this.service_7_arr_header = merged_service7_data[0].header_text;
+  this.service_7_arr_order_id = merged_service7_data[0].order_id;
+}
+             console.log('service_7_arr_header',this.service_7_arr_header);
+          }
+        });
+
+        this.all_over_combined_arr = [
+          { order_id: this.packages_arr_order_id, arr_name: 'packages_arr' },
+          { order_id: this.service_1_arr_order_id, arr_name: 'service_1_arr' },
+        ];
+        // console.log(this.all_over_combined_arr);``
       }
-    } catch (error) {
-      console.error('Error fetching order data:', error);
-    }
+    });
   }
+  
 
   printPackages(){
     this.apiservice.packages().subscribe((response)=>{
       if(response.status === true){
         this.packagesData = response.message;
-        //console.log('packages-',this.packagesData);     
+        // console.log('packages-',this.packagesData);     
       }
     })
   }
 
-  async onClickPackages(service_category: any, name: any, service_name: any, static_name: any, service_category_name: any ){
+  async onClickPackages(service_category: any, name: any, service_name: any, static_name: any, service_category_name: any, services_variants:any ){
     await this.storage.set('service_name', service_name);
+    localStorage.setItem('heading_Service_name',service_category_name);
     await this.storage.set('ItemType', static_name);
     this.router.navigate(['/spa-ladies', service_category, service_category_name]); 
+    // console.log('service_name',service_name);
+    // console.log('service_category_name',service_category_name);
+    // console.log('package_services_variants',services_variants);
+    await this.storage.set('package_services_variants', services_variants);
   }
   
     // Method to increase quantity
@@ -480,5 +924,35 @@ export class Tab1Page implements OnInit {
 
     navigateToViewBooking(){
       this.router.navigate(['/view-booking']);
+    }
+    async onclickParticularService3(name: any, service_category: any, category_name: any){
+      await this.storage.set('ItemType', 'service');
+      // console.log(name,id)
+    //  const service_category = service_category;
+      const heading_Service_name = category_name;
+      localStorage.setItem('heading_Service_name',heading_Service_name);
+      
+      const service_name = name;
+      this.router.navigate(['/spa-ladies',service_category, service_name]);
+    }
+    async onclickParticularService2(name: any, service_category: any, category_name: any){
+      await this.storage.set('ItemType', 'service');
+      // console.log(name,id)
+     // const service_category = service_category;
+      const heading_Service_name = category_name;
+      localStorage.setItem('heading_Service_name',heading_Service_name);
+      
+      const service_name = name;
+      this.router.navigate(['/spa-ladies',service_category, service_name]);
+    }
+    async onclickParticularService1(name: any, service_category: any, category_name: any){
+      await this.storage.set('ItemType', 'service');
+      // console.log(name,id)
+    //  const service_category = service_category;
+      const heading_Service_name = category_name;
+      localStorage.setItem('heading_Service_name',heading_Service_name);
+      
+      const service_name = name;
+      this.router.navigate(['/spa-ladies',service_category, service_name]);
     }
 }

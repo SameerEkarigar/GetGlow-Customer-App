@@ -1,5 +1,5 @@
 
-<app-header-component></app-header-component>
+<app-header-component [cart_quantity]="HeaderQyt"></app-header-component>
 <ion-content [fullscreen]="true" >
   <div class="outer_content">
 
@@ -8,7 +8,7 @@
   </ion-row>
   <ion-row size="12">
     <ion-col size="12" class="section_heading">
-      <p>My Bookings</p>
+      <p style="font-size: 16px;">My Bookings</p>
     </ion-col>
   </ion-row>
   <ion-row size="12">
@@ -21,9 +21,9 @@
       (click)="setActiveButton('past')" (click)="onclickPastBooking()"><p>Past</p></ion-button>
     </ion-col>
   </ion-row>
-  <div *ngIf="loading" class="swiper-slide loader-slide">
+  <!-- <div *ngIf="loading" class="swiper-slide loader-slide">
     <ion-spinner name="crescent"></ion-spinner>
-  </div>
+  </div> -->
   <div class="cancel-booking-div" *ngIf="showFirstDiv && confirmbooking && showUpcommingBooking">
   <ion-row class="upcomming_booking_row_css" size="12" *ngFor=" let upComBooking of upComingBookingData">
     <ion-col size="4" class="upcoming_outer_booking_div">
@@ -34,13 +34,13 @@
     </ion-col>
     <ion-col size="5" class="">
       <div class="prof_img">
-        <img class="rounded-img" [src]="upComBooking.profile_pic">
+        <img class="rounded-img" loading="lazy" [src]="upComBooking.profile_pic">
         <p>{{upComBooking.employee_fname}} {{upComBooking.employee_lname}}</p>
       </div>
     </ion-col>
     <ion-col size="3" class="cancel_btn_div">
       <div class="color_black text-end ">
-        <p>GGB-{{upComBooking.booking_id}}</p>
+        <p>{{upComBooking.booking_suffix}}-{{upComBooking.booking_id}}</p>
       </div>
       <div class="cancel_btn_outer_div">
         <ion-button size="small" class="cacnel_btn" (click)="toggleDivs(upComBooking.booking_id, upComBooking.servicetime, upComBooking.servicedate)">Cancel</ion-button>
@@ -56,25 +56,28 @@
   <p>No Upcoming Bookings</p>
 </div>
 <div *ngIf="!showUpcommingBooking">
-  <ion-row class="upcomming_booking_row_css" size="12" *ngFor=" let pastBooking of pastBooking">
+  <ion-row class="upcomming_booking_row_css" size="12" *ngFor=" let pastBookingdata of pastBooking">
     <ion-col size="4" class="upcoming_outer_booking_div">
-      <h5 class="">{{pastBooking.services_name}}</h5>
-      <p class="">{{pastBooking.servicedate}}</p>
-      <p class="">{{pastBooking.sv_name}}</p>
-      <p class="">AED {{pastBooking.total_price}}</p>
+      <h5 class="">{{pastBookingdata.services_name}}</h5>
+      <p class="">{{pastBookingdata.servicedate}}</p>
+      <p class="">{{pastBookingdata.sv_name}}</p>
+      <p class="">AED {{pastBookingdata.total_price}}</p>
     </ion-col>
     <ion-col size="5" class="text_center">
       <div class="prof_img">
         <div class="img_outer_div">
-          <img class="rounded-img" [src]="pastBooking.profile_pic">
+          <img class="rounded-img" [src]="pastBookingdata.profile_pic">
         </div>  
-        <p>{{pastBooking.employee_fname}} {{pastBooking.employee_lname}}</p>     
+        <p>{{pastBookingdata.employee_fname}} {{pastBookingdata.employee_lname}}</p>     
       </div>
       
     </ion-col>
     <ion-col size="3" class="cancel_btn_div">
       <div class="color_black text-end ">
-        <p>GGB-{{pastBooking.booking_id}}</p>
+        <p>{{pastBookingdata.booking_suffix}}-{{pastBookingdata.booking_id}}</p>
+      </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+      <div class="cancel_btn_outer_div">
+        <ion-button size="small" class="cacnel_btn" (click)="reBook(pastBookingdata.service_name, pastBookingdata.service_variant, pastBookingdata.service_category, pastBookingdata.services_name,pastBookingdata.sv_duration_time, pastBookingdata.total_price, pastBookingdata.sv_people)">Re-Book</ion-button>
       </div>
     </ion-col>
   </ion-row>

@@ -5,11 +5,16 @@
 }
 .text_bold{
     font-weight: 500;
+    font-size: 14px;
    
+}
+.font_bold{
+    font-size: 18px;
 }
 .profile_rows p{
     color: black;
     white-space: nowrap;
+    font-size: 13px;
 }
 .profile_rows {
     padding-top: 12px;
@@ -24,7 +29,7 @@
 .right_arrow_outer_div{
    width: 7%;
    float: inline-end;
-   padding-top: 25px;
+   padding-top: 15px;
 }
 .right_arrow_outer_div ion-icon{
     color: black;

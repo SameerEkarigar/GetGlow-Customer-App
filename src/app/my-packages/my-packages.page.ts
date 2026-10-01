@@ -13,6 +13,7 @@ export class MyPackagesPage implements OnInit {
   printPurchasedPackageData: any[]= [];
   printInnerPackgeData: any[] = [];
   package_id: any[]=[];
+  noPackage: boolean = false;
 
   constructor(private router: Router, private apiService: ApiService, private Storage: Storage) { 
     this.init();
@@ -70,6 +71,8 @@ export class MyPackagesPage implements OnInit {
         });
   
         console.log('purchased packages', this.printPurchasedPackageData);
+      } else{
+        this.noPackage = true;
       }
     });
   }

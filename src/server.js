@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const TAP_SECRET_KEY = 'sk_test_ParN2MZDGgdbkqLcmIuznVTH'; // Replace with your Tap secret key
+const TAP_SECRET_KEY = 'TEst_key_paste'; // Replace with your Tap secret key
 
 // Endpoint to create a payment request
 app.post('/create-payment', async (req, res) => {

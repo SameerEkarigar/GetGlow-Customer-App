@@ -1,184 +1,205 @@
 
 ion-toolbar{
-    --background: white !important;
+  --background: white !important;
 }
 ion-content{
-    --background: white !important;
+  --background: white !important;
 }
 ion-searchbar{
-    --background: white !important;
-    color: black;
+  --background: white !important;
+  color: black;
 }
 .tab_logo_div{
- width: 50%;
- margin-top: 6px;
+width: 50%;
+margin-top: 6px;
 }
 .header_icon{   
-    margin-left: 115px;
-    margin-top: 4px;  
+  margin-left: 115px;
+  margin-top: 4px;  
 }
 .outer_icon_div{
-  display: flex;
+display: flex;
 }
 swiper-slide img{
-    width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .mySwiper{
-    padding: 0 11px;
+  padding: 0 11px;
 }
 .slide-content p{
-    color: black;
-    text-align: center;
-    font-size: 13px;
-    white-space: nowrap;
-    margin-bottom: 2px;
+  color: black;
+  text-align: center;
+  font-size: 13px;
+  white-space: nowrap;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 }
 .padding_global{
-    padding: 0 11px;
+  padding: 0 11px;
 }
 .slider_heading p{
-  color: black;
-  margin-top: 1px;
-  font-size: 16px;
-  margin-bottom: 7px;
+color: black;
+margin-top: 1px;
+font-size: 16px;
+margin-bottom: 7px;
+font-weight: 600;
+margin-top: 8px;
 }
 .searchbar-input.sc-ion-searchbar-ios{
-      height: 40px !important;
-    padding-top: 18px !important;
-    color: green !important;
+    height: 40px !important;
+  padding-top: 18px !important;
+  color: green !important;
 }
 .ion_searchBar .searchbar-input-container{
-    height: 50px !important;
+  height: 50px !important;
 }
 
 .mySwiper .swiper-pagination-bullet {
-    background-color: #007bff; /* Blue color for bullets */
-    opacity: 0.7; /* Adjust opacity */
-  }
-  
-  .mySwiper .swiper-pagination-bullet-active {
-    background-color: #ff4081; /* Pink color for active bullet */
-  }
-  .swiper-pagination{
-    color: black;
-  }
+  background-color: #007bff; 
+  opacity: 0.7; 
+}
+
+.mySwiper .swiper-pagination-bullet-active {
+  background-color: #ff4081; 
+}
+.swiper-pagination{
+  color: black;
+}
 .serviceimgdiv ion-img{
-    object-fit: cover;
-    height: inherit;
+  object-fit: cover;
+  height: inherit;
 }
 .serviceimgdiv {
-    height: 14vh;
+  height: 14vh;
 }
-.white_space_normal{
-    white-space: normal !important;
-}
+
 
 .swiper-pagination {
-    bottom: 10px; /* Positioning the pagination bullets */
-  }
-  
-  .swiper-pagination-bullet {
-    background: #007bff; /* Default color for bullets */
-    opacity: 0.5; /* Default opacity */
-  }
-  
-  .swiper-pagination-bullet-active {
-    opacity: 1; /* Active bullet opacity */
-  }
-  p{
-    color: black;
-  }
-  .skeleton{
-    opacity: .7;
-    animation: skeleton-loading 1s linear infinite alternate;
-  }
-  @keyframes skeleton-loading {
-    0%{
-      background-color: hsl(200, 20%,70%);
-    }
+  bottom: 10px; 
+}
 
-    100%{
-      background-color: hsl(200, 20%, 95%);
-    }
-  }
-  .skeleton2{
-    opacity: .7;
-    height: 26vh;
-    animation: skeleton-loading 1s linear infinite alternate;
-  }
-  @keyframes skeleton-loading {
-    0%{
-      background-color: hsl(200, 20%,70%);
-    }
-    
-    100%{
-      background-color: hsl(200, 20%, 95%);
-    }
-  }
-  .skeleton-text{
-    opacity: .7;
-    height: 2vh;
-    border-radius: 8px;
-    animation: skeleton-loading 1s linear infinite alternate;
-  }
-  @keyframes skeleton-loading {
-    0%{
-      background-color: hsl(200, 20%,70%);
-    }
-    
-    100%{
-      background-color: hsl(200, 20%, 95%);
-    }
-  }
-  @media screen and (max-width: 400px) {
-    .slide-content p{
-      font-size: 12px;
-  }
-  }
-  .after_add{
-     display: flex;
-  }
-  .most_popular_btn_div ion-button{
-    width: 100%;
-    --border-radius: 0;
-    color: white;
-  }
-  .less_btn{
-    width: 31% !important;
-    min-width: 22% !important;
-    color: white;
-  }
-  .add_btn{
-    width: 27% !important;
-    --background: white !important;
-     color: black !important;
-    min-width: 38% !important;
-  }
-  .plus_btn{
-    width: 30% !important;
-    min-width: 22% !important;
-    color: white;
-  }
-  .after_add ion-button{
-    --border-radius: 0;
-     margin: 2px 0px;
+.swiper-pagination-bullet {
+  background: #007bff; 
+  opacity: 0.5; 
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1; 
+}
+p{
+  color: black;
+}
+.skeleton{
+  opacity: .7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+@keyframes skeleton-loading {
+  0%{
+    background-color: hsl(200, 20%,70%);
   }
 
-  .view_cart_div{
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 999;
-    background: white;
-    padding: 0px 12px;
+  100%{
+    background-color: hsl(200, 20%, 95%);
   }
-  .view_cart_div ion-button{
-    --border-radius: 0 !important;
-    color: white;
+}
+.skeleton2{
+  opacity: .7;
+  height: 26vh;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+@keyframes skeleton-loading {
+  0%{
+    background-color: hsl(200, 20%,70%);
+  }
+  
+  100%{
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+.skeleton-text{
+  opacity: .7;
+  height: 2vh;
+  border-radius: 8px;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+@keyframes skeleton-loading {
+  0%{
+    background-color: hsl(200, 20%,70%);
+  }
+  
+  100%{
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+@media screen and (max-width: 400px) {
+  .slide-content p{
     font-size: 12px;
-    text-transform: capitalize;
-  }
-  .view_cart_div p{
-    font-size: 13px;
-    font-weight: 600;
-  }
+}
+}
+.after_add{
+   display: flex;
+}
+.most_popular_btn_div ion-button{
+  width: 100%;
+  --border-radius: 0;
+  color: white;
+}
+.less_btn{
+  width: 31% !important;
+  min-width: 22% !important;
+  color: white;
+}
+.add_btn{
+  width: 27% !important;
+  --background: white !important;
+   color: black !important;
+  min-width: 38% !important;
+}
+.plus_btn{
+  width: 30% !important;
+  min-width: 22% !important;
+  color: white;
+}
+.after_add ion-button{
+  --border-radius: 0;
+   margin: 2px 0px;
+}
+
+.view_cart_div{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  background: white;
+  padding: 0px 12px;
+}
+.view_cart_div ion-button{
+  --border-radius: 0 !important;
+  color: white;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.view_cart_div p{
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.outer_div_for_order {
+  display: flex;
+  flex-direction: column;
+}
+ion-col{
+padding-left: 0;
+
+}
+.sliderouter_div_margin{
+margin-bottom: 12px;
+}
+.object_fit_div{
+height: 120px;
+margin-bottom: 10px;
+}

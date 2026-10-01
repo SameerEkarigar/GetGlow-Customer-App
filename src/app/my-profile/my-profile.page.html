@@ -1,5 +1,12 @@
 
 <app-header-component></app-header-component>
+<!-- <ion-row size="12">
+  <ion-col size="12">
+    <div class="arrow_div" (click)="navigateTotabstab3()">
+      <ion-icon size="large" name="arrow-back-outline"></ion-icon>
+    </div>
+  </ion-col>
+</ion-row> -->
 <ion-content [fullscreen]="true">
   <div class="outer_content">
     <app-backbutton></app-backbutton>
@@ -34,7 +41,7 @@
               <ion-row>
                 <ion-col size="12">
                   <div class="border_bottom_css color_black">
-                    <ion-input placeholder="Enter Your Name" (ionChange)="onFirstNameChange($event)" value="Reshma" [(ngModel)]="first_name"></ion-input>
+                    <ion-input placeholder="Enter Your Name" (ionChange)="onFirstNameChange($event)"  [(ngModel)]="first_name"></ion-input>
                   </div>
                 </ion-col>
               </ion-row>
@@ -75,7 +82,7 @@
               <ion-row>
                 <ion-col size="12">
                   <div class="border_bottom_css color_black">
-                    <ion-input placeholder="Enter Your Name" (ionChange)="onLastNameChange($event)" value="Joshi" [(ngModel)]="last_name"></ion-input>
+                    <ion-input placeholder="Enter Your Name" (ionChange)="onLastNameChange($event)"  [(ngModel)]="last_name"></ion-input>
                   </div>
                 </ion-col>
               </ion-row>
@@ -115,7 +122,33 @@
               </ion-row>
               <ion-row size="12">
                 <ion-col >
-                <div class="outer_number_div margin_bottom12px">
+                  <div class="outer_number_div" >
+          
+                    <ion-item (click)="toggleDropdown()" class="dropdown-trigger">
+                      <ion-label>{{ selectedPrefix || 'Select Prefix' }}</ion-label>
+                    </ion-item>
+                    
+          
+                    <div *ngIf="dropdownOpen" class="dropdown-container">
+                      <ion-searchbar
+                        placeholder="Search prefix"
+                        [(ngModel)]="searchText"
+                        (ionInput)="filterPrefix($event)"
+                        debounce="300"
+                        class="dropdown-searchbar">
+                      </ion-searchbar>
+                        <ion-item 
+                          *ngFor="let data of filteredCountryCode" 
+                          (click)="selectPrefix(data.telephonePrefix)">
+                          {{ data.telephonePrefix }} ({{data.countryCode}})
+                        </ion-item>
+                    </div>
+                    <ion-item lines="full" class="login_number_div2">
+                      <ion-input type="tel" [(ngModel)]="phoneNumber"  placeholder="Enter your phone number" (ionInput)="onPhoneNumberChangeevent($event)"></ion-input>
+                    </ion-item>
+                   
+                  </div>
+                <!-- <div class="outer_number_div margin_bottom12px">
                   <ion-select [value] ="phone_country_code" class="country_dropdown" (ionChange)="onChangeCountryCode($event)">
                     <ion-select-option  [value] ="code.telephonePrefix" *ngFor ="let code of CountryCode" > 
                       {{code.telephonePrefix}}  
@@ -124,11 +157,12 @@
                   <ion-item lines="full" class="login_number_div2">
                     <ion-input [(ngModel)]="phone"  name="phoneNumber" type="tel" placeholder="Enter your phone number" (ionInput)="onPhoneNumberChange($event)"></ion-input>
                   </ion-item>
-                </div>
+                </div> -->
+                <div *ngIf="errorMessage2" style="color: red; margin-top: 8px; display: flex; justify-content: center;">{{ errorMessage2 }}</div>
               </ion-col>
                 <ion-col size="12">
-                  <ion-button id="getotp" expand="full" class="save_changes_btn">Get OTP</ion-button>
-                  <ion-modal trigger="getotp" [initialBreakpoint]="0.3" class="ion_modal">
+                  <ion-button expand="full" (click)="getOTPFucntion()" class="save_changes_btn">Get OTP</ion-button>
+                  <ion-modal  [initialBreakpoint]="0.4" class="ion_modal" [isOpen]="isModalOpen">
                     <ng-template>
                       <div class="padding_12px">
                         <ion-row>
@@ -142,34 +176,38 @@
                               <p (click)="customClose()" class="start_end color_black margin_0">close</p>
                             </div>
                           </ion-col>
-                          <ion-row class="">
-                            <ion-col>
-                              <div>
-                                <p class="margin_0 color_black text_align_center">Please enter the 4 digit One Time Passcode sent on your mobile number.</p>
-                              </div>
-                              <ion-row class="otp_colums otp_outer_div">
-                                <ion-col size="1.5" class="otp-input">
-                                  <ion-input type="tel" maxlength="1"></ion-input>
-                                </ion-col>
-                                <ion-col size="1.5" class="otp-input">
-                                  <ion-input type="tel" maxlength="1"></ion-input>
-                                </ion-col>
-                                <ion-col size="1.5" class="otp-input">
-                                  <ion-input type="tel" maxlength="1"></ion-input>
-                                </ion-col>
-                                <ion-col size="1.5" class="otp-input">
-                                  <ion-input type="tel" maxlength="1"></ion-input>
-                                </ion-col>
-                              </ion-row>
-                              <div class="timer_div color_black text_align_center ">02:00</div>
-                            </ion-col>
-                          </ion-row>
+                          <form class="form_otp_div" (ngSubmit)="submitOtp()">
+                            <div class="otp-input-group">
+                              <ion-input
+                                *ngFor="let digit of otpDigits; let i = index"
+                                [(ngModel)]="otp[i]"
+                                (ionInput)="onInputChange(i, $event)"
+                                (keydown)="handleKeyDown(i, $event)"
+                                maxlength="1"
+                                type="number"
+                                inputmode="numeric"
+                                class="otp-input"
+                                required
+                                name="otp-{{i}}"
+                              ></ion-input>
+                            </div>
+                            <p style="color: black; justify-content: center; display: flex;" *ngIf="!isTimeOut">{{ minutes }}:{{ seconds | number:'2.0' }}</p>
+                            <p  style="justify-content: center; display: flex;"*ngIf="isTimeOut" (click)="resendOtp()" style="color: red; justify-content: center; display: flex;">Resend OTP</p>
+                            <!-- Disable button if not all OTP fields are filled -->
+                            <div *ngIf="isOtpFilled" class="continue_btn">
+                              <ion-button expand="full" type="submit"><ng-container *ngIf="!loading_otp; else loadingSpinner">Continue</ng-container></ion-button>
+                              <ng-template #loadingSpinner>
+                                <ion-spinner name="dots"></ion-spinner> <!-- Spinner inside the button -->
+                              </ng-template>
+                             </div>
+                             <div *ngIf = "errorMessage" class="error-message" style="justify-content: center; display: flex;color: red; margin-top: 12px;">
+                              {{ errorMessage }}
+                            </div>
+                          </form>
+                        
+
                         </ion-row>
-                        <ion-row size="12">
-                          <ion-col size="12">
-                            <ion-button expand="full" (click)="customClose()" class="save_changes_btn">Continue</ion-button>
-                          </ion-col>
-                        </ion-row>
+    
                       </div>
 
                     </ng-template>

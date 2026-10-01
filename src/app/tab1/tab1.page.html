@@ -1,24 +1,29 @@
 <app-header-component [cart_quantity]="HeaderQyt"></app-header-component>
 <app-check-location></app-check-location>
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="Pull to refresh" refreshingText="Refreshing..."></ion-refresher-content>
+  </ion-refresher>
   <div class="outer_content">
-  <ion-searchbar class="ion_searchBar" placeholder="Search services, packages" [(ngModel)]="searchText"></ion-searchbar>
+    
+    <ion-searchbar class="ion_searchBar" placeholder="Search services, packages" [(ngModel)]="searchText"></ion-searchbar>
   <div>
-    <div class="loading" *ngIf="loading; else content" >
+
+  <div class="loading" *ngIf="loading; else content" >
     <div id="1">
       <ion-row size="12" class="padding_global slider_heading" *ngIf="(data_0 | search: searchText)">
         <ion-col size="12">
           <p class="skeleton-text"></p>
         </ion-col>
       </ion-row>
-      <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
+      <swiper-container class="mySwiper" slides-per-view="3" space-between="10">
+        <swiper-slide *ngFor="let services of data | search: searchText">
           <div class="slide-content ">
             <div class="serviceimgdiv skeleton">
               <ion-img [src] = ""></ion-img>
             </div>
             <p class="skeleton-text"></p>
+
           </div>
         </swiper-slide>
       </swiper-container>
@@ -29,9 +34,8 @@
           <p class="skeleton-text"></p>
         </ion-col>
       </ion-row>
-      <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
+      <swiper-container class="mySwiper" slides-per-view="3" space-between="10">
+        <swiper-slide *ngFor="let services of data | search: searchText">
           <div class="slide-content ">
             <div class="serviceimgdiv skeleton">
               <ion-img [src] = ""></ion-img>
@@ -68,8 +72,7 @@
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
+        <swiper-slide *ngFor="let services of data | search: searchText">
           <div class="slide-content ">
             <div class="serviceimgdiv skeleton">
               <ion-img [src] = ""></ion-img>
@@ -95,8 +98,7 @@
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
+        <swiper-slide *ngFor="let services of data | search: searchText">
           <div class="slide-content ">
             <div class="serviceimgdiv skeleton">
               <ion-img [src] = ""></ion-img>
@@ -113,8 +115,7 @@
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
+        <swiper-slide *ngFor="let services of data | search: searchText">
           <div class="slide-content ">
             <div class="serviceimgdiv skeleton">
               <ion-img [src] = ""></ion-img>
@@ -131,8 +132,7 @@
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
+        <swiper-slide *ngFor="let services of data | search: searchText">
           <div class="slide-content ">
             <div class="serviceimgdiv skeleton">
               <ion-img [src] = ""></ion-img>
@@ -143,7 +143,8 @@
       </swiper-container>
     </div>
   </div>
-    <!-- <div *ngFor="let order of OrderPrint; let i = index">
+
+  <!-- <div *ngFor="let order of OrderPrint; let i = index">
       <ng-container>
         <p>{{ order.service_name }} - Order: {{ order.order }}</p>
          
@@ -156,47 +157,51 @@
         </ng-container>
       </ng-container>
     </div> -->
+    
     <ng-template #content>
-    <div id="1">
-      <ion-row size="12" class="padding_global slider_heading" *ngIf="(data_0 | search: searchText)">
-        <ion-col size="12">
-          <p>{{data_0.display_text}}</p>
-        </ion-col>
-      </ion-row>
-      <swiper-container class="mySwiper " slides-per-view="3" space-between="10">
-        <swiper-slide (click)="openServiceDetails(services.service_category, services.category_name)"
-          *ngFor="let services of data | search: searchText">
-          <div class="slide-content">
-            <div class="serviceimgdiv ">
-              <ion-img [src] = "services.image_name"></ion-img>
-            </div>
-            <p>{{services.category_name}}</p>
-          </div>
-        </swiper-slide>
-      </swiper-container>
-    </div>
-    <div id="2">
-      <ion-row size="12" class="padding_global slider_heading" *ngIf="(packagesData | search: searchText)">
-        <ion-col size="12">
-          <p>Packages</p>
-        </ion-col> 
-      </ion-row>
-      <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
-        <swiper-slide *ngFor="let packages of packagesData | search: searchText" (click)="onClickPackages(packages.service_category, packages.name, packages.service_name, packages.static_name, packages.service_category_name)">
-          <div class="slide-content margin_0 ">
-            <img [src]="packages.image_name">
-            <p>{{packages.package_name}}</p>
-            <!-- <p>{{packages.sv_name}}</p>
-            <p>AED {{packages.sv_price}}</p> -->
-          </div>
-        </swiper-slide>
-      </swiper-container>
-    </div>
+    <div class="outer_div_for_order" >
+    
+      <div id="box1" *ngIf="service_7_arr_header" class="sliderouter_div_margin">
+        <ion-row size="12" class="padding_global slider_heading" *ngIf="(data_0 | search: searchText)">
+          <ion-col size="12">
+            <p>{{service_7_arr_header }}</p>
+          </ion-col>
+        </ion-row>
+          <swiper-container class="mySwiper" slides-per-view="3" space-between="10">
+            <swiper-slide (click)="openServiceDetails(services7.service_category, services7.category_name, services7.service_name, services7.static_name, services7.sv_name, services7.sv_price)"
+              *ngFor="let services7 of service_7_arr | search: searchText">
+              <div class="slide-content">
+                <div class="serviceimgdiv">
+                  <ion-img [src] = "services7.display_image"></ion-img>
+                </div>
+                <p>{{services7.service_name}} </p>
+              </div>
+            </swiper-slide>
+          </swiper-container>
 
-    <div id="3">
+      </div>
+      <div id="box2" *ngIf="packages_arr_header" class="sliderouter_div_margin">
+        <ion-row size="12" class="padding_global slider_heading" *ngIf="(packagesData | search: searchText)">
+          <ion-col size="12">
+            <p>{{packages_arr_header}}</p>
+          </ion-col> 
+        </ion-row>
+        <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
+          <swiper-slide *ngFor="let packages of packagesData | search: searchText" (click)="onClickPackages(packages.service_category, packages.name, packages.service_name, packages.static_name, packages.service_category_name, packages.services_variants)">
+            <div class="slide-content margin_0 object_fit_div">
+              <img [src]="packages.image_name">         
+            </div>
+            <div class="slide-content margin_0">
+              <p>{{packages.package_name}}</p>
+            </div>
+          </swiper-slide>
+        </swiper-container>
+      </div>
+
+    <div id="box3" class="sliderouter_div_margin">
       <ion-row size="12" class="padding_global slider_heading" *ngIf="(OfferData_1 | search: searchText)">
         <ion-col size="12">
-          <p>{{OfferData_1.display_text}}</p>
+          <p>{{service_6_arr_header}}</p>
         </ion-col>
       </ion-row>
       <swiper-container  class="mySwiper" 
@@ -207,16 +212,16 @@
       [loop]="false" 
       [pagination]="{ clickable: true }">
         <swiper-slide *ngFor="let offer of OfferData | search: searchText">
-          <div class="slide-content ">
+          <div class="slide-content">
             <ion-img [src] = "offer.image_name"></ion-img>
           </div>
         </swiper-slide>
       </swiper-container>
     </div>
-    <div id="4">
+    <div id="box4" *ngIf="service_4_arr_heading" class="sliderouter_div_margin">
       <ion-row size="12" class="padding_global slider_heading" *ngIf="(mostPopularData_1 | search: searchText)">
         <ion-col size="12">
-          <p>{{mostPopularData_1.display_text}}</p>
+          <p>{{service_4_arr_heading}}</p>
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
@@ -243,68 +248,70 @@
       </swiper-container>
     </div>
 
-    <div id="5">
-      <ion-row size="12" class="padding_global">
-        <div class="">
-          <ion-col size="12">
+    <div id="box5" class="sliderouter_div_margin">
+      <ion-row size="12" class="padding_global slider_heading"> 
+          <ion-col>
+            <p style="margin-bottom: 2px;">{{service_5_arr_header}}</p>
+          </ion-col>
+          <ion-col size="12">         
             <ion-img [src] = "spa_lady_banner" alt=""></ion-img>
           </ion-col>
-        </div>
       </ion-row>
     </div>
 
-    <div id="7">
+    <div id="box6" *ngIf="service_2_arr_header" class="sliderouter_div_margin">
       <ion-row size="12" class="padding_global slider_heading">
         <ion-col size="12">
-          <p>{{ categoryName2 }}</p>
+          <p>{{service_2_arr_header}}</p>
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
-        <swiper-slide *ngFor="let service2 of printService2 | search: searchText">
-          <div class="slide-content margin_0 ">
-            <ion-img [src] = "service2.image_name"></ion-img>
+        <swiper-slide *ngFor="let service2 of printService2 | search: searchText" (click)="onclickParticularService2(service2.name, service2.service_category, service2.category_name)">
+          <div class="slide-content margin_0 object_fit_div">
+            <img [src] = "service2.image_name">
+          </div>
+          <div class="slide-content margin_0">
             <p class="white_space_normal">{{service2.name}}</p>
-            <!-- <p>{{service2.sv_name}}</p> -->
-            <!-- <p>AED {{service2.sv_price}}</p> -->
           </div>
         </swiper-slide>
       </swiper-container>
     </div>
     
-    <div id="6">
+    <div id="box7" *ngIf="service_1_arr_header" class="sliderouter_div_margin">
       <ion-row size="12" class="padding_global slider_heading">
         <ion-col size="12">
-          <p>{{ categoryName1 }}</p>
+          <p>{{service_1_arr_header}}</p>
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper" loop="false" slides-per-view="3" space-between="10">
-        <swiper-slide *ngFor="let service1 of PrintService1 | search: searchText">
-          <div class="slide-content margin_0 ">
-            <ion-img [src]= "service1.image_name"></ion-img>
+        <swiper-slide *ngFor="let service1 of PrintService1 | search: searchText" (click)="onclickParticularService1(service1.name, service1.service_category, service1.category_name)">
+          <div class="slide-content margin_0 object_fit_div">
+            <img [src]= "service1.image_name">         
+          </div>
+          <div class="slide-content margin_0">
             <p class="white_space_normal">{{service1.name}}</p>
-            <!-- <p>{{service1.sv_name}}</p> -->
-            <!-- <p>AED {{service1.sv_price}}</p> -->
           </div>
         </swiper-slide>
       </swiper-container>
     </div>
 
-    <div id="8">
+    <div id="box8" *ngIf="service_3_arr_header" class="sliderouter_div_margin">
       <ion-row size="12" class="padding_global slider_heading">
         <ion-col size="12">
-          <p>{{ categoryName3 }}</p>
+          <p>{{service_3_arr_header}} </p>
         </ion-col>
       </ion-row>
       <swiper-container class="mySwiper" slides-per-view="3" space-between="10">
-        <swiper-slide *ngFor = "let service3 of printService3 ">
-          <div class="slide-content margin_0 " >
-            <ion-img [src] = "service3.image_name"></ion-img>
+        <swiper-slide *ngFor = "let service3 of printService3 " (click)="onclickParticularService3(service3.name, service3.service_category, service3.category_name)">
+          <div class="slide-content margin_0 object_fit_div">
+            <img [src] = "service3.image_name">
+          </div>
+          <div class="slide-content margin_0">
             <p class="white_space_normal">{{service3.name}}</p>
-            <!-- <p>{{service3.sv_name}}</p> -->
-            <!-- <p>AED {{service3.sv_price}}</p> -->
           </div>
         </swiper-slide>
       </swiper-container>
+    </div>
     </div>
     </ng-template>
   </div>

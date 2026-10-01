@@ -47,13 +47,13 @@
       </ion-row>
       <div *ngIf="cartitem.package_arr && cartitem.package_arr.length > 0">
         <ion-row *ngIf="showpackageDropdown">
-          <ion-col size="6">
+          <ion-col size="5">
             <ion-checkbox [(ngModel)]="cartitem.isChecked" name="isChecked2"  (ionChange)="onCheckboxChange(cartitem, $event)" class="bg_white custom_margin"
               labelPlacement="end" required style="position: relative; z-index: 999;">
               <p>Book from Package</p>
             </ion-checkbox>
           </ion-col>
-          <ion-col size="6">
+          <ion-col size="5" class="ion_select_outer_div">
             <ion-select [disabled]="!cartitem.isChecked" [(ngModel)]="cartitem.selectedPackageId"
               (ngModelChange)="onPackageSelect(cartitem,i)" class="map_input" placeholder="Search package">
               <ion-select-option *ngFor="let pastbooking of cartitem.package_arr" [value]="pastbooking.ID">
@@ -179,19 +179,24 @@
           </p>
         </ion-col>
       </ion-row>
-      <!-- <ion-button  expand="full" (click)="onPaymentClick()"
-      class="continue_to_address_btn">Pay test</ion-button> -->
+     
 
       <ion-button *ngIf="!creditPay" expand="full" (click)="onPaymentClick()"
-        class="continue_to_address_btn">Pay</ion-button>
-      <ion-button *ngIf="creditPay" expand="full" (click)="CashPayBook()" class="continue_to_address_btn">Confirm
-        Booking</ion-button>
+        class="continue_to_address_btn"><ng-container *ngIf="!loading_payment; else loadingSpinner">Pay</ng-container>
+        <ng-template #loadingSpinner>
+          <ion-spinner name="dots"></ion-spinner> <!-- Spinner inside the button -->
+        </ng-template></ion-button>
+      <ion-button *ngIf="creditPay" expand="full" (click)="CashPayBook()" class="continue_to_address_btn"> <ng-container *ngIf="!loading_payment; else loadingSpinner">Confirm Booking</ng-container>
+        <ng-template #loadingSpinner>
+          <ion-spinner name="dots"></ion-spinner> <!-- Spinner inside the button -->
+        </ng-template></ion-button>
+        <!-- <ion-spinner *ngIf="loading_payment" name="dots"></ion-spinner> -->
     </div>
   </div>
 
 </div>
 <div *ngIf="connectToPaymentGateway" >
-   <p class="conectToPG">Connecting to Payment gateway</p> 
+   <p class="conectToPG">Connecting to Payment Gateway</p> 
    <!-- <p>{{tapId}}</p> -->
 </div>
 </ion-content>

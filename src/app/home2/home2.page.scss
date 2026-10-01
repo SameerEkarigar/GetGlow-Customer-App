@@ -28,18 +28,25 @@ ion-img{
     --background: #82A29D;
     --border-radius: 0;
     --color: white;
+    font-size: 15px;
+    width: 26%;
 }
 .theme_btn_skip {
     --color: rgb(0, 0, 0);
     --background: #ffffff;
     --box-shadow: none;
+    --border-radius: 0;
+      font-size: 15px;
+      width: 26%;
 }
 .home_heading{
     font-weight: bold;
     margin-bottom: 4px;
+    font-size: 18px;
 }
 .home_para{
     margin-top: 0;
+    font-size: 15px;
 }
 .small_logo_img{
     margin-bottom: 12px;

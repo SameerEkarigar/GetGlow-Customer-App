@@ -16,6 +16,7 @@ export class PaymentService {
   constructor(private http: HttpClient) {}
 
   createPayment(amount: number, booking_type: any, user_id: any) {
+    
     return this.http.post(`${this.serverUrl}`, {
         amount,
         booking_type,

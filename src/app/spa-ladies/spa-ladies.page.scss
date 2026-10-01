@@ -25,6 +25,12 @@ ion-content{
 .section_heading p{
   color: black;
   margin: 0;
+  // color: black;
+  margin-top: 1px;
+  font-size: 16px;
+  margin-bottom: 7px;
+  font-weight: 600;
+  margin-top: 8px;
 }
 .outer_content{
     padding: 0 8px;
@@ -253,6 +259,7 @@ ion-content{
   z-index: 999;
   background: white;
   padding: 0px 12px;
+  padding-bottom: 25px;
 }
 .view_cart_div ion-button{
   --border-radius: 0 !important;

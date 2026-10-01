@@ -26,11 +26,12 @@ export class HomePage implements OnInit {
   
  async navigateToAnotherPage() {
     const phone = await this.storage.get('PhoneNumber');
+    console.log('phone number present or not -',phone);
     setTimeout(() => {
       if(phone){
         this.router.navigate(['/tabs/tab1']);
       } else{
-        this.router.navigate(['/home2',this.characterId]);
+        this.router.navigate(['/home2']);
       }
     
     }, 1000);

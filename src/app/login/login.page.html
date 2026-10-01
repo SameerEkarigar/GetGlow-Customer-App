@@ -7,15 +7,41 @@
         <ion-img src="/assets/header-logo.png" class="logo-img"></ion-img>
         <ion-row size="12" class="mb_txt_row">
           <ion-col size="12">
-            <p class="">Please Enter Your Mobile Number</p>
+            <p class="phn_text">Please Enter Your Mobile Number</p>
+            <p class="">We will sent OTP on WhatsApp</p>
           </ion-col>
         </ion-row>
         <div class="outer_number_div" >
-          <ion-select value="+971"  class="country_dropdown">
+          
+          <ion-item (click)="toggleDropdown()" class="dropdown-trigger">
+            <ion-label>{{ selectedPrefix || 'Select Prefix' }}</ion-label>
+          </ion-item>
+          
+          <!-- Dropdown Area -->
+          <div *ngIf="dropdownOpen" class="dropdown-container">
+            <!-- Search Bar -->
+            <ion-searchbar
+              placeholder="Search prefix"
+              [(ngModel)]="searchText"
+              (ionInput)="filterPrefix($event)"
+              debounce="300"
+              class="dropdown-searchbar">
+            </ion-searchbar>
+          
+            <!-- Prefix List -->
+            <!-- <ion-list> -->
+              <ion-item 
+              *ngFor="let data of filteredCountryCode" 
+              (click)="selectPrefix(data.telephonePrefix)">
+              {{ data.telephonePrefix }} ({{data.countryCode}})
+            </ion-item>
+            <!-- </ion-list> -->
+          </div>
+          <!-- <ion-select value="+971"  (ionChange)="onPrefixChange($event)" class="country_dropdown">
             <ion-select-option  *ngFor="let data of CountryCode" [value]="data.telephonePrefix">
               {{data.telephonePrefix}}
             </ion-select-option>    
-          </ion-select>
+          </ion-select> -->
           <ion-item lines="full" class="login_number_div2">
             <ion-input type="tel"  [(ngModel)]="phoneNumber"  placeholder="Enter your phone number" (ionInput)="onPhoneNumberChange($event)"></ion-input>
           </ion-item>
@@ -23,6 +49,7 @@
         <div style="color: red; margin-top: 8px;">{{pleaseEnterPhone}}</div>
       </ion-col>
     </ion-row>
+    <div *ngIf="errorMessage" style="color: red; margin-top: 8px;">{{ errorMessage }}</div>
     <ion-row class="get_otp_outer_div">
       <ion-col class="get_otp_btn">
         <ion-button expand="block" (click)="navigateToCompleteLoginPage()">Get OTP</ion-button>

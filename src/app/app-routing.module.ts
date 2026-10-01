@@ -17,9 +17,13 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'home2/:charId',
+    path: 'home2',
     loadChildren: () => import('./home2/home2.module').then( m => m.Home2PageModule)
   },
+  // {
+  //   path: 'home2/:charId',
+  //   loadChildren: () => import('./home2/home2.module').then( m => m.Home2PageModule)
+  // },
   {
     path: 'home3',
     loadChildren: () => import('./home3/home3.module').then( m => m.Home3PageModule)
@@ -121,6 +125,10 @@ const routes: Routes = [
   {
     path: 'payment-success',
     loadChildren: () => import('./payment-success/payment-success.module').then( m => m.PaymentSuccessPageModule)
+  },
+  {
+    path: 'payment-failure',
+    loadChildren: () => import('./payment-failure/payment-failure.module').then( m => m.PaymentFailurePageModule)
   },
 
  

@@ -7,13 +7,14 @@
 <ion-content [fullscreen]="true">
   <div class="outer_content">
     <app-backbutton></app-backbutton>
-    <div *ngFor="let packagedata of printPurchasedPackageData">
+    <div *ngIf="noPackage"  class="noPackges">No Packages</div>
+    <div>
       <ion-row size="12">
         <ion-col size="12" class="section_heading">
           <p>My Packages</p>
         </ion-col>
       </ion-row>
-      <div class="border_bottom_css">
+      <div class="border_bottom_css" *ngFor="let packagedata of printPurchasedPackageData">
         <ion-row size="12">
           <ion-col size="9">
             <div>

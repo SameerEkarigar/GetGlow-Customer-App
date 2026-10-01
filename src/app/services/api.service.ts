@@ -9,7 +9,8 @@ export class ApiService {
     throw new Error('Method not implemented.');
   }
 
-  base_path = 'https://dashboard.getglowsalon.ae/staging/cms_app_api/api/';
+  base_path = 'https://dashboard.getglowsalon.ae/cms_app_api/api/';
+    // base_path = 'https://dashboard.getglowsalon.ae/staging/cms_app_api/api/';
 
   splash_content = this.base_path + 'splash';
   signIndetailsApi = this.base_path + 'personal_details';
@@ -70,6 +71,10 @@ export class ApiService {
   getAllpurchasedInnerApi = this.base_path+ 'getCustomerALlPackages_inner_data';
   CheckPaymentStatusApi = this.base_path+ 'App_payment_check_process';
   lastBookedProffessionalApi = this.base_path+ 'last_time_employee_booked';
+  otpApi = this.base_path+ 'sendwamsg';
+  service_package_banner_img_api = this.base_path+'service_packages_page_banner_image';
+  getEnteredOtpApi = this.base_path+ 'checking_otp_value';
+  updateUserDetailOnProfile = this.base_path + 'update_profile_details_on_profile_page';
   constructor(private http: HttpClient) { }
 
   get_splash_content(): Observable<any> {
@@ -219,6 +224,11 @@ export class ApiService {
     const body = { packages_service_category:  packages_service_category  };
     return this.http.post<any>(this.packagesInnerApi, body, { headers })
   }
+  getpackageBanerImg(service_variant_id: any,service_category_id: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { service_variant_id:  service_variant_id,service_category_id: service_category_id};
+    return this.http.post<any>(this.service_package_banner_img_api, body, { headers })
+  }
   packageVariants(packages_service_name: any){
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { packages_service_name:  packages_service_name  };
@@ -238,6 +248,16 @@ export class ApiService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { service_variant: service_variant };
     return this.http.post<any>(this.package_innerWhatweget, body, { headers })
+  }
+  getotp(phone_no: any,phone_coutry_code: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { phone_no: phone_no ,phone_coutry_code:phone_coutry_code};
+    return this.http.post<any>(this.otpApi, body, { headers })
+  }
+  getEnteredotpData(phone_no: any,phone_coutry_code: any, otp_code: any){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { phone_no: phone_no ,phone_coutry_code: phone_coutry_code, otp_code: otp_code};
+    return this.http.post<any>(this.getEnteredOtpApi, body, { headers })
   }
   packageInnerWhatWeInclude(service_variant: any){
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -308,6 +328,11 @@ export class ApiService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { user_id : user_id , service_variant : service_variant, servicetime : servicetime, servicedate : servicedate,service_location :service_location};
     return this.http.post<any>(this.lastBookedProffessionalApi, body, { headers })
+  }
+  updateUserDetailOnProfilePage(user_index_id: any, phone_country_code: any, phone: any, first_name: any, last_name: any, email: any,){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { user_index_id: user_index_id, phone_country_code: phone_country_code, phone: phone, first_name: first_name, last_name: last_name, email: email, };
+    return this.http.post<any>(this.updateUserDetailOnProfile, body, { headers })
   }
   packages(){
     return this.http.get<any>(this.packagesApi);

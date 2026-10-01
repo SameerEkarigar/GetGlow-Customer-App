@@ -11,19 +11,7 @@
             <h6 class="home_para"></h6>
           </ion-text>
           <div class="dot-dots">
-          <div *ngFor="let dot_deta of arr_data; let i = index">
-            <div *ngIf="dot_deta.status == 1; else inActivedots">
-              <div *ngIf="i == 0; else inactive_dots">
-                <div class="dot active"></div>
-              </div>
-              <ng-template #inactive_dots>
-                <div class="dot"></div>
-              </ng-template>
-            </div>
-            <ng-template #inActivedots>
-          
-            </ng-template>        
-          </div>       
+              
         </div>
           <div class="button_space" col-md="12">
             <ion-button  expand="block" class="theme_btn_skip-skeleton skeleton-button" (click)="navigateTolocation()"></ion-button>
@@ -35,16 +23,16 @@
 
 
     <!-- --------------- -->
-    <div *ngIf="splashContent">
+    <div >
     <ion-row>
       <ion-col class="content_box">
         <ion-img class="small_logo_img" loading="lazy" src="/assets/header-logo.png"></ion-img>
-        <ion-img  class="massage_img" [src]="splashContent.image_name"></ion-img>
+        <ion-img  class="massage_img" src="/assets/splash-1.png"></ion-img>
         <ion-text>
-          <h4 class="home_heading">{{splashContent.display_text}}</h4>
-          <h6 class="home_para">{{splashContent.display_sub_text}}</h6>
+          <h4 class="home_heading">Relax</h4>
+          <h6 class="home_para">Indulge in Bliss & Tranquility</h6>
         </ion-text>
-        <div class="dot-dots">
+        <!-- <div class="dot-dots">
         <div *ngFor="let dot_deta of arr_data; let i = index">
           <div *ngIf="dot_deta.status == 1; else inActivedots">
             <div *ngIf="i == 0; else inactive_dots">
@@ -58,6 +46,13 @@
         
           </ng-template>        
         </div>       
+      </div> -->
+      <div class="dot-dots">
+            <div class="dots_outer_div">
+              <div class="dot active"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>        
       </div>
         <div class="button_space" col-md="12">
           <ion-button  expand="block" class="theme_btn_skip" (click)="navigateTolocation()">Skip</ion-button>

@@ -21,16 +21,19 @@ ion-img{
       width: 24%;
       border: 1px solid black;
 }
-.login_number_div2{
+.login_number_div2 {
     --background: white;
     --inner-border-width: 0;
-      border: 1px solid black;
-      color: #000;
-      width: -webkit-fill-available;
+    // / border: 1px solid black; /
+    color: #000;
+    width: 85%;
+  
+    border-left: 1px solid;
 }
-.outer_number_div{
+.outer_number_div {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    border: 1px solid;
 }
 .get_otp_btn ion-button{
     --background: #82A29D;
@@ -58,3 +61,93 @@ ion-img{
 .mb_txt_row{
     margin-top: 1.5rem;
 }
+
+
+
+
+
+
+
+
+.dropdown-container {
+    position: relative;
+    width: 300px;
+  }
+  
+  .dropdown-search {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .dropdown-list {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    z-index: 1000;
+  }
+  
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  
+  .dropdown-item:hover {
+    background: #f0f0f0;
+  }
+  
+
+
+
+//   -----------
+.dropdown-trigger {
+    cursor: pointer;
+    background: #f8f8f8;
+    --background: white;
+    --color: black;
+    --border-color: white;
+        width: 80px;
+
+}
+  
+.dropdown-container {
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    width: 65%;
+    max-height: 300px;
+    overflow-y: auto;
+    // / box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+  
+  .dropdown-searchbar {
+    // / margin: 10px; /
+    --background: #f8f8f8;
+    --box-shadow: none;
+    --border-radius: 5px;
+    --color: black;
+    // / --color: black; /
+    text-align: left;
+}
+  ion-item{
+    --background: white;
+    --color: black;
+    --padding: 0;
+    margin: 0px;
+    --border-color: #ffffff;
+  }
+  .item-native{
+    --border-color: white !important;
+    border: 1px solid !important;
+    border-bottom: none !important;
+}
+  

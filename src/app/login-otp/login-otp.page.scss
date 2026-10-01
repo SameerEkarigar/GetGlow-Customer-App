@@ -32,22 +32,23 @@ ion-img{
     transform: translateY(-50%);
 }
 .arrow_div{
-    text-align: center;
-    position: absolute;
-    left: 0px;
-    right: 82%;
-    top: 21%;
-    transform: translateY(-50%);
+  display: flex;
+  position: relative;
+  bottom: -8rem;
+  left: 10px;
+  z-index: 1;
 }
 .timer_div{
     margin-top: 12px;
 }
 .continue_btn{
     margin-top: 2rem;
+ 
 }
 .continue_btn ion-button{
     --border-radius: 0;
     color: white;
+    font-size: 15px;
 }
 
 
@@ -68,8 +69,13 @@ ion-img{
   }
   .set_positon_OTP{
     position: relative;
-    top: 13rem;
+    top: 9rem;
+    padding: 13px;
   }
   .header-text{
     font-weight: 600;
+    font-size: 18px;
   }
+  ion-spinner{
+    height: 14px;
+    }

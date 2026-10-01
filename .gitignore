@@ -68,3 +68,24 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Android
+.gradle/
+build/
+android/app/build/
+android/.gradle/
+android/build/
+android/captures/
+android/gradlew
+android/gradlew.bat
+
+# iOS
+ios/DerivedData/
+ios/App/Pods/
+xcuserdata/
+DerivedData/
+
+# Environment files
+src/environments/
+
+

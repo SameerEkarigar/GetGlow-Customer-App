@@ -60,6 +60,8 @@ export class SpaLadiesPage implements OnInit {
   service_name: any[]= [];
   showpackages: boolean = false;
   ItemType: any;
+  package_services_variants_id: any;
+  packagesBannerImg: any;
   
   constructor(
     private router: Router,
@@ -89,7 +91,7 @@ export class SpaLadiesPage implements OnInit {
     // this.refreshPage();
     // //console.log('ionViewWillEnter called');
     const ItemType = await this.Storage.get('ItemType');
-    // //console.log('ItemType-',ItemType)
+    // console.log('ItemType-',ItemType)
     if(ItemType === 'service'){
       this.showpackages = false;
     }else{
@@ -102,7 +104,7 @@ export class SpaLadiesPage implements OnInit {
     const index = 0; // Set the appropriate index if needed
     const service_name = await this.Storage.get('service_name'); // Replace with the actual service name or variable
     this.onclickpackageServiceName(null, index, service_name);
-
+    this.printPackageBannerImg();
     this.printPackagesServices();
     this.CalculateHeaderItem();
     localStorage.setItem('spa_ladies_url', '');
@@ -112,8 +114,9 @@ export class SpaLadiesPage implements OnInit {
     this.user_id = await this.Storage.get('user_index_id');
     this.service_name = await this.Storage.get('service_name');
 
-    // this.get_quantity_length();
-    this.category_name = this.route.snapshot.paramMap.get('category_name');
+ 
+    this.category_name = localStorage.getItem('heading_Service_name');
+    // console.log(this.category_name)
     this.servicecategory = this.route.snapshot.paramMap.get('service_category');
 
     await this.Storage.set('service_category', this.servicecategory);
@@ -132,14 +135,18 @@ export class SpaLadiesPage implements OnInit {
   
     this.apiService.getSeriveName().subscribe(response => {
       const services = response.data;
+      console.log('roop',services)
       this.selectedService = services.find((service: { service_category: any; }) => service.service_category === this.servicecategory);
+      // console.log('selectedService', this.selectedService)
       if (this.selectedService) {
         this.servicesArray = this.selectedService.names_of_services.split(',').map((service: string) => service.trim());
         this.serviceNamesArray = this.selectedService.service_name.split(',').map((name: string) => name.trim());
         this.activeIndex = 0;
         this.matchServiceId = this.serviceNamesArray[0];
+        // console.log('serviceNamesArray',this.serviceNamesArray[0])
         this.fetchInitialData(this.serviceNamesArray[0]);
         this.serviceImgbanner = this.selectedService.image_name;     
+        console.log(this.serviceImgbanner)
       }
     });
   }
@@ -259,12 +266,13 @@ export class SpaLadiesPage implements OnInit {
   }
 
   fetchInitialData(serviceName: string) {
-    
+    console.log('ji')
     this.apiService.getServiceVariant(serviceName).subscribe((response) => {
+      console.log('service variant data : ',response);
       if (response) {
         this.variantData1 = response.message[0];
         this.variantData = response.message;
-        console.log('service variant data : ',this.variantData);
+       console.log('service variant data : ',this.variantData1);
         const storedCartString = localStorage.getItem('cart') || '[]';
 
         let storedCart;
@@ -289,12 +297,12 @@ export class SpaLadiesPage implements OnInit {
           console.warn('Stored cart data is not an array:', storedCart);
         }
   
-        const varient_id = this.variantData1.id;
-        this.apiService.addTocart(varient_id).subscribe(response => {
-          if (response.status == true) {
-            this.pre_fetched_data = response.message;
-          }
-        });
+        // const varient_id = this.variantData1.id;
+        // this.apiService.addTocart(varient_id).subscribe(response => {
+        //   if (response.status == true) {
+        //     this.pre_fetched_data = response.message;
+        //   }
+        // });
       }
     });
   }
@@ -317,13 +325,26 @@ export class SpaLadiesPage implements OnInit {
   printPackagesServices(){
     this.servicecategory = this.route.snapshot.paramMap.get('service_category');
     const packages_service_category = this.servicecategory;
+     console.log('packages_service_category',packages_service_category);
     this.apiService.packagesInnerData(packages_service_category).subscribe((response)=>{
       if(response.status === true){
         this.packages = response.message; 
-        //  //console.log('packages inner data',response);
+        // this.package_services_variants_id = response.message.services_variants_id;
+        console.log('printPackagesServices', this.packages);
       }
     })
-
+  }
+  async printPackageBannerImg(){
+    const service_category_id = this.route.snapshot.paramMap.get('service_category');
+    const service_variant_id = await this.Storage.get('package_services_variants');
+    console.log('service_category_id',service_category_id)
+    this.apiService.getpackageBanerImg(service_variant_id,service_category_id).subscribe((response)=>{
+      if(response){
+        this.packagesBannerImg = response.message; 
+        // this.package_services_variants_id = response.message.services_variants_id;
+        console.log('packages banner img',this.packagesBannerImg);
+      }
+    })
   }
  
  async showAddButtons(index: number, event: any) {
@@ -511,7 +532,7 @@ export class SpaLadiesPage implements OnInit {
       // service item rules 
       const prev_cart_data = localStorage.getItem('cart');
       let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
-
+      
       const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
       // //console.log('this.variantData', this.variantData)
       const newCartItems = this.variantData
@@ -602,16 +623,46 @@ export class SpaLadiesPage implements OnInit {
     }else{
       this.variantData[index].quantity++;
     }
-    // Increase the quantity of the specific item
-    // Update the total amount for this specific variant
+
     this.updateTotalAmount(index);
     this.saveCart();
-    // Update the overall total amount
-    // this.updateOverallTotalAmount();
-    // Trigger change detection
     this.cdr.detectChanges();  // This ensures the UI updates immediately
-
   }
+//   increaseQuantity(index: number) {
+//     // Retrieve the current cart data
+//     const prev_cart_data = localStorage.getItem('cart');
+//     const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+//     this.variantData[index].quantity++;
+//     // Retrieve the current item details
+//     const currentVariant = this.variantData[index];
+
+//     // Create a new cart item object (a copy of the current item)
+//     const newCartItem = {
+//         id: currentVariant.id,
+//         name: currentVariant.name,
+//         quantity: 1, // New item starts with quantity 1
+//         duration: currentVariant.sv_duration,
+//         services_id: currentVariant.services_id,
+//         totalAmount: currentVariant.totalAmount,
+//         services_variants_id: currentVariant.services_variants_id,
+//         unitAmount: currentVariant.totalAmount,
+//         booking_type: 'service', // Adjust this according to your requirement
+//         user_id: this.user_id,
+//         service_category: this.servicecategory,
+//         duration_number: Number(currentVariant.sv_duration_time),
+//         service_type: currentVariant.sv_name.split(' - ')[0].trim(),
+//     };
+
+//     // Push the new cart item into the cart array
+//     previousCart.push(newCartItem);
+
+//     // Save the updated cart back to local storage
+//     localStorage.setItem('cart', JSON.stringify(previousCart));
+
+//     // Optionally, update the UI or other states
+//     this.updateTotalAmount(index);
+//     this.cdr.detectChanges();
+// }
 
 
   async deductQuantity(index: number) {
@@ -748,6 +799,7 @@ export class SpaLadiesPage implements OnInit {
   async navigateToTabPage(){
     const static_name = '';
     await this.Storage.set('static_name', static_name);
+    await this.Storage.set('ItemType', '');
     this.router.navigate(['/tabs/tab1']);
   }
 
@@ -796,11 +848,11 @@ export class SpaLadiesPage implements OnInit {
 
   onclickpackageServiceName(event: any, index: number, service_name: any){
      const packages_service_name =  service_name; 
-     //console.log('packages_service_name',packages_service_name)
+    console.log('packages_service_name',packages_service_name)
      this.apiService.packageVariants(packages_service_name).subscribe((response)=>{
       if(response.status === true){
           this.printPackageVariant = response.message;  
-          // console.log('package-variant',this.printPackageVariant);
+          console.log('package-variant',this.printPackageVariant);
 
           const storedCartString = localStorage.getItem('cart') || '[]';
 

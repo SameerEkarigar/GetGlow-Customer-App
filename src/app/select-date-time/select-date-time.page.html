@@ -18,7 +18,7 @@
         <!-- <app-custom-calendar-component></app-custom-calendar-component> -->
         <div>
           <!-- <ion-datetime presentation="date" class="calender_div" [(ngModel)]="selectedDate" (ionChange)="showCalendarDetails = true"></ion-datetime> -->
-          <ion-datetime presentation="date" class="calender_div"  [(ngModel)]="servicedate" [min]="minDate"
+          <ion-datetime presentation="date" class="calender_div custom-datetime"  [(ngModel)]="servicedate" [min]="minDate"
             (ionChange)="showCalendarDetails = true" (ionChange)="onDateChange($event)">
           </ion-datetime>
         </div>
@@ -73,8 +73,16 @@
               </ion-col>
             </ion-row>
             <ion-row size="12" >
+              <!-- <ion-col size="12">
+               
+              </ion-col> -->
               <ion-col size="12">
-                <div class="bottom_btn_fix">
+                <div class="bottom_btn_fix2">
+                  <div style="padding: 12px;" *ngIf="!hidediv">
+                    <p class="notAvialslot">Sorry, the time slot is not available. Please select an earlier slot.</p>
+                  </div>
+                </div>
+                <div class="bottom_btn_fix" *ngIf="hideSelectTime" >
                   <ion-button expand="full" (click)="customClose()" class="continue_to_address_btn">Select Time</ion-button>
                 </div>
               </ion-col>
@@ -83,13 +91,13 @@
         </ng-template>
       </ion-modal>
     </div>
-  
-    <div *ngIf="showAdditionalDetails" #professionalSection>
-      
+    <div style="padding: 12px;" *ngIf="!hidediv">
+      <p class="notAvialslot">Sorry, the time slot is not available. Please select an earlier slot.</p>
+    </div>
+    <div *ngIf="showAdditionalDetails"  [ngClass]="{'else-condition-class': !hidediv}" #professionalSection>   
       <ion-row size="12">
         <ion-col size="12" class="section_heading">
-          <p style="font-size: 13px;
-    font-weight: 500;">Select Professional</p>
+          <p style="font-size: 13px;">Select Professional</p>
         </ion-col>
       </ion-row>
       <ion-row size="12">
@@ -98,7 +106,7 @@
           </p>
         </ion-col>
       </ion-row>
-      <div *ngIf="loading" class="swiper-slide loader-slide">
+    <div *ngIf="loading" class="swiper-slide loader-slide">
         <ion-spinner name="crescent"></ion-spinner>
       </div>
       <div *ngIf="!loading" >
@@ -184,7 +192,7 @@
       </ion-col>
       <ion-col size="6">
         <div class="start_end ">
-          <p>AED {{AmountAfterDeductDiscount}}</p>
+          <p>AED {{this.totalAmount}}</p>
           <p class="font_10px">Includes 5% VAT = AED {{vatAmount}}</p>
         </div>
       </ion-col>

@@ -373,12 +373,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
   border: 1px solid;
   padding: 0px 10px !important;
+  font-size: 15px;
 }
-
+.ion_select_outer_div ion-select{
+  border: 1px solid #000000;
+  border-radius: 0px;
+  padding: 0px 13px;
+  font-size: 13px;
+}
 .custom-icon {
   position: absolute;
   right: 10px; /* Adjust this as needed */
   color: #000000; /* Change icon color here */
+}
+ion-spinner{
+height: 14px;
 }
 
 ion-input {

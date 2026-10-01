@@ -19,44 +19,9 @@ export class Home4Page implements OnInit {
   constructor(private router: Router, private apiservice: ApiService, private recentreturn: RecentReturnService) { }
 
   ngOnInit() {
-    this.splash_content_print();
-    // this.apiservice.get_splash_content().subscribe(
-    //   data => {
-    //     const all_data = data;
-    //     this.arr_data = all_data;
-    //   } // For debugging purposes
-    // );
+  
   }
-  splash_content_print(){
-    this.loading = true;
-    this.apiservice.get_splash_content().subscribe((response)=>{ 
-      if(response.status == true){
-        const ApiData = response.result; 
-        const SingleData = ApiData[2];
-        if(SingleData.status != 0){
-          this.splashContent = SingleData;
-        }else{
-          this.router.navigate(['/complete-login']);
-        }
-        this.arr_data = response.result;
-      }else{
-        this.router.navigate(['/complete-login']);
-      }
-      this.loading = false;
-    });
-
-    // this.apiservice.get_splash_content().subscribe(
-    //   data => {
-    //     const arrrdata  = data[2];
-    //     const PageStatus=  arrrdata.status; 
-    //     if(PageStatus != 0){
-    //       this.splashContent = arrrdata;
-    //     }  else{
-    //       this.router.navigate(['/complete-login']);
-    //     }
-    //   }
-    // );
-  }
+  
   redirectToLocationAcces(){
       this.router.navigate(['/location-access']);
   } 

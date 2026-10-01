@@ -465,7 +465,7 @@ export class SelectAddressPage implements OnInit {
     } 
     const value = this.selectedAddressStatus;
     const index_id = this.selectedAddressData.id; // get id to update last Selected addresss by user
-    
+    console.log('index_id', index_id)
     this.apiService.updateLastselectedAddress(index_id, value).subscribe((response)=>{
       if(response.status === true){
             this.updateData = response.message;

@@ -12,7 +12,7 @@
       <div class="set_positon_OTP">
         <div>
           <h4 class="header-text">Enter One Time Password</h4>
-          <p>Please enter the 4 digit One Time Passcode sent on your mobile number.</p>
+          <p>Please enter the 4 digit One Time Passcode send on WhatsApp</p>
         </div>
       <form (ngSubmit)="submitOtp()">
         <div class="otp-input-group">
@@ -33,18 +33,19 @@
         <p *ngIf="isTimeOut" (click)="resendOtp()" style="color: red;">Resend OTP</p>
         <!-- Disable button if not all OTP fields are filled -->
          <div *ngIf="isOtpFilled" class="continue_btn">
-          <ion-button expand="full" type="submit" >Continue</ion-button>
+          <ion-button expand="full" type="submit"><ng-container *ngIf="!loading_otp; else loadingSpinner">Continue</ng-container></ion-button>
+          <ng-template #loadingSpinner>
+            <ion-spinner name="dots"></ion-spinner> <!-- Spinner inside the button -->
+          </ng-template>
          </div>
-        
+         <div *ngIf = "errorMessage" class="error-message" style="color: red; margin-top: 12px;">
+          {{ errorMessage }}
+        </div>
       </form>
     </div>
      </ion-col>
     </ion-row>
  
   </ion-grid>
-
-   
-      
-    
  
 </ion-content>

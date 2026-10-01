@@ -22,12 +22,13 @@ export class LocationAccessPage implements OnInit {
 
   ngOnInit() {
     this.getCurrentLocation();
+    // this.router.navigate(['/tabs/tab1']);
   }
 
   async getCurrentLocation() {
     try {
-      this.loadingService.presentLoading();
 
+      this.loadingService.presentLoading();
       const permissionStatus = await Geolocation.checkPermissions();
 
       if (permissionStatus?.location !== 'granted') {
@@ -37,34 +38,40 @@ export class LocationAccessPage implements OnInit {
           await this.openSettings(true);
           return;
         }
-      } else {
-        // Permission is granted; check if the user should be prompted for "while using the app" (iOS)
-        if (Capacitor.getPlatform() === 'ios') {
-          // Example for iOS, prompt user again for precise location access
-          const status = await Geolocation.requestPermissions();
-          if (status.location !== 'granted') {
-            await this.openSettings(true);
-            return;
-          }
-        }
       }
 
+      // If platform is iOS, check if precise location is enabled
+      if (Capacitor.getPlatform() === 'ios') {
+        const status = await Geolocation.requestPermissions();
+        if (status.location !== 'granted') {
+          await this.openSettings(true);
+          return;
+        }
+      }
+      
       if (Capacitor.getPlatform() === 'android') {
         await this.enableGps();
       }
 
       let options: PositionOptions = {
         maximumAge: 3000,
-        timeout: 10000,
+        timeout: 5000,  // Set a timeout to avoid hanging indefinitely
         enableHighAccuracy: true
       };
-
+     
       const position = await Geolocation.getCurrentPosition(options);
+      console.log('position',position)
       this.loadingService.dismissLoading();
       this.router.navigate(['/login']); // Replace '/target-page' with your actual route
     } catch (e: any) {
+      this.loadingService.dismissLoading();
+      console.error('Error getting location:', e);
+
       if (e?.message === 'Location services are not enabled') {
         await this.openSettings();
+      } else {
+        // Handle other errors appropriately
+        // You can show a user-friendly message here
       }
     }
   }

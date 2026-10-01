@@ -131,7 +131,7 @@ export class ViewBookingPage implements OnInit {
           };
 
         });
-        // //console.log('frequent- : ',this.frequentData);
+        // console.log('frequent- : ',this.frequentData);
       }
       // this.loadingService.dismissLoading();
     });
@@ -198,21 +198,57 @@ export class ViewBookingPage implements OnInit {
   openOffers(){
     // console.log('click on Open offer')
   }
-  IncreaseCartQuantity(i: number) {
-    // Increase the quantity of the item
-    this.cart_data[i].quantity += 1;
+  // IncreaseCartQuantity(i: number) {
+  //   // Increase the quantity of the item
+  //   this.cart_data[i].quantity += 1;
     
-    // Ensure the total amount is updated by multiplying the quantity with the unit price
+  //   // Ensure the total amount is updated by multiplying the quantity with the unit price
+  //   const unitPrice = this.cart_data[i].totalAmount / (this.cart_data[i].quantity - 1); // Derive unit price
+  //   this.cart_data[i].totalAmount = unitPrice * this.cart_data[i].quantity;
+
+  //   const item_id = this.cart_data[i].id;
+  //   const new_quantity = this.cart_data[i].quantity;
+  //   const new_totalAmount = this.cart_data[i].totalAmount;
+    
+  //   this.UpdateCartItem(item_id,new_quantity,new_totalAmount);
+  // }
+  IncreaseCartQuantity(i: number) {
+    // Calculate the duration for the item whose quantity is being increased
+    const itemDuration = Number(this.cart_data[i].duration_number); // Ensure the duration is numeric
+    const newItemTotalDuration = itemDuration * (this.cart_data[i].quantity + 1); // New duration for this item after incrementing quantity
+  
+    // Calculate the total duration of all other items in the cart
+    const totalDurationFromOtherItems = this.cart_data.reduce((sum: number, item, index) => {
+      if (index !== i) {
+        return sum + Number(item.duration_number) * item.quantity;
+      }
+      return sum;
+    }, 0);
+  
+    // Calculate the new total duration including the increased item
+    const newTotalDuration = totalDurationFromOtherItems + newItemTotalDuration;
+  
+    // Check if the new total duration exceeds 180 minutes
+    if (newTotalDuration > 180) {
+      alert('Increasing the quantity exceeds the maximum booking duration of 180 minutes.');
+      return; // Prevent further execution if duration exceeds limit
+    }
+  
+    // If the total duration is within the limit, proceed with quantity increment
+    this.cart_data[i].quantity += 1;
+  
+    // Update the total amount for the item
     const unitPrice = this.cart_data[i].totalAmount / (this.cart_data[i].quantity - 1); // Derive unit price
     this.cart_data[i].totalAmount = unitPrice * this.cart_data[i].quantity;
-
+  
     const item_id = this.cart_data[i].id;
     const new_quantity = this.cart_data[i].quantity;
     const new_totalAmount = this.cart_data[i].totalAmount;
-    
-    this.UpdateCartItem(item_id,new_quantity,new_totalAmount);
+  
+    // Update the cart item in storage or backend
+    this.UpdateCartItem(item_id, new_quantity, new_totalAmount);
   }
-
+  
   DeductCartQuantity(i: number) {
     if (this.cart_data[i].quantity > 1) {
       // Decrease the quantity if greater than 1
@@ -426,7 +462,9 @@ export class ViewBookingPage implements OnInit {
         unitAmount: Number(variant.discounted_price),
         booking_type: 'frequent',
         user_id: this.user_id,
+        services_id: variant.service_name,
         service_category: variant.service_category,
+
         duration_number: this.extractDurationNumber(variant.sv_duration),
         service_type: variant.sv_name.split(' - ')[0].trim(),
       }));
@@ -454,69 +492,6 @@ export class ViewBookingPage implements OnInit {
     this.total_amount = OverAllTotal;
     localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // const prev_cart_data = localStorage.getItem('cart');
-    // let previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
-  
-    // // Get unique service types from the previous cart items
-    // // const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
-  
-    // // Filter and map new cart items with necessary fields
-
-    // //console.log("cart items : ",this.cart_data);
-
-    // const newCartItems = this.cart_data
-    //   .filter(variant => variant.addButton && variant.quantity > 0)
-    //   .map(variant => ({
-    //     id: variant.id,
-    //     name: variant.name,
-    //     quantity: variant.quantity,
-    //     duration: variant.sv_duration,
-    //     totalAmount: Number(variant.discounted_price),
-    //     services_variants_id: variant.service_variants,
-    //     unitAmount: Number(variant.discounted_price),
-    //     booking_type: 'frequent',
-    //     user_id: this.user_id,
-    //     service_category: variant.service_category,
-    //     duration_number: this.extractDurationNumber(variant.sv_duration), // Extract numeric duration
-    //     service_type: variant.sv_name.split(' - ')[0].trim(),
-    //   }));
-  
-    // // Merge the new items into the previous cart
-    // newCartItems.forEach(newItem => {
-    //   const existingItem = previousCart.find((item: { id: any; }) => item.id === newItem.id);
-    //   if (existingItem) {
-    //     // Update existing item's quantity and prices
-    //     existingItem.quantity = newItem.quantity;
-    //     existingItem.totalAmount = Number(newItem.totalAmount);  // Ensure discounted_price is used
-    //     existingItem.unitAmount = Number(newItem.unitAmount);
-    //   } else {
-    //     // Add new item to the cart if it doesn't exist
-    //     previousCart.push({ ...newItem });
-    //   }
-    // });
-  
-    // //console.log('previus cart : ',previousCart);
-    // // Save the updated cart back to localStorage
-    // localStorage.setItem('cart', JSON.stringify(previousCart));
-  
-    // // Calculate the overall total amount
-    // const OverAllTotal = previousCart.reduce(
-    //   (accumulator: number, item: { unitAmount: number; quantity: number; }) => accumulator + (item.unitAmount * item.quantity),
-    //   0
-    // );
-  
-    // // Save the overall total amount in the component and localStorage
-    // this.total_amount = OverAllTotal;
-    // localStorage.setItem('overallTotalAmount', OverAllTotal.toString());
   }
   
   // Extract numeric part from the duration string (e.g., "90min" -> 90)

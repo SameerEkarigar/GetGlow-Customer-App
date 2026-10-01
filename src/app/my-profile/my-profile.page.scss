@@ -1,76 +1,286 @@
 .profile_rows p{
-    color: black;
-    white-space: nowrap;
+  color: black;
+  white-space: nowrap;
 }
 .padding_top{
-    padding-top: 20px;
+  padding-top: 20px;
 }
 .edit_outer_div  {     
-    float: inline-end;
- }
- .margin_0 {
-    margin: 4px;
-  }
-  .padding_top30px{
-    padding-top: 30px;
-  }
-  .save_changes_btn{
-    --border-radius: 0;
-    font-size: 11px;
-    color: white;
-    --background: #6596A0;
-    white-space: nowrap;
-    width: 100%;
-  }
-  .bottom_btn_fix{
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  float: inline-end;
+}
+.margin_0 {
+  margin: 4px;
+}
+.padding_top30px{
+  padding-top: 30px;
+}
+.save_changes_btn{
+  --border-radius: 0;
+  font-size: 11px;
+  color: white;
+  --background: #6596A0;
+  white-space: nowrap;
+  width: 100%;
+}
+.bottom_btn_fix{
+  position: fixed;
+  bottom: 35px;
+  width: 100%;
 }
 .edit_outer_div p{
-    color: #6596a0 !important;
+  color: #6596a0 !important;
 }
 .ion_modal{
-    --background: white;
-  }
-  .padding_12px{
-    padding: 12px;
-  }
-  .otp_colums{
-    justify-content: space-evenly;
-  }
-  .otp-input {
-    text-align: center;
-    border: 1px solid #ccc;
-    display: flex; 
-  }
-  .otp_outer_div{
-    padding: 10px 0px !important;
-  }
-  .save_btn_outer_div{
-    width: 99%;
-  }
-  .outer_number_div{
-    display: flex;
-    justify-content: center;
+  --background: white;
 }
+.padding_12px{
+  padding: 12px;
+}
+.otp_colums{
+  justify-content: space-evenly;
+}
+.otp-input {
+  text-align: center;
+  border: 1px solid #ccc;
+  display: flex;
+  color: black; 
+}
+.otp_outer_div{
+  padding: 10px 0px !important;
+}
+.save_btn_outer_div{
+  width: 99%;
+}
+//   .outer_number_div{
+//     display: flex;
+//     justify-content: center;
+// }
 .login_form_column{
-  position: absolute;
-  top: 20%;
-  right: 0;
-  padding: 0 12px;
+position: absolute;
+top: 20%;
+right: 0;
+padding: 0 12px;
 }
 .login_number_div2{
-  --background: white;
-  --inner-border-width: 0;
-    border: 1px solid black;
-    color: #000;
-    width: -webkit-fill-available;
+--background: white;
+--inner-border-width: 0;
+  // border: 1px solid black;
+  color: #000;
+  width: 78%;
 }
 .country_dropdown{
-  width: 25%;
-  padding-left: 15px;
-  border: 1px solid;
-  color: #000;
-  border-right: none;
+width: 25%;
+padding-left: 15px;
+border: 1px solid;
+color: #000;
+border-right: none;
+}
+
+
+// =====
+ion-content{
+--background: rgb(255, 255, 255);
+--color: #000;
+--overflow: auto; 
+}
+.content_box {
+text-align: center;
+position: absolute;
+left: 0;
+right: 0;
+top: 50%;
+transform: translateY(-50%);
+}
+ion-img{
+width: 200px;
+display: block;
+margin: auto;
+}
+.login_number_div{
+--background: white;
+--inner-border-width: 0;
+  width: 24%;
+  border: 1px solid black;
+}
+.login_number_div2 {
+--background: white;
+--inner-border-width: 0;
+color: #000;
+border-left: 1px solid;
+}
+.outer_number_div {
+display: flex;
+justify-content: flex-start;
+border: 1px solid black;
+}
+.get_otp_btn ion-button{
+--background: #82A29D;
+  color: white;
+--border-radius: 0;
+}
+.get_otp_outer_div{
+margin-top: 20px;
+}
+.country_dropdown{
+width: 25%;
+padding-left: 15px;
+border: 1px solid;
+color: #000;
+border-right: none;
+}
+.select-wrapper-inner{
+padding-left: 15px !important;
+}
+.enter_mb_no_outer_div{
+position: relative;
+top: 20%;
+padding: 12px;
+}
+.mb_txt_row{
+margin-top: 1.5rem;
+}
+
+
+
+
+
+
+
+
+.dropdown-container {
+position: relative;
+width: 300px;
+}
+
+.dropdown-search {
+width: 100%;
+padding: 10px;
+box-sizing: border-box;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+.dropdown-list {
+position: absolute;
+width: 100%;
+border: 1px solid #ccc;
+border-top: none;
+max-height: 200px;
+overflow-y: auto;
+background: white;
+z-index: 1000;
+}
+
+.dropdown-item {
+padding: 10px;
+cursor: pointer;
+border-bottom: 1px solid #f1f1f1;
+}
+
+.dropdown-item:hover {
+background: #f0f0f0;
+}
+
+
+
+
+//   -----------
+.dropdown-trigger {
+cursor: pointer;
+background: #f8f8f8;
+--background: white;
+--color: black;
+--border-color: white;
+}
+
+.dropdown-container {
+position: absolute;
+background: white;
+z-index: 1000;
+width: 65%;
+max-height: 300px;
+overflow-y: auto;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+.dropdown-searchbar {
+--background: #f8f8f8;
+--box-shadow: none;
+--border-radius: 5px;
+--color: black;
+ text-align: left;
+}
+ion-item{
+--background: white;
+--color: black;
+--padding: 0;
+margin: 0px;
+--border-color: #ffffff;
+}
+.item-native{
+--border-color: white !important;
+border: 1px solid !important;
+border-bottom: none !important;
+}
+
+
+// ---
+.otp-input {
+text-align: center;
+border: 1px solid #ccc;
+display: flex; 
+}
+.otp_colums{
+justify-content: space-evenly;
+}
+.content_box {
+text-align: center;
+position: absolute;
+left: 0;
+right: 0;
+top: 40%;
+transform: translateY(-50%);
+}
+.arrow_div{
+// display: flex;
+position: relative;
+// bottom: -8rem;
+// left: 10px;
+z-index: 1;
+}
+.timer_div{
+margin-top: 12px;
+}
+.continue_btn{
+margin-top: 2rem;
+}
+.continue_btn ion-button{
+--border-radius: 0;
+color: white;
+}
+
+
+.otp-input-group {
+display: flex;
+justify-content: center;
+margin: 20px 0;
+}
+
+.otp-input {
+width: 50px;
+height: 50px;
+text-align: center;
+font-size: 24px;
+margin: 0 5px;
+border-radius: 0px;
+background-color: #ffffff;
+}
+.set_positon_OTP{
+position: relative;
+top: 13rem;
+}
+.form_otp_div{
+margin: auto;
+width: 100%;
 }

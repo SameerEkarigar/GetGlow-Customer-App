@@ -30,6 +30,7 @@ export class Tab2Page {
   cancel_reason: any;
   cancel_other_reason: string = '';
   loading: boolean = false; 
+  HeaderQyt: any;
   
 
   constructor(private apiservice: ApiService, private storage: Storage, private router: Router) {
@@ -118,6 +119,7 @@ export class Tab2Page {
          console.log('response upcoming bookings', response)
       } else if(response.status === false){
         this.noUpcomingFound = true;
+        console.log('no up coming booking')
       }
       this.loading = false;
     })
@@ -180,6 +182,197 @@ export class Tab2Page {
     })
   }
 
+    increaseQuantity() {
+    const prev_cart_data = localStorage.getItem('cart');
+    const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+
+    const newCartItem = {
+        id: 91,
+        name: "Relaxation Massage",
+        quantity: 1, // New item starts with quantity 1
+        duration: "90 min",
+        services_id: "20",
+        totalAmount: 299,
+        services_variants_id: "91",
+        unitAmount: 299,
+        booking_type: 'service', // Adjust this according to your requirement
+        user_id: 1136,
+        service_category: "7",
+        duration_number: 90,
+        service_type: "Relaxation",
+    };
+
+    // Push the new cart item into the cart array
+    previousCart.push(newCartItem);
+
+    // Save the updated cart back to local storage
+    localStorage.setItem('cart', JSON.stringify(previousCart));
+
+    // Optionally, update the UI or other states
+    // this.updateTotalAmount(index);
+    // this.cdr.detectChanges();
+}
+
+
+  // reBook(service_name: any,service_variant: any,service_category: any,services_name: any, sv_duration_time: any, total_price: any, sv_people: any){
+  //   //  console.log('service_variant',service_variant)    
+  //    const duration = Number(sv_duration_time)
+  //   //  console.log('duration',duration)
+  //   //  this.saveCart(service_variant,service_name,service_category,services_name);
+  //   const prev_cart_data = localStorage.getItem('cart');
+  //   const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+  //   const existingServiceTypes = [...new Set(previousCart.map((item: { service_type: any; }) => item.service_type))];
+  //   if(sv_people>1)
+  //   {
+  //     sv_people = 'single'
+  //   }else{
+  //     sv_people = 'Couple'
+  //   }
+  //   const newCartItem = {
+  //       id: service_variant,
+  //       name: services_name,
+  //       quantity: 1, // New item starts with quantity 1
+  //       duration: sv_duration_time+ 'min',
+  //       services_id: "20",
+  //       totalAmount: total_price,
+  //       services_variants_id: service_variant,
+  //       unitAmount: total_price,
+  //       booking_type: sv_people, // Adjust this according to your requirement
+  //       user_id: 1136,
+  //       service_category: "7",
+  //       duration_number: duration,
+  //       service_type: sv_people,
+  //   };
+    
+    
+  //   // Push the new cart item into the cart array
+  //   previousCart.push(newCartItem);
+  //   // Save the updated cart back to local storage
+  //   localStorage.setItem('cart', JSON.stringify(previousCart));
+
+  //   const prev_cart_data2 = localStorage.getItem('cart');
+  //   const cartLength = prev_cart_data2 ? JSON.parse(prev_cart_data2).length : 0;
+  //   console.log('prev_cart_data2',prev_cart_data2)
+  //   if (prev_cart_data) {
+  //     const cartItems = JSON.parse(cartLength);
+  //     console.log('prevois cart', cartItems)
+  //     // const cart_len = cartItems.length;
+  //     console.log(cartItems);
+  //     if(cartItems != 0){
+  //       console.log(cartItems);
+  //       this.HeaderQyt = cartItems;
+
+  //       localStorage.setItem('headerCart',  this.HeaderQyt);
+  //     }else{
+  //       this.HeaderQyt = '';
+  //       localStorage.setItem('headerCart',  this.HeaderQyt);
+  //     }
+     
+  //   } else {
+  //     this.HeaderQyt = '';
+  //   }
+  //   // Optionally, update the UI or other states
+  //   // this.updateTotalAmount(index);
+  //   // this.cdr.detectChanges();
+  // }
+ async reBook(
+    service_name: any,
+    service_variant: any,
+    service_category: any,
+    services_name: any,
+    sv_duration_time: any,
+    total_price: any,
+    sv_people: any
+  ) {
+    const user_id = await this.storage.get('user_index_id');
+    const duration = Number(sv_duration_time);
+  
+    const prev_cart_data = localStorage.getItem('cart');
+    const previousCart = prev_cart_data ? JSON.parse(prev_cart_data) : [];
+  
+    // Calculate total duration of existing items in the cart
+    const totalDurationFromPrevious = previousCart.reduce(
+      (sum: number, item: { duration_number: number }) => sum + Number(item.duration_number),
+      0
+    );
+  
+    // Calculate the new total duration if this item is added
+    const totalDuration = totalDurationFromPrevious + duration;
+  
+    // Check if the total duration exceeds 180 minutes
+    if (totalDuration > 180) {
+      alert('Adding this service exceeds the maximum booking duration of 180 minutes.');
+      return; // Prevent further execution if duration exceeds limit
+    }
+  
+    const currentBookingType = sv_people > 1 ? 'Couple' : 'single';
+
+    // Check if a 'couple' or 'single' booking is already in the cart
+    const hasSingle = previousCart.some((item: { booking_type: string }) => item.booking_type === 'single');
+    const hasCouple = previousCart.some((item: { booking_type: string }) => item.booking_type === 'Couple');
+  
+    // Restrict adding a 'single' booking if there's already a 'couple' booking in the cart
+    if (currentBookingType === 'single' && hasCouple) {
+      alert("Cannot add a 'single' booking as there is already a 'couple' booking in the cart.");
+      return; // Prevent adding the 'single' booking
+    }
+  
+    // Restrict adding a 'couple' booking if there's already a 'single' booking in the cart
+    if (currentBookingType === 'Couple' && hasSingle) {
+      alert("Cannot add a 'couple' booking as there is already a 'single' booking in the cart.");
+      return; // Prevent adding the 'couple' booking
+    }
+    if (sv_people === '1') {
+      sv_people = 'single';
+    } else {
+      sv_people = 'Couple';
+    }
+    const newCartItem = {
+      id: service_variant,
+      name: services_name,
+      quantity: 1, // New item starts with quantity 1
+      duration: sv_duration_time + 'min',
+      services_id: service_name,
+      totalAmount: total_price,
+      services_variants_id: service_variant,
+      unitAmount: total_price,
+      booking_type: sv_people, // Adjust this according to your requirement
+      user_id: user_id,
+      service_category: service_category,
+      duration_number: duration,
+      service_type: sv_people,
+    };
+  
+    // Push the new cart item into the cart array
+    previousCart.push(newCartItem);
+  
+    // Save the updated cart back to local storage
+    localStorage.setItem('cart', JSON.stringify(previousCart));
+  
+    const cartLength = previousCart.length;
+    console.log('Updated Cart:', previousCart);
+    localStorage.setItem('cart', JSON.stringify(previousCart));
+
+    let total = previousCart.reduce((accumulator: number, item: { totalAmount: number }) => {
+      return accumulator + Number(item.totalAmount);
+    }, 0);
+    console.log(total)
+    // Store the total in localStorage
+    localStorage.setItem('overallTotalAmount', total.toString());
+
+    // if(total == 0){
+    //   this.showcart = false;
+    // }
+    // this.overallTotalAmount = total;
+    if (cartLength !== 0) {
+      this.HeaderQyt = cartLength.toString();
+      localStorage.setItem('headerCart', this.HeaderQyt);
+    } else {
+      this.HeaderQyt = '';
+      localStorage.setItem('headerCart', this.HeaderQyt);
+    }
+  }
+  
 }
 
 

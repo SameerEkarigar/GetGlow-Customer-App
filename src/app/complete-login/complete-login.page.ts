@@ -29,7 +29,7 @@ export class CompleteLoginPage implements OnInit {
   emailSyntax: boolean= false;
   message: boolean = false;
   checkboxerror: boolean = false;
-  selectedCountryCode: string= '+971';
+  selectedCountryCode: any;
   id: any;
   constructor(
     private router: Router,
@@ -48,7 +48,8 @@ export class CompleteLoginPage implements OnInit {
   }
 
   async ngOnInit() {
-      
+      this.selectedCountryCode = await this.storage.get('selectedcountrycode');
+      console.log(this.selectedCountryCode)
       this.getCountryCode();    
       const phonenumber = await this.storage.get('PhoneNumber');
       this.phoneNumber = phonenumber;
@@ -112,9 +113,15 @@ export class CompleteLoginPage implements OnInit {
   const email = this.email;
   const first_login = '1';
   const user_index_id =  await this.storage.get('user_index_id');
-     this.apiservice.updateUserDetail(user_index_id, phone_country_code, phone,first_name,last_name,email,marketing_checkbox,first_login).subscribe((response)=>{
-      if(response){
-        
+     this.apiservice.updateUserDetail(user_index_id, phone_country_code, phone,first_name,last_name,email,marketing_checkbox,first_login).subscribe(async (response)=>{
+      if(response.status == true){
+        console.log(response);
+        await this.storage.set('phone_country_code', phone_country_code);
+        const setphone = await this.storage.set('Newphone', phone);
+        await this.storage.set('first_name', first_name);
+        await this.storage.set('last_name', last_name);
+        await this.storage.set('email', email);
+        await this.storage.set('checkboxResponse', marketing_checkbox);
       }
      })
   }

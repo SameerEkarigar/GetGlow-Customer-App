@@ -68,7 +68,7 @@
     <ion-col size="12">
       
       <div *ngFor="let variant of variantData; let i = index">
-        <p>{{ variant.sv_name.split(' - ')[0].trim() }}</p>
+        <p>{{ variant.sv_name.split(' -')[0].trim() }}</p>
         <p>{{ variant.sv_duration }}</p>
         <p class="bold_css">AED {{ variant.sv_price }}</p>
     
@@ -84,7 +84,8 @@
         <div  *ngIf="variant.addButton && variant.quantity > 0" class="after_add" >
             <ion-button class="less_btn" size="small" (click)="deductQuantity(i)">-</ion-button>
             <ion-button class="add_btn" size="small">{{ variant.quantity }}</ion-button>
-            <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
+            <!-- <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button> -->
+              <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
         </div>
     </div>
     
@@ -120,7 +121,7 @@
     </ion-col>
   </ion-row>
 </div> -->
-<div class="ifpackages" *ngIf="showpackages" >     
+<div class="ifpackages" *ngIf="showpackages">     
   <!-- <ion-content [fullscreen]="true" >
     <app-header-component [cart_quantity]="HeaderQyt"></app-header-component> //[serviceCategory] ="servicecategory" -->
     
@@ -132,7 +133,7 @@
           </div>
         </ion-col>
       </ion-row>
-      <div *ngIf="selectedService">
+      <div *ngIf="packages">
         <ion-row size="12">
           <ion-col size="12" class="section_heading">
             <p>Packages</p> 
@@ -141,16 +142,17 @@
         <ion-row size="12">
           <ion-col size="12" class="">
             <div class="bannerImgOuterDiv" >
-              <ion-img [src]="serviceImgbanner" alt=""></ion-img>
+              <ion-img [src]="packagesBannerImg.banner_img" alt=""></ion-img>
             </div>
           </ion-col>
         </ion-row>
+        
         <ion-row size="12">
           <ion-col size="12">
             <swiper-container class="mySwiper" loop="false" slides-per-view="2.2" space-between="5">
               <swiper-slide *ngFor="let package of packages; let i = index">
                 <div class="slide-content variant_slide" (click)="changeToactive(i)">
-                  <!-- Highlight the active button using ngClass -->
+             
                   <ion-button 
                     [ngClass]="{'active-button': activeIndex === i}" 
                     (click)="onclickpackageServiceName($event, i, package.service_name)"  
@@ -200,7 +202,8 @@
                 <div  *ngIf="packageVariant.addButton && packageVariant.quantity > 0" class="after_add" >
                     <ion-button class="less_btn" size="small" (click)="deductQuantity(i)">-</ion-button>
                     <ion-button class="add_btn" size="small">{{ packageVariant.quantity }}</ion-button>
-                    <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button>
+                    <!-- <ion-button class="plus_btn" size="small" (click)="increaseQuantity(i)">+</ion-button> -->
+                    <ion-button class="plus_btn" size="small" (click)="saveCart()">+</ion-button> 
                 </div>
             </div>
             

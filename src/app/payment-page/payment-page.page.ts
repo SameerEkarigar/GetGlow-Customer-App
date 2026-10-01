@@ -10,6 +10,8 @@ import { TapPayment } from 'tap-payment/src';
 import { response } from 'express';
 // import { PaymentService } from '../services/payment.service';
 import { Browser } from '@capacitor/browser';
+import { App } from '@capacitor/app';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-payment-page',
@@ -54,7 +56,7 @@ export class PaymentPagePage implements OnInit {
   printServiceRealtedPackages: any[]=[];
   allResponses: any[]=[];
  // PastBookingArray: any[] | undefined;
-  // PastBookingArray: never[];
+  
   isChecked: boolean = false;
   selectedPackageId: any = null;
   selectedPackage: any;
@@ -62,6 +64,7 @@ export class PaymentPagePage implements OnInit {
   totalAmountBeforeAnyDeduction: any;
   hideDiscountRow: boolean = true;
   ifpackagethenTotalAmount: boolean = false;
+  loading_payment: boolean = false;
   vatAmount: any;
   selected_service_amount: any;
   hideRadioButton: boolean = true;
@@ -70,16 +73,20 @@ export class PaymentPagePage implements OnInit {
   couple_booking_employee_count: any;
   people_count: any;
   connectToPaymentGateway: boolean = false;
-  tapId: string | null = null;
+  tapId: any;
   booking_type_payment: any;
   bookFromPackage: any[] = [];
+  bookingtypes: any;
+  failResponse: any;
+  failStatus: any;
   constructor(
     private http: HttpClient, 
     private apiService: ApiService, 
     private router: Router, 
     private storage: Storage, 
     private tap_payment: PaymentService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
   ) { 
     this.init();
   }
@@ -87,21 +94,60 @@ export class PaymentPagePage implements OnInit {
   async init() {
     await this.storage.create();
   }
-
+  async openURL() {
+    // Open an external URL in the in-app browser
+    await Browser.open({ url: 'https://dashboard.getglowsalon.ae/staging' });
+  }
   async ngOnInit() {
     var CartList = JSON.parse(localStorage.getItem('cart') || '[]');
     CartList = CartList.map((item: any) => ({
       ...item, // Retain existing properties
       BookedFromPackage: 0 // Add new variable with value 0
     }));
-    
-    // Save back the updated CartList to localStorage (if needed)
-    localStorage.setItem('cart', JSON.stringify(CartList));
-    this.route.queryParams.subscribe((params) => {
-      if (params['trigger'] === 'true') {
-        this.OnlinePayment(); // Trigger the function
+    if (Array.isArray(CartList) && CartList.length > 0) {
+      this.bookingtypes = CartList[0]?.service_type || null;
+      console.log('First Booking Type:', this.bookingtypes);
+    } else {
+      console.error('CartList is empty or not a valid array');
+    }
+    this.route.queryParams.subscribe(async (params) => {
+      this.tapId = params['tap_id'] || null;
+      console.log('Query-Parameters:', this.tapId);
+      if(this.tapId){
+        await Browser.close();
+        
+        console.log('Browser closed programmatically');
+        console.log('in the if condition',this.tapId)
+        this.OnlinePayment();
       }
     });
+    this.route.queryParams.subscribe(async (params) => {
+      this.failResponse = params['false_response'];
+      this.failStatus = params['failStatus'];
+      if(this.failResponse && this.failStatus){
+        await Browser.close(); 
+        // console.log('false response',tap_id_with_false_response)
+        this.failResponse = this.failResponse;
+        // this.router.navigate(['/payment-failure']);
+        console.log('response--',this.failResponse)
+        this.router.navigate(['/payment-failure']); 
+        
+        // setTimeout(() => {
+        //   this.router.navigate(['/tabs/tab1']);     
+        // }, 2000); // 3000 milliseconds = 3 seconds
+      
+      }
+    });
+   
+ 
+    // // Save back the updated CartList to localStorage (if needed)
+    localStorage.setItem('cart', JSON.stringify(CartList));
+    // this.route.queryParams.subscribe((params) => {
+    //   console.log('Query Parameters:', params['trigger']);
+    //   if (params['trigger'] === 'true') {
+    //     this.OnlinePayment(); // Trigger the function
+    //   }
+    // });
    
     this.connectToPaymentGateway = false;
     
@@ -116,7 +162,7 @@ export class PaymentPagePage implements OnInit {
         this.vatAmount = Math.round(vatAmount * 100) / 100;
     }
     const checkViewbooking = await this.storage.get('backtoViewbooking');
-    // console.log(checkViewbooking)
+    console.log('check view booking',checkViewbooking)
     if (checkViewbooking === 'viewBooking') {
         this.slecetDatePackage = true;
     }
@@ -125,7 +171,9 @@ export class PaymentPagePage implements OnInit {
     this.selectedDiscountCode = await this.storage.get('selectedDiscountCode');
     this.selectedDiscountAmount = await this.storage.get('selectedDiscountAmount');
     this.AmountAfterDeductDiscount = await this.storage.get('AmountAfterDeductDiscount');
-    // console.log('this.AmountAfterDeductDiscount',this.AmountAfterDeductDiscount)
+    this.selectedTime = await this.storage.get('servicetime');
+    console.log('selectedTime',this.selectedTime)
+    console.log('this.AmountAfterDeductDiscount',this.AmountAfterDeductDiscount)
     this.PrintCartData();
     this.printPreviousBookedPackage();
 
@@ -140,44 +188,56 @@ export class PaymentPagePage implements OnInit {
     this.updateConsolidatedDates();
 }
 
-  async onPaymentClick() { 
-    this.connectToPaymentGateway = true;
-    const AmountTobePaid = this.finalAmount;
-    if(this.booking_type === 'package'){
-       this.booking_type_payment = '1';
-    } else{
-      this.booking_type_payment = '2';
-    }
-    const booking_type_sex = this.booking_type_payment;
-    console.log(booking_type_sex)
-    const user_id = await this.storage.get('user_index_id');
-    
-    this.tap_payment.createPayment(AmountTobePaid, '1', user_id).subscribe(
-      async (response: any) => {
-        // const redirectUrl = response?.transaction?.url; // Corrected field
-        const redirectUrl = response?.url;
-        console.log('response', response)
-        await Browser.open({ url: redirectUrl});
-        if (redirectUrl) {
-          // Redirect the user to the Tap Payments hosted page
-          window.location.href = redirectUrl;
-        } else {
-          console.error('No redirect URL provided in response', response);
+
+async onPaymentClick() { 
+  this.loading_payment = true;
+  this.connectToPaymentGateway = true;
+  const AmountTobePaid = this.finalAmount;
+  this.booking_type_payment = this.booking_type === 'package' ? '1' : '2';
+  const booking_type_= this.booking_type_payment;
+  
+  const user_id = await this.storage.get('user_index_id');
+  
+  this.tap_payment.createPayment(AmountTobePaid, '1', user_id).subscribe(
+    async (response: any) => {
+      const redirectUrl = response?.url;
+      if (redirectUrl) {
+        try {
+          
+          await Browser.open({
+            url: redirectUrl,
+            toolbarColor: '#6596A0',
+          });
+          this.loading_payment = false;
+        } catch (error) {
+          console.error('Error opening URL in in-app browser', error);
         }
-      },
-      (error) => {
-        console.error('Error creating payment', error);
+      } else {
+        console.error('No redirect URL provided in the response', response);
       }
-    );
+    },
+    (error) => {
+      console.error('Error creating payment', error);
+    }
+  );
+}
+getQueryParam(url: string, param: string): string | null {
+  const queryString = url.split('?')[1]; // Get the query string part of the URL
+  if (queryString) {
+    const params = new URLSearchParams(queryString);
+    return params.get(param); // Return the value of the specified parameter
   }
+  return null;
+}
   async OnlinePayment(){
 
-    console.log('fun run ')
-      const tap_id = await this.storage.get('tap_id');
-      console.log('tap_id',tap_id)
+    // console.log('fun run ')
+      // const tap_id = await this.storage.get('tap_id');
+      // console.log('tap_id',tap_id)
       this.booking_type = await this.storage.get('booking_type');
-      
+      console.log('booking_type->',this.booking_type)
         if(this.booking_type === 'package'){
+          this.updateMergedList();
           this.insertPackages();
           console.log('online mode for book package') 
       } else{ 
@@ -185,7 +245,7 @@ export class PaymentPagePage implements OnInit {
         const customer_id = await this.storage.get('user_index_id');
         const selectedLocationUrl = await this.storage.get('selectedLocationUrl');
         const selectedDate = localStorage.getItem('ServiceDate');
-        const servicetime = this.selectedTime;
+        const servicetime = await this.storage.get('servicetime');
         const service_category = await this.storage.get('service_category');
         const service_employee = await this.storage.get('EmployeeID');
         const service_location = await this.storage.get('ServiceLocation'); 
@@ -200,8 +260,9 @@ export class PaymentPagePage implements OnInit {
         var CartList = JSON.parse(localStorage.getItem('cart') || '[]');
         console.log('cart-list', CartList)
         const totalAmountSum = CartList.reduce((sum: number, item: any) => sum + item.totalAmount, 0);
-        console.log(this.booking_type);
-        if(this.booking_type === 'Couple'){
+        // console.log(this.bookingtypes);
+        if(this.bookingtypes === 'Couple'){
+           this.booking_type = 4;
            this.couple_booking_employee_count = 2;
            this.people_count = 2;
         }else{
@@ -209,12 +270,20 @@ export class PaymentPagePage implements OnInit {
           this.people_count = 1;
         }
      
-        const updatedCartDataList = CartList.map((item: any) => {
+        let currentServiceTime = new Date(`${selectedDate}T${servicetime}`);
+
+        const updatedCartDataList = CartList.map((item: any, index: number) => {
+          // Calculate current service start time in HH:mm format
+          const serviceStartTime = currentServiceTime.toTimeString().slice(0, 5);
+    
+          // Add service duration to current time
+          currentServiceTime = new Date(currentServiceTime.getTime() + item.duration_number * 60 * 1000);
+    
           return {
             customer_id: customer_id,
             location_url: selectedLocationUrl,
             servicedate: selectedDate,
-            servicetime: servicetime,
+            servicetime: serviceStartTime, // Use dynamically calculated time
             service_category: service_category,
             service_name: item.services_id,
             service_employee: service_employee,
@@ -226,26 +295,30 @@ export class PaymentPagePage implements OnInit {
             booking_comment: booking_comment,
             package_id: package_id,
             package_used: item.BookedFromPackage,
-            actual_amount: totalAmountSum,
+            // actual_amount: totalAmountSum,
+            actual_amount: item.unitAmount,
             discounted_coupon: discounted_coupon,
             discount_option: 0,
             discount_amount: discount_amount,
             discounted_amount: discounted_amount,
             total_price: this.finalAmount,
             package_used_count: item.BookedFromPackage,
-            payment_link: this.finalAmount,
+            payment_link: item.unitAmount,
             booking_type: this.booking_type,
-            // booking_type: this.booking_type,
             couple_booking_employee_count: this.couple_booking_employee_count,
             payment_cash: '',
+            quantity: item.quantity,
+            unit_amount: item.unitAmount,
             people_count: this.people_count,
             service_employee_2: 0,
             service_employee_3: 0,
-            service_employee_4: 0
+            service_employee_4: 0,
+            duration_number: item.duration_number
           };
-          
         });
-         console.log('updatedCartDataList',updatedCartDataList)
+    
+        console.log('updatedCartDataList', updatedCartDataList);
+
         this.apiService.insertAllBookingData({service_data: updatedCartDataList}).subscribe(async (response)=>{
           if(response.status === true){
             this.booking_id = response.booking_id;
@@ -255,10 +328,16 @@ export class PaymentPagePage implements OnInit {
             localStorage.setItem('cart', ''); 
             localStorage.setItem('overallTotalAmount', '');
             await this.storage.set('AmountAfterDeductDiscount', '');
-            await this.storage.set('tap_id','');
+            await this.storage.set('selectedDiscountCode','');
+            // await this.storage.set('tap_id','');
+            await this.storage.set('selectedDiscountAmount', '');
             await this.storage.set('backtoViewbooking', 'viewBooking');
             const Order_id= await this.storage.set('Order_id','');
             this.navigateTothankyou();
+          } else{
+            await this.storage.set('AmountAfterDeductDiscount', '');
+            await this.storage.set('selectedDiscountCode','');
+            await this.storage.set('selectedDiscountAmount', '');
           }
         });
         }
@@ -331,12 +410,13 @@ export class PaymentPagePage implements OnInit {
     this.selectedaddressOption = await this.storage.get('selectedaddressOption');
     this.booking_type = await this.storage.get('booking_type');
     this.overalltotal  = localStorage.getItem('overallTotalAmount');
-    if(this.booking_type != 'package'){
-      this.showAddressAndDate = true; 
+    if(this.booking_type != 'package'){    
       this.showpackageDropdown = true;
+      this.showAddressAndDate = true; 
+      this.Title = await this.storage.get('selectedAddressTitle');
+      this.Address = await this.storage.get('selectedAddress');
       if (this.selectedaddressOption) {
-        this.Title = await this.storage.get('selectedAddressTitle');
-        this.Address = await this.storage.get('selectedAddress');
+     
       }
         this.formattedDate = await this.storage.get('formattedDate'); 
         this.selectedTime = await this.storage.get('servicetime');
@@ -598,6 +678,7 @@ export class PaymentPagePage implements OnInit {
    const checkViewbooking =  await this.storage.get('backtoViewbooking');
    if(checkViewbooking === 'viewBooking'){
     this.router.navigate(['/view-booking'])
+    await this.storage.set('backtoViewbooking', '');
     } else{
     this.router.navigate(['/select-date-time']);
    }
@@ -635,9 +716,11 @@ export class PaymentPagePage implements OnInit {
   
   insertPackages(){
     const resultJson = this.resultJson
+    console.log('resultJson', resultJson)
     this.apiService.insertOnlypackage(resultJson).subscribe((response) => {
       if (response.status === true) {
         this.navigateTothankyou();
+        localStorage.setItem('cart', ''); 
         // console.log('Response for item:', response);
       }
     });
@@ -652,6 +735,7 @@ export class PaymentPagePage implements OnInit {
   }
   
   async CashPayBook(){
+    this.loading_payment = true;
     this.booking_type = await this.storage.get('booking_type');
     if(this.booking_type === 'package'){
         this.insertPackages();
@@ -680,22 +764,31 @@ export class PaymentPagePage implements OnInit {
     var CartList = JSON.parse(localStorage.getItem('cart') || '[]');
     console.log('cart-list', CartList)
     const totalAmountSum = CartList.reduce((sum: number, item: any) => sum + item.totalAmount, 0);
-    console.log(this.booking_type);
-    if(this.booking_type === 'Couple'){
+    console.log(this.bookingtypes);
+    if(this.bookingtypes === 'Couple'){
+       this.booking_type = 4;
        this.couple_booking_employee_count = 2;
        this.people_count = 2;
     }else{
       this.couple_booking_employee_count = 1;
       this.people_count = 1;
     }
+    
+    let currentServiceTime = new Date(`${selectedDate}T${servicetime}`);
 
-    const updatedCartDataList = CartList.map((item: any) => {
+    const updatedCartDataList = CartList.map((item: any, index: number) => {
+      // Calculate current service start time in HH:mm format
+      const serviceStartTime = currentServiceTime.toTimeString().slice(0, 5);
+
+      // Add service duration to current time
+      currentServiceTime = new Date(currentServiceTime.getTime() + item.duration_number * 60 * 1000);
+
       return {
         customer_id: customer_id,
         location_url: selectedLocationUrl,
         servicedate: selectedDate,
-        servicetime: servicetime,
-        service_category: service_category,
+        servicetime: serviceStartTime, // Use dynamically calculated time
+        service_category: item.service_category,
         service_name: item.services_id,
         service_employee: service_employee,
         service_location: service_location,
@@ -705,9 +798,9 @@ export class PaymentPagePage implements OnInit {
         variant_id: item.id,
         booking_comment: booking_comment,
         package_id: package_id,
-        // package_used: this.package_used,
         package_used: item.BookedFromPackage,
-        actual_amount: totalAmountSum,
+        // actual_amount: totalAmountSum,
+        actual_amount: item.unitAmount,
         discounted_coupon: discounted_coupon,
         discount_option: 0,
         discount_amount: discount_amount,
@@ -716,27 +809,76 @@ export class PaymentPagePage implements OnInit {
         package_used_count: item.BookedFromPackage,
         payment_link: '',
         booking_type: this.booking_type,
-        // booking_type: this.booking_type,
         couple_booking_employee_count: this.couple_booking_employee_count,
-        payment_cash: this.finalAmount,
+        payment_cash: item.unitAmount,
         people_count: this.people_count,
+        quantity: item.quantity,
+        unit_amount: item.unitAmount,
         service_employee_2: 0,
         service_employee_3: 0,
-        service_employee_4: 0
+        service_employee_4: 0,
+        duration_number: item.duration_number
       };
-      
     });
-     console.log('updatedCartDataList',updatedCartDataList)
+
+    console.log('updatedCartDataList', updatedCartDataList);
+
+    // const updatedCartDataList = CartList.map((item: any) => {
+    //   return {
+    //     customer_id: customer_id,
+    //     location_url: selectedLocationUrl,
+    //     servicedate: selectedDate,
+    //     servicetime: servicetime,
+    //     service_category: service_category,
+    //     service_name: item.services_id,
+    //     service_employee: service_employee,
+    //     service_location: service_location,
+    //     booking_zone_id: booking_zone_id,
+    //     status: status,
+    //     service_variant: item.services_variants_id,
+    //     variant_id: item.id,
+    //     booking_comment: booking_comment,
+    //     package_id: package_id,
+    //     // package_used: this.package_used,
+    //     package_used: item.BookedFromPackage,
+    //     actual_amount: totalAmountSum,
+    //     discounted_coupon: discounted_coupon,
+    //     discount_option: 0,
+    //     discount_amount: discount_amount,
+    //     discounted_amount: discounted_amount,
+    //     total_price: this.finalAmount,
+    //     package_used_count: item.BookedFromPackage,
+    //     payment_link: '',
+    //     booking_type: this.booking_type,
+    //     // booking_type: this.booking_type,
+    //     couple_booking_employee_count: this.couple_booking_employee_count,
+    //     payment_cash: this.finalAmount,
+    //     people_count: this.people_count,
+    //     service_employee_2: 0,
+    //     service_employee_3: 0,
+    //     service_employee_4: 0
+    //   };
+      
+    // });
+    //  console.log('updatedCartDataList',updatedCartDataList)
     this.apiService.insertAllBookingData({service_data: updatedCartDataList}).subscribe(async (response)=>{
       if(response.status === true){
+        this.loading_payment = false;
         this.booking_id = response.booking_id;
+        console.log()
         await this.storage.set('booking_id', this.booking_id);
         localStorage.setItem('headerCart', '');
         localStorage.setItem('cart', ''); 
         localStorage.setItem('overallTotalAmount', '');
         await this.storage.set('AmountAfterDeductDiscount', '');
+        await this.storage.set('selectedDiscountCode','');
+        await this.storage.set('selectedDiscountAmount', '');
         await this.storage.set('backtoViewbooking', 'viewBooking');
         this.navigateTothankyou();
+      } else{
+        await this.storage.set('AmountAfterDeductDiscount', '');
+        await this.storage.set('selectedDiscountCode','');
+        await this.storage.set('selectedDiscountAmount', '');
       }
     });
     }

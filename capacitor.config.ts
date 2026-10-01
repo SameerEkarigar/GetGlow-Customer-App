@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.gg.customer',
-  appName: 'getglow-customer',
+  appId: 'io.gg.customer.app',
+  appName: 'Get Glow Home Spa',
   webDir: 'www',
   plugins: {
     SplashScreen: {
